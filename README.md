@@ -53,7 +53,8 @@ sudo update-ca-certificates
 ```
 # username: adminuser
 # password: adminpassword
-docker run uro:latest mix run priv/repo/test_seeds.exs
+URO_ID=$( docker ps --format "{{.ID}} {{.Image}}" | awk '$2 ~ /^my-app:v.*/ {print $1}' )
+docker exec ${URO_ID} mix run priv/repo/test_seeds.exs
 ```
 
 ## Contributing
