@@ -29,6 +29,7 @@ jobs:
 
             git log -n 5
             git reset --soft HEAD~21
+            mix local.hex --force
             mix deps.get
             mix format
 
