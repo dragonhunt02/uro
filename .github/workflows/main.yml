@@ -34,14 +34,15 @@ jobs:
       - name: Dispatch to workflow 
         run: |
 
-            git diff origin/patch1
-            exit 1
+            #git diff origin/patch1
+            #exit 1
             sudo apt install -y tree git
             #sudo add-apt-repository ppa:rabbitmq/rabbitmq-erlang
             #sudo apt update
             #sudo apt install -y elixir erlang
             curl -fsSO https://elixir-lang.org/install.sh
             sh install.sh elixir@1.16.3 otp@26.2.5.6
+            rm install.sh
             installs_dir=$HOME/.elixir-install/installs
             export PATH=$installs_dir/otp/26.2.5.6/bin:$PATH
             export PATH=$installs_dir/elixir/1.16.3-otp-26/bin:$PATH
