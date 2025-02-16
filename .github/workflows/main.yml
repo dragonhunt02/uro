@@ -8,7 +8,7 @@ jobs:
   dispatch:
     name: Dispatch
     env:
-      GITHUB_TOKEN: abcd
+      #GITHUB_TOKEN: abcd
       #${{ secrets.SQUASH1 }}
       INPUT_REPO_TOKEN: GITHUB_TOKEN
       INPUT_BRANCH: main
@@ -49,7 +49,7 @@ jobs:
             echo "$PATH"
             #find -type d -name ".elixir-install"
             #tree -a $HOME/.elixir-install/
-            iex
+            #iex
             git status
             
 
