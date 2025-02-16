@@ -70,7 +70,7 @@ docker compose -f docker-compose.development.yml up
 - Local **Mailbox** page to test email signup at http://vsekai.local/api/v1/mailbox
 - HTTP server (TLS disabled) on port 80
 
-By default, the stack uses [Caddy](https://caddyserver.com/) as a reverse proxy and is accessible at http://vsekai.local. You can adjust the values by setting the `ROOT_ORIGIN`, `URL`, and `FRONTEND_URL` environment variables in `.env` and `NEXT_PUBLIC_ORIGIN`, `NEXT_PUBLIC_API_ORIGIN` in `frontend/.env`. Also you will need to set it in `Caddyfile`.
+By default, the stack uses [Caddy](https://caddyserver.com/) as a reverse proxy and is accessible at http://vsekai.local. You can adjust the values by setting `BASE_URL` environment variable in `.env` and `NEXT_BASE_URL` in `frontend/.env`. Also you will need to set it in `Caddyfile`.
 
 If you want to configure **captcha** for registration, you need to set `TURNSTILE_SECRET_KEY` and `NEXT_PUBLIC_TURNSTILE_SITEKEY` ([Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/get-started/))
 
