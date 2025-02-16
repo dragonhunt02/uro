@@ -51,7 +51,7 @@ defmodule Uro.Router do
     end
   end
 
- scope "/session" do
+  scope "/session" do
     pipe_through([:authenticated])
 
     get("/", Uro.AuthenticationController, :get_current_session)
