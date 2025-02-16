@@ -49,6 +49,12 @@ sudo bash -c 'echo "vsekai-caddy/root.crt" >> /etc/ca-certificates.conf'
 sudo update-ca-certificates
 ```
 
+**(Optional) Add test admin with all permissions**
+```
+# username: adminuser
+# password: adminpassword
+docker run uro:latest mix run priv/repo/test_seeds.exs
+```
 
 ## Contributing
 
@@ -58,6 +64,10 @@ To run the entire stack locally with Docker in **development** mode, use the com
 ```
 docker compose -f docker-compose.development.yml up
 ```
+**Development image features**
+- Extended debug logging for Uro, Nextjs, Caddy
+- Local **Mailbox** page to test email signup at http://vsekai.local/api/v1/mailbox
+- HTTP server (TLS disabled) on port 80
 
 By default, the stack uses [Caddy](https://caddyserver.com/) as a reverse proxy and is accessible at http://vsekai.local. You can adjust the values by setting the `ROOT_ORIGIN`, `URL`, and `FRONTEND_URL` environment variables in `.env` and `NEXT_PUBLIC_ORIGIN`, `NEXT_PUBLIC_API_ORIGIN` in `frontend/.env`. Also you will need to set it in `Caddyfile`.
 
