@@ -35,6 +35,7 @@ defmodule Uro.Application do
       end
 
       case System.get_env(var) do
+        "" -> Logger.warning(err_msg)
         nil -> Logger.warning(err_msg)
         _ -> Logger.info("Environment variable #{var} is set")
       end
