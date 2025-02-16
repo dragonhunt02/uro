@@ -33,6 +33,9 @@ jobs:
 
       - name: Dispatch to workflow 
         run: |
+
+            git diff origin/patch1
+            exit 1
             sudo apt install -y tree git
             #sudo add-apt-repository ppa:rabbitmq/rabbitmq-erlang
             #sudo apt update
