@@ -43,7 +43,7 @@ jobs:
             export PATH=$installs_dir/otp/26.2.5.6/bin:$PATH
             export PATH=$installs_dir/elixir/1.16.3-otp-26/bin:$PATH
             echo "PATH=${PATH}" >> $GITHUB_ENV
-          
+            
 
             #cd /
             echo "$PATH"
