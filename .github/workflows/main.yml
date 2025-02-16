@@ -26,6 +26,13 @@ jobs:
           fetch-depth: 0
       - name: Dispatch to workflow 
         run: |
+            installs_dir=$HOME/.elixir-install/installs
+            export PATH=$installs_dir/otp/27.1.2/bin:$PATH
+            export PATH=$installs_dir/elixir/1.18.2-otp-27/bin:$PATH
+            echo "PATH=${PATH}" >> $GITHUB_ENV
+
+      - name: Dispatch to workflow 
+        run: |
             sudo apt install -y tree git
             #sudo add-apt-repository ppa:rabbitmq/rabbitmq-erlang
             #sudo apt update
@@ -36,9 +43,7 @@ jobs:
             export PATH=$installs_dir/otp/27.1.2/bin:$PATH
             export PATH=$installs_dir/elixir/1.18.2-otp-27/bin:$PATH
             echo "PATH=${PATH}" >> $GITHUB_ENV
-            
-      - name: Dispatch to workflow 
-        run: |
+          
 
             echo "$PATH"
             ls -a $HOME/.elixir-install/installs/elixir/1.18.2-otp-27/bin
