@@ -28,6 +28,13 @@ defmodule Uro.Router do
     plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
   end
 
+  pipe_through([:api])
+
+  get("/health", Uro.HealthController, :index)
+
+  get("/openapi", OpenApiSpex.Plug.RenderSpec, [])
+  get("/docs", Uro.OpenAPI.Viewer, [])
+
   if Mix.env() == :dev do
     pipeline :browser do
       plug(:accepts, ["html"])
@@ -44,14 +51,7 @@ defmodule Uro.Router do
     end
   end
 
-  pipe_through([:api])
-
-  get("/health", Uro.HealthController, :index)
-
-  get("/openapi", OpenApiSpex.Plug.RenderSpec, [])
-  get("/docs", Uro.OpenAPI.Viewer, [])
-
-  scope "/session" do
+ scope "/session" do
     pipe_through([:authenticated])
 
     get("/", Uro.AuthenticationController, :get_current_session)
