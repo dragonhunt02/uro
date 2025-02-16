@@ -48,7 +48,7 @@ jobs:
             #cd /
             echo "$PATH"
             #find -type d -name ".elixir-install"
-            tree -a $HOME/.elixir-install/
+            #tree -a $HOME/.elixir-install/
             iex
             git status
             
