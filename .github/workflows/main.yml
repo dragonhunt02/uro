@@ -41,6 +41,7 @@ jobs:
         run: |
 
             echo "$PATH"
+            ls -a $HOME/.elixir-install/installs/elixir/1.18.2-otp-27/bin
             iex
             git status
             
