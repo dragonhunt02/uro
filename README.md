@@ -64,7 +64,7 @@ To run the entire stack locally with Docker in **development** mode, use the com
 ```
 docker compose -f docker-compose.development.yml up
 ```
-**Development image features**
+**Development image additional features**
 - Extended debug logging for Uro, Nextjs, Caddy
 - Local **Mailbox** page to test email signup at http://vsekai.local/api/v1/mailbox
 - HTTP server (TLS disabled) on port 80
