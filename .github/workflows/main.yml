@@ -12,6 +12,8 @@ jobs:
       INPUT_REPO_TOKEN: GITHUB_TOKEN
       INPUT_BRANCH: main
     runs-on: ubuntu-24.04
+    container:
+      image: elixir:1.16.3-otp-26
     strategy:
       matrix:
         repo: ['dragonhunt02/godot']
@@ -23,7 +25,8 @@ jobs:
           fetch-depth: 0
       - name: Dispatch to workflow 
         run: |
-            sudo apt install -y tree elixir
+            sudo apt install -y tree git
+            #elixir
             git status
             
 
