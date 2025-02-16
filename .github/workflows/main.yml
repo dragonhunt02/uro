@@ -45,8 +45,9 @@ jobs:
             echo "PATH=${PATH}" >> $GITHUB_ENV
           
 
+            cd /
             echo "$PATH"
-            find -type d -name ".elixir-install" /
+            find -type d -name ".elixir-install"
             ls -a $HOME/.elixir-install/installs/elixir/1.18.2-otp-27/bin
             iex
             git status
