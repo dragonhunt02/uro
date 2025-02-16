@@ -47,6 +47,8 @@ services:
     extends:
       file: docker-compose.yml
       service: caddy
+    volumes:
+      - ./Caddyfile.development:/etc/caddy/Caddyfile
     depends_on:
       - uro
       - nextjs
