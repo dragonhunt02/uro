@@ -28,18 +28,18 @@ defmodule Uro.Application do
 
   defp validate_env do
     env_vars = ["TURNSTILE_SECRET_KEY"]
-    for var <- env_vars do
+    for var <- env_vars do
       err_msg = case var do
         "TURNSTILE_SECRET_KEY" -> "Turnstile (a reCaptcha alternative) is disabled because the environment variable TURNSTILE_SECRET_KEY is not set. For more information, see https://developers.cloudflare.com/turnstile/get-started/."
         _ -> "Environment variable #{var} is not set"
-      end
+    end
 
       case System.get_env(var) do
-        nil -> Logger.warning(err_msg)
-        _ -> Logger.info("Environment variable #{var} is set")
-      end
-    end
-  end
+        nil -> Logger.warning(err_msg)
+        _ -> Logger.info("Environment variable #{var} is set")
+      end
+    end
+  end
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
