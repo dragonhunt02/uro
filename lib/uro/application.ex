@@ -32,7 +32,7 @@ defmodule Uro.Application do
       err_msg = case var do
         "TURNSTILE_SECRET_KEY" -> "Turnstile (a reCaptcha alternative) is disabled because the environment variable TURNSTILE_SECRET_KEY is not set. For more information, see https://developers.cloudflare.com/turnstile/get-started/."
         _ -> "Environment variable #{var} is not set"
-    end
+      end
 
       case System.get_env(var) do
         nil -> Logger.warning(err_msg)
