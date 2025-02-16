@@ -31,7 +31,7 @@ jobs:
             #sudo apt update
             #sudo apt install -y elixir erlang
             curl -fsSO https://elixir-lang.org/install.sh
-            sh install.sh elixir@1.16.3 otp@26
+            sh install.sh elixir@1.16.3 otp@26.2.5.6
             installs_dir=$HOME/.elixir-install/installs
             export PATH=$installs_dir/otp/27.1.2/bin:$PATH
             export PATH=$installs_dir/elixir/1.18.2-otp-27/bin:$PATH
