@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 0
       - name: Dispatch to workflow 
         run: |
-            sudo apt install -y tree git
+            #sudo apt install -y tree git
             #elixir
             git status
             
