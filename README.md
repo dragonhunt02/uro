@@ -38,8 +38,8 @@ Server will be available at **http://vsekai.local**
 
 Auto generated root CA will be in `./caddy/data/caddy/pki/authorities/local/root.crt` after you run `docker compose up`.
 
-When using default `docker compose up`, installing root certificate is required to connect V-Sekai game client. 
-If you want to test without TLS use `docker-compose.development.yml` and connect client to port 80.
+When using default `docker compose up`, installing root certificate is **required** to connect V-Sekai game client. 
+If you want to test without **TLS**, use `docker-compose.development.yml` and connect client to port 80.
 
 **(Optional) Install root CA on Ubuntu/Debian**
 ```
