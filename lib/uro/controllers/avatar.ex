@@ -3,6 +3,20 @@ defmodule Uro.AvatarController do
 
   alias Uro.UserContent
 
+  tags(["avatars"])
+
+  operation(:index,
+    operation_id: "listAvatars",
+    summary: "List Avatars",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        %Schema{}
+      }
+    ]
+  )
+
   def index(conn, _params) do
     avatars = UserContent.list_public_avatars()
 
@@ -17,6 +31,18 @@ defmodule Uro.AvatarController do
       }
     })
   end
+
+  operation(:show,
+    operation_id: "getAvatar",
+    summary: "Get Avatar",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        %Schema{}
+      }
+    ]
+  )
 
   def show(conn, %{"id" => id}) do
     id
