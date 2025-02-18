@@ -6,6 +6,18 @@ defmodule Uro.MapController do
 
   tags(["maps"])
 
+  operation(:index,
+    operation_id: "listMaps",
+    summary: "List Maps",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        %Schema{}
+      }
+    ]
+  )
+
   def index(conn, _params) do
     maps = UserContent.list_public_maps()
 
