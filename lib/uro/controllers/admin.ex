@@ -3,7 +3,7 @@ defmodule Uro.AdminController do
 
   alias OpenApiSpex.Schema
 
-  tags(["system"])
+  tags(["admin"])
 
   operation(:status,
     operation_id: "status",
