@@ -76,7 +76,7 @@ defmodule Uro.Router do
     pipe_through([:authenticated])
     plug Uro.Plug.RequireAdmin
 
-    get("/", Uro.AdminController, :index)
+    get("/", Uro.AdminController, :status)
   end
 
   scope "/users" do
