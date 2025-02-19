@@ -85,3 +85,11 @@ jobs:
 
       - name: Check formatted code
         run: mix format --check-formatted
+
+      - name: Run server
+        run: |
+          # mix do compile, phx.digest
+          mix uro.apigen
+          MIX_ENV=prod
+          timeout 3m iex -S mix do ecto.migrate, phx.servermix
+        
