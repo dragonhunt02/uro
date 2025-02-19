@@ -5,7 +5,7 @@ defmodule Uro.AdminController do
 
   tags(["system"])
 
-  operation(:index,
+  operation(:status,
     operation_id: "admin_status",
     summary: "Admin status",
     responses: [
@@ -15,12 +15,12 @@ defmodule Uro.AdminController do
         %Schema{
           type: :object,
           properties: %{
-            services: %Schema{
+            status: %Schema{
               type: :object,
               properties: %{
-                uro: %Schema{
+                is_admin: %Schema{
                   type: :string,
-                  enum: ["healthy", "unhealthy"]
+                  enum: ["true", "false"]
                 }
               }
             }
@@ -30,7 +30,7 @@ defmodule Uro.AdminController do
     ]
   )
 
-  def index(conn, _params) do
-    json(conn, %{services: %{uro: "healthy"}})
+  def status(conn, _params) do
+    json(conn, %{status: %{is_admin: "true"}})
   end
 end
