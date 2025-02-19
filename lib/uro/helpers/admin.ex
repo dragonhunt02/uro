@@ -10,5 +10,4 @@ defmodule Uro.Helpers.Admin do
     user = Auth.get_current_user(conn)
     User.admin?(user)
   end
-
 end
