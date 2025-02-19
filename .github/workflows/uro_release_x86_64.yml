@@ -89,6 +89,7 @@ jobs:
       - name: Run server
         run: |
           # mix do compile, phx.digest
+          apk add --no-cache inotify-tools
           mix uro.apigen
           MIX_ENV=prod
           timeout 3m iex -S mix do ecto.migrate, phx.servermix
