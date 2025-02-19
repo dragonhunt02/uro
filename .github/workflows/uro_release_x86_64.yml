@@ -22,10 +22,11 @@ jobs:
           mv .env.example .env
           mv frontend/.env.example frontend/.env
           # timeout 5m docker compose up
-          docker compose -f docker-compose.development.yml up -d
+          // docker compose -f docker-compose.development.yml up -d
+          docker compose up -d
           sleep 1m
           echo "Run curl"
-          curl -v -L http://0.0.0.0:80/api/v1/mailbox
+          curl -v -k -L https://0.0.0.0:443/
           exit 1
           export DEBIAN_FRONTEND=noninteractive
           apt update
