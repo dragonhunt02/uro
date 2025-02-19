@@ -18,6 +18,7 @@ jobs:
 
       - name: Install system dependencies
         run: |
+          export DEBIAN_FRONTEND=noninteractive
           apt update
           apt install -y postgresql inotify-tools sudo
           sudo -u postgres initdb -D /var/lib/postgresql/data
