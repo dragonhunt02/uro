@@ -6,8 +6,8 @@ defmodule Uro.AdminController do
   tags(["admin"])
 
   operation(:status,
-    operation_id: "status",
-    summary: "Admin status",
+    operation_id: "getAdminStatus",
+    summary: "Get Admin status",
     responses: [
       ok: {
         "",
