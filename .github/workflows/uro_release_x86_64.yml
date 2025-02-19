@@ -19,6 +19,13 @@ jobs:
       - name: Install system dependencies
         run: |
           apt update
+          apt install -y postgresql inotify-tools sudo
+          sudo -u postgres initdb -D /var/lib/postgresql/data
+          sudo -u postgres psql -c "CREATE DATABASE vsekai;"
+          sudo -u postgres psql -c "CREATE USER vsekai WITH ENCRYPTED PASSWORD 'vsekai';"
+          sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE vsekai TO myuser;"
+          timeout 2m sudo -u postgres pg_ctl -D /var/lib/postgresql/data -l logfile start
+
           apt install -y build-essential erlang-dev curl
 
       - name: Set up Elixir
@@ -89,7 +96,6 @@ jobs:
       - name: Run server
         run: |
           # mix do compile, phx.digest
-          apk add --no-cache inotify-tools
           mix uro.apigen
           MIX_ENV=prod
           timeout 3m iex -S mix do ecto.migrate, phx.servermix
