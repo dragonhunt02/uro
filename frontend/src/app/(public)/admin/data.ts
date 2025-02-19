@@ -2,8 +2,7 @@ import { skipToken, useSuspenseQuery } from "@tanstack/react-query";
 
 import {
 	type api,
-	getAdminStatus,
-	type User
+	getAdminStatus
 } from "~/api";
 import { useOptionalSession } from "~/hooks/session";
 import { getQueryClient } from "~/query";
