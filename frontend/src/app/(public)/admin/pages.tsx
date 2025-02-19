@@ -3,7 +3,7 @@
 import { VSekaiMark } from "~/components/vsekai-mark";
 import { useReturnIntent } from "~/hooks/return-intent";
 import { restoreReturnIntent } from "~/hooks/return-intent/common";
-import { useAdminStatus } from "./admin";
+import { useAdminStatus } from "./data";
 
 export default function AdminStatusPage() {
 	 const adminStatus = useAdminStatus();
