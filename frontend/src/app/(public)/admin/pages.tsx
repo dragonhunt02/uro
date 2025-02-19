@@ -3,26 +3,26 @@
 import { VSekaiMark } from "~/components/vsekai-mark";
 import { useReturnIntent } from "~/hooks/return-intent";
 import { restoreReturnIntent } from "~/hooks/return-intent/common";
-import { useSession } from "~/hooks/session";
+import { useAdminStatus } from "./admin";
 
 export default function AdminStatusPage() {
-	const session = useSession();
+	 const adminStatus = useAdminStatus();
 	const { returnIntent } = useReturnIntent();
 
-	if (session.user.email_confirmed_at)
-		restoreReturnIntent(returnIntent?.href || "/");
+	if (adminStatus.status.is_admin == 'false')
+		restoreReturnIntent("/404");
+	//returnIntent?.href || "/");
 
 	return (
 		<div className="flex h-full grow items-center justify-center">
 			<div className="flex w-[32rem] flex-col gap-4 overflow-hidden rounded-xl border border-tertiary-300 bg-tertiary-50 p-8">
 				<span className="text-xl">
-					<VSekaiMark className="inline size-5" /> Admin Status
+					<VSekaiMark className="inline size-5" /> Admin Access Status
 				</span>
 				<p className="opacity-75">
-					We&apos;ve sent you an email to{" "}
-					<span className="font-medium">{session.user.email}</span> with a link
-					to confirm your account. Please check your inbox and click the link to
-					continue.
+					Status: {" "}
+					<span className="font-medium">{adminStatus.status.is_admin}</span>
+					You can upload files.
 				</p>
 				<div className="flex gap-2">
 				</div>
