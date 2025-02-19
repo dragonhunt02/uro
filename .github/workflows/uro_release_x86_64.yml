@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    timeout-minutes: 5
+    timeout-minutes: 6
     runs-on: ubuntu-latest
 
  #   container:
@@ -23,7 +23,9 @@ jobs:
           mv frontend/.env.example frontend/.env
           # timeout 5m docker compose up
           docker compose -f docker-compose.development.yml up -d
-          curl -v -L http://0.0.0.0:80 
+          sleep 1m
+          echo "Run curl"
+          curl -v -L http://0.0.0.0:80/api/v1/mailbox
           exit 1
           export DEBIAN_FRONTEND=noninteractive
           apt update
