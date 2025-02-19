@@ -2,7 +2,7 @@ name: Uro Development x86_64
 
 on:
   push:
-    branches: [master]
+    branches: [api]
   pull_request:
     branches: [master]
 
@@ -25,13 +25,6 @@ jobs:
         run: |
           mix local.hex --force
           mix local.rebar --force
-
-      - name: Restore dependencies cache
-        uses: actions/cache@v2
-        with:
-          path: deps
-          key: ${{ runner.os }}-mix-deps-${{ hashFiles('mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix-deps-
 
       - name: Install CockroachDB
         run: |
