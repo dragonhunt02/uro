@@ -1,6 +1,7 @@
 defmodule Uro.AvatarController do
   use Uro, :controller
 
+  alias OpenApiSpex.Schema
   alias Uro.UserContent
 
   tags(["avatars"])
