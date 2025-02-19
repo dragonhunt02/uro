@@ -20,7 +20,7 @@ jobs:
         run: |
           mv .env.example .env
           mv frontend/.env.example frontend/.env
-          timeout 2m docker compose up
+          timeout 5m docker compose up
           exit 1
           export DEBIAN_FRONTEND=noninteractive
           apt update
