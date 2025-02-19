@@ -9,7 +9,7 @@ export default function AdminStatusPage() {
 	 const adminStatus = useAdminStatus();
 	const { returnIntent } = useReturnIntent();
 
-	if (adminStatus?.status.is_admin == 'false')
+	if (adminStatus?.status?.is_admin == 'false')
 		restoreReturnIntent("/404");
 	//returnIntent?.href || "/");
 
@@ -21,7 +21,7 @@ export default function AdminStatusPage() {
 				</span>
 				<p className="opacity-75">
 					Status: {" "}
-					<span className="font-medium">{adminStatus?.status.is_admin}</span>
+					<span className="font-medium">{adminStatus?.status?.is_admin}</span>
 					You can upload files.
 				</p>
 				<div className="flex gap-2">
