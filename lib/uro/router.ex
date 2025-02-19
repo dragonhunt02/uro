@@ -72,6 +72,13 @@ defmodule Uro.Router do
 
   resources("/shards", Uro.ShardController, only: [:index, :create, :update, :delete])
 
+  scope "/admin" do
+    pipe_through([:authenticated])
+    plug Uro.Plug.RequireAdmin
+
+    get("/", Uro.AdminController, :index)
+  end
+
   scope "/users" do
     post "/", Uro.UserController, :create
 
