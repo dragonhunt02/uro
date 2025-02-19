@@ -28,6 +28,11 @@ defmodule Uro.Router do
     plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
   end
 
+  pipeline :authenticated_admin do
+    plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
+    plug(Uro.Plug.RequireAdmin)
+  end
+
   if Mix.env() == :dev do
     pipeline :browser do
       plug(:accepts, ["html"])
@@ -73,8 +78,7 @@ defmodule Uro.Router do
   resources("/shards", Uro.ShardController, only: [:index, :create, :update, :delete])
 
   scope "/admin" do
-    pipe_through([:authenticated])
-    plug Uro.Plug.RequireAdmin
+    pipe_through([:authenticated_admin])
 
     get("/", Uro.AdminController, :status)
   end
