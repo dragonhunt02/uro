@@ -18,6 +18,8 @@ jobs:
 
       - name: Install system dependencies
         run: |
+          mv .env.example .env
+          mv frontend/.env.example frontend/.env
           timeout 2m docker compose up
           exit 1
           export DEBIAN_FRONTEND=noninteractive
