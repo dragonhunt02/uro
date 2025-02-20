@@ -29,6 +29,11 @@ jobs:
           docker compose up -d
           sleep 1m
           URO_ID=$( docker ps --format "{{.ID}} {{.Image}}" | awk '$2 ~ /^.*-uro/ {print $1}' )
+          
+          docker exec ${URO_ID} mkdir -p uploads
+          docker exec ${URO_ID} touch uploads/test_scene1.scn
+          docker exec ${URO_ID} touch uploads/teststring.jpg
+
           docker exec ${URO_ID} mix run priv/repo/test_seeds.exs
           docker exec ${URO_ID} mix run priv/repo/test_user_content.exs
           sleep 10s
