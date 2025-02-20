@@ -41,11 +41,16 @@ jobs:
           curl -v -L http://0.0.0.0:80/
           curl -v -L http://0.0.0.0:80/api/v1/health
           curl -v -i -c cookies.txt -X POST -H "Content-Type: application/json" -d '{"username":"adminuser","password":"adminpassword"}' http://0.0.0.0:80/api/v1/login
-          curl -v -L http://0.0.0.0:80/api/v1/maps
+          
+          curl -v -L -s -o responsemap.json http://0.0.0.0:80/api/v1/maps
+          cat responsemap.json
+          echo -e "\nMaps end\n\n\n"
+          
           curl -v -L -s -o response.json http://0.0.0.0:80/api/v1/avatars
           cat response.json
+          echo -e "\nAvatars end\n\n\n"
           
-          echo -e "\nDockerlogs disabled\n\n\n"
+          #echo -e "\nDockerlogs disabled\n\n\n"
           #docker logs ${URO_ID}
           
           curl -v -L -b cookies.txt http://0.0.0.0:80/api/v1/admin
