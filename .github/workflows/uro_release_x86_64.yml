@@ -40,7 +40,7 @@ jobs:
           sudo bash -c 'echo "0.0.0.0 vsekai.local" >> /etc/hosts'
           
           echo -e"\nAuth requests"
-          curl -v -L --http1.0 -b cookies.txt http://0.0.0.0:80/admin || true
+          curl -v --http1.0 -b cookies.txt http://0.0.0.0:80/admin || true
           echo -e"\nNot Auth requests"
           curl -v -L --http1.0 http://0.0.0.0:80/admin
           echo "Run wget"
