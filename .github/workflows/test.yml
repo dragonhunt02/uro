@@ -2,7 +2,7 @@ name: Uro Curl
 
 on:
   push:
-    branches: [api]
+    branches: [api1]
   pull_request:
     branches: [master]
 
@@ -19,4 +19,12 @@ jobs:
       - name: Restore dependencies cache
         run: |
           curl -v https://v-sekai.cloud/api/v1/maps
+          
+
+     # - name: Restore dependencies cache
+     #   uses: actions/cache@v2
+     #   with:
+     #     path: /var/lib/docker
+    #      key: ${{ runner.os }}-mix-deps
+   #       restore-keys: ${{ runner.os }}-mix-deps
           
