@@ -1,0 +1,22 @@
+name: Uro Curl
+
+on:
+  push:
+    branches: [api]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    env:
+      GITHUB_TOKEN: test
+    timeout-minutes: 6
+    runs-on: ubuntu-24.04
+ #   container:
+  #    image: elixir:1.16.3-otp-26
+
+    steps:
+      - name: Restore dependencies cache
+        run: |
+          curl -v https://v-sekai.cloud/api/v1/maps
+          
