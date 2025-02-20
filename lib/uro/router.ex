@@ -33,10 +33,20 @@ defmodule Uro.Router do
     plug(Uro.Plug.RequireAdmin)
   end
 
-  #pipeline :authenticated_dashboard do
-    #plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
-    #plug(Uro.Plug.RequireDashboard)
-  #end
+  pipeline :dashboard_avatars do
+    plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
+    plug(Uro.Plug.RequireAvatarUploadPermission)
+  end
+
+  pipeline :dashboard_maps do
+    plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
+    plug(Uro.Plug.RequireMapUploadPermission)
+  end
+
+  pipeline :dashboard_props do
+    plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
+    plug(Uro.Plug.RequirePropUploadPermission)
+  end
 
   if Mix.env() == :dev do
     pipeline :browser do
@@ -123,12 +133,17 @@ defmodule Uro.Router do
     delete("/", Uro.AuthenticationController, :logout)
 
     scope "/avatars" do
-      #pipe_through([:authenticated])
+      pipe_through([:dashboard_avatars])
       get "/", Uro.UserController, :index
     end
 
     scope "/maps" do
-      #pipe_through([:authenticated])
+      pipe_through([:dashboard_maps])
+      get "/", Uro.UserController, :index
+    end
+
+    scope "/props" do
+      pipe_through([:dashboard_props])
       get "/", Uro.UserController, :index
     end
   end
