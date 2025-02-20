@@ -16,12 +16,13 @@ alias Uro.Repo
 current_time = DateTime.utc_now()
 #def get_uploader_id_by_username(username) do
 user = Repo.get_by(Uro.Accounts.User, username: "adminuser")
+IO.inspect user
 uploader = user.id
 #end
 
 # uploader = get_uploader_id_by_username("adminuser")
 
-UserContent.create_avatar(%{
+error = UserContent.create_avatar(%{
       name: "TestScene1",
       description: "First test scene",
       user_content_data: "test_scene1.tscn",
@@ -30,3 +31,4 @@ UserContent.create_avatar(%{
       is_public: true
 })
 
+IO.inspect error
