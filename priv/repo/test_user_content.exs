@@ -14,12 +14,12 @@ alias Uro.UserContent
 alias Uro.Repo
 
 current_time = DateTime.utc_now()
-def get_uploader_id_by_username(username) do
-  user = Repo.get_by(Uro.Accounts.User, username: username)
-  user.id
-end
+#def get_uploader_id_by_username(username) do
+user = Repo.get_by(Uro.Accounts.User, username: "adminuser")
+uploader = user.id
+#end
 
-uploader = get_uploader_id_by_username("adminuser")
+# uploader = get_uploader_id_by_username("adminuser")
 
 UserContent.create_avatar(%{
       name: "TestScene1",
