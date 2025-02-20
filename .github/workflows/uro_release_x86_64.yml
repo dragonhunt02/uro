@@ -30,6 +30,7 @@ jobs:
           sleep 1m
           URO_ID=$( docker ps --format "{{.ID}} {{.Image}}" | awk '$2 ~ /^.*-uro/ {print $1}' )
           docker exec ${URO_ID} mix run priv/repo/test_seeds.exs
+          docker exec ${URO_ID} mix run priv/repo/test_user_content.exs
           sleep 10s
           curl -v -L http://0.0.0.0:80/
           curl -v -L http://0.0.0.0:80/api/v1/health
@@ -39,9 +40,9 @@ jobs:
           echo "Html test"
           sudo bash -c 'echo "0.0.0.0 vsekai.local" >> /etc/hosts'
           
-          echo -e"\nAuth requests"
+          echo -e "\nAuth requests"
           curl -v --http1.0 -b cookies.txt http://0.0.0.0:80/admin || true
-          echo -e"\nNot Auth requests"
+          echo -e "\nNot Auth requests"
           curl -v -L --http1.0 http://0.0.0.0:80/admin
           echo "Run wget"
           #wget --no-check-certificate --secure-protocol=TLSv1_2 https://0.0.0.0:443/
