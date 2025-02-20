@@ -43,6 +43,10 @@ jobs:
           curl -v -L http://0.0.0.0:80/api/v1/maps
           curl -v -L -s -o response.json http://0.0.0.0:80/api/v1/avatars
           cat response.json
+          
+          echo -e "\nDockerlogs\n\n\n"
+          docker logs ${URO_ID}
+          
           curl -v -L -b cookies.txt http://0.0.0.0:80/api/v1/admin
           echo "Html test"
           sudo bash -c 'echo "0.0.0.0 vsekai.local" >> /etc/hosts'
