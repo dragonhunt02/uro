@@ -23,6 +23,17 @@ uploader = user.id
 # uploader = get_uploader_id_by_username("adminuser")
 
 error = UserContent.create_avatar(%{
+      name: "TestAvatar1",
+      description: "First test avatar",
+      user_content_data: "uploads/test_avatar1.scn",
+      uploader_id: uploader,
+      user_content_preview: "uploads/teststring.jpg",
+      is_public: true
+})
+
+IO.inspect error
+
+error = UserContent.create_map(%{
       name: "TestScene1",
       description: "First test scene",
       user_content_data: "uploads/test_scene1.scn",
