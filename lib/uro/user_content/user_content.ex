@@ -27,7 +27,7 @@ defmodule Uro.UserContent.UserContent do
 
       def user_content_upload_changeset(changeset, attrs) do
         changeset
-        |> cast_attachments(attrs, [:user_content_data, :user_content_preview], allow_urls: true)
+        |> cast_attachments(attrs, [:user_content_data, :user_content_preview], allow_paths: true)
         |> validate_required([:name, :uploader_id, :user_content_data])
       end
     end
