@@ -19,14 +19,14 @@ def get_uploader_id_by_username(username) do
   user.id
 end
 
-uploader_id = get_uploader_id_by_username("adminuser")
+uploader = get_uploader_id_by_username("adminuser")
 
 UserContent.create_avatar(%{
       name: "TestScene1",
       description: "First test scene",
       user_content_data: "test_scene1.tscn",
-      uploader_id: references(:users, type: :uuid),
-      user_content_preview: string,
+      uploader_id: uploader,
+      user_content_preview: "teststring.jpg",
       is_public: true
 })
 
