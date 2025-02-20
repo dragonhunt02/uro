@@ -41,7 +41,7 @@ jobs:
           curl -v -L http://0.0.0.0:80/api/v1/health
           curl -v -i -c cookies.txt -X POST -H "Content-Type: application/json" -d '{"username":"adminuser","password":"adminpassword"}' http://0.0.0.0:80/api/v1/login
           curl -v -L http://0.0.0.0:80/api/v1/maps
-          curl -v -L http://0.0.0.0:80/api/v1/avatars
+          curl -v -L --output - http://0.0.0.0:80/api/v1/avatars
           curl -v -L -b cookies.txt http://0.0.0.0:80/api/v1/admin
           echo "Html test"
           sudo bash -c 'echo "0.0.0.0 vsekai.local" >> /etc/hosts'
