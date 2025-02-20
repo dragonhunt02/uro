@@ -13,8 +13,16 @@
 alias Uro.UserContent
 alias Uro.Repo
 
-current_time = DateTime.utc_now()
+#current_time = DateTime.utc_now()
 #def get_uploader_id_by_username(username) do
+
+# Copy test assets
+case File.cp_r("priv/test_content", "priv/uploads") do
+  {:ok, _} -> IO.puts("Test Files copied successfully.")
+  {:error, reason} -> IO.puts("Failed to copy files: #{reason}")
+end
+
+# Create upload database entries
 user = Repo.get_by(Uro.Accounts.User, username: "adminuser")
 IO.inspect user
 uploader = user.id
