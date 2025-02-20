@@ -17,7 +17,7 @@ alias Uro.Repo
 #def get_uploader_id_by_username(username) do
 
 # Copy test assets
-case File.cp_r("priv/repo/test_content", "priv/uploads") do
+case File.cp_r("priv/repo/test_content", "uploads") do
   {:ok, _} -> IO.puts("Test Files copied successfully.")
   {:error, reason} -> IO.puts("Failed to copy files: #{reason}")
 end
