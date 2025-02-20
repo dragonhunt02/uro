@@ -35,7 +35,7 @@ error = UserContent.create_avatar(%{
       description: "First test avatar",
       user_content_data: "uploads/test_avatar1.scn",
       uploader_id: uploader,
-      user_content_preview: "uploads/teststring.jpg",
+      user_content_preview: "uploads/test_image.jpg",
       is_public: true
 })
 
@@ -46,7 +46,7 @@ error = UserContent.create_map(%{
       description: "First test scene",
       user_content_data: "uploads/test_scene1.scn",
       uploader_id: uploader,
-      user_content_preview: "uploads/teststring.jpg",
+      user_content_preview: "uploads/test_image.jpg",
       is_public: true
 })
 
