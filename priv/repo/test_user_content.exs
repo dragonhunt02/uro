@@ -25,9 +25,9 @@ uploader = user.id
 error = UserContent.create_avatar(%{
       name: "TestScene1",
       description: "First test scene",
-      user_content_data: "test_scene1.scn",
+      user_content_data: "/uploads/test_scene1.scn",
       uploader_id: uploader,
-      user_content_preview: "teststring.jpg",
+      user_content_preview: "/uploads/teststring.jpg",
       is_public: true
 })
 
