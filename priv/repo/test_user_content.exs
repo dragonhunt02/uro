@@ -2,13 +2,7 @@
 #
 #     mix run priv/repo/test_user_content.exs
 #
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     Uro.Repo.insert!(%Uro.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+# Script must be run from repository root
 
 alias Uro.UserContent
 alias Uro.Repo
@@ -45,6 +39,17 @@ error = UserContent.create_map(%{
       name: "TestScene1",
       description: "First test scene",
       user_content_data: "uploads/test_scene1.scn",
+      uploader_id: uploader,
+      user_content_preview: "uploads/test_image.jpg",
+      is_public: true
+})
+
+IO.inspect error
+
+error = UserContent.create_map(%{
+      name: "TestScene2",
+      description: "Second test scene",
+      user_content_data: "uploads/test_scene2.scn",
       uploader_id: uploader,
       user_content_preview: "uploads/test_image.jpg",
       is_public: true
