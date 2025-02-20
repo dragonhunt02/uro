@@ -28,8 +28,12 @@ jobs:
           # docker compose -f docker-compose.development.yml up -d
           docker compose up -d
           sleep 1m
+          URO_ID=$( docker ps --format "{{.ID}} {{.Image}}" | awk '$2 ~ /^.*-uro/ {print $1}' )
+          docker exec ${URO_ID} mix run priv/repo/test_seeds.exs
+          sleep 10s
           curl -v -L http://0.0.0.0:80/
           curl -v -L http://0.0.0.0:80/api/v1/health
+          curl -v -i -X POST -H "Content-Type: application/json" -d '{"username":"adminuser","password":"adminpassword"}' http://0.0.0.0:80/api/v1/login
           curl -v -L http://0.0.0.0:80/api/v1/maps
           curl -v -L http://0.0.0.0:80/api/v1/admin
           echo "Run wget"
