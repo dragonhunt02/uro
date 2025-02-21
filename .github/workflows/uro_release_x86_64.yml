@@ -16,6 +16,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: python
+        run: |
+          echo '
+          import request
+          multipart_form_data = {
+              'upload': ('custom_file_name.zip', open('myfile.zip', 'rb')),
+              'action': (None, 'store'),
+              'path': (None, '/path1')
+          }
+          response = requests.post('https://0.0.0.0/post', files=multipart_form_data)
+          print(response.content)
+          ' > request.py
+          cat request.py
+          exit 1
+
       - name: Install system dependencies
         run: |
           sudo apt update -y 
@@ -80,17 +95,18 @@ jobs:
           #-H "Content-Type: application/json" \
           #-d '{"map": { "name": "MyScene", "description": "My custom scene", "is_public": true, "user_content_data": {"filename": "autogen.scn", "content_type": "application/octet-stream", "data": ""}, "user_content_preview": {"filename": "autogen.png", "content_type": "image/png", "data": ""} }}'
           curl -v -L -s -o responsepostmap.json -b cookies.txt -X POST http://0.0.0.0:80/api/v1/dashboard/maps \
-          -F "filename=autogen.scn; user_content_data=@example.scn" \
           -F "name=MyScene1" \
           -F "description=My custom scene" \
           -F "is_public=true" \
+          -F "filename=autogen.scn; user_content_data=@example.scn" \
           -F "filename=autogen.jpg; user_content_preview=@exampleimage.jpg"
           #--trace-ascii ascii.txt
           cat responsepostmap.json
           echo -e "\n\n"
           #cat ascii.txt
           echo -e "\nDashPostMaps end\n\n\n"
-          
+
+          echo "Caddy: ${CADDY_ID}"
           docker logs ${CADDY_ID}
 
           
