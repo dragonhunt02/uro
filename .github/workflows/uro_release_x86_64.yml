@@ -19,6 +19,7 @@ jobs:
       - name: python
         run: |
           echo "Test" > aname.scn
+          echo "Test" > aname2.jpg
           echo '
           import requests
           multipart_form_data = {
@@ -52,7 +53,7 @@ jobs:
           -F "description=My custom scene" \
           -F "is_public=true" \
           -F "user_content_data=@aname.scn" \
-          -F "user_content_preview=@exampleimage.jpg"
+          -F "user_content_preview=@aname2.jpg"
           sleep 21s
           cat requests.log
           exit 1
