@@ -74,7 +74,7 @@ jobs:
 
           curl -v -L -s -o responsepostmap.json -b cookies.txt -X POST http://0.0.0.0:80/api/v1/dashboard/maps \
           -H "Content-Type: application/json" \
-          -d '{"name": "MyScene", "description": "My custom scene", "is_public": true, "user_content_data": {"filename": "autogen.scn", "content_type": "application/octet-stream", "data": ""}, "user_content_preview": {"filename": "autogen.png", "content_type": "image/png", "data": ""}}'
+          -d '{"map": { "name": "MyScene", "description": "My custom scene", "is_public": true, "user_content_data": {"filename": "autogen.scn", "content_type": "application/octet-stream", "data": ""}, "user_content_preview": {"filename": "autogen.png", "content_type": "image/png", "data": ""} }}'
           cat responsepostmap.json
           echo -e "\nDashPostMaps end\n\n\n"
 
