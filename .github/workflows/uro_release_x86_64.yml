@@ -20,7 +20,7 @@ jobs:
         run: |
           echo "Test" > aname.txt
           echo '
-          import request
+          import requests
           multipart_form_data = {
               "upload": ("aname1.txt", open("aname.txt", "rb")),
               "ction": (None, "tore"),
