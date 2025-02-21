@@ -72,8 +72,8 @@ jobs:
           cat responsedashmap.json
           echo -e "\nDashMaps end\n\n\n"
 
-          touch example.scn
-          touch exampleimage.jpg
+          echo "Testscene" > example.scn
+          echo "Testimg" > exampleimage.jpg
 
           #curl -v -L -s -o responsepostmap.json -b cookies.txt -X POST http://0.0.0.0:80/api/v1/dashboard/maps \
           #-H "Content-Type: application/json" \
