@@ -53,10 +53,10 @@ jobs:
           -F "description=My custom scene" \
           -F "is_public=true" \
           -F "user_content_data=@aname.scn" \
-          -F "user_content_preview=@aname2.jpg"
+          -F "user_content_preview=@aname2.jpg" || true
           sleep 21s
-          cat requests.log
-          exit 1
+          cat requests.log || true
+          #exit 1
      
           
 
@@ -123,6 +123,17 @@ jobs:
           #curl -v -L -s -o responsepostmap.json -b cookies.txt -X POST http://0.0.0.0:80/api/v1/dashboard/maps \
           #-H "Content-Type: application/json" \
           #-d '{"map": { "name": "MyScene", "description": "My custom scene", "is_public": true, "user_content_data": {"filename": "autogen.scn", "content_type": "application/octet-stream", "data": ""}, "user_content_preview": {"filename": "autogen.png", "content_type": "image/png", "data": ""} }}'
+
+          echo -e "\nNeetest"
+          curl -v -L -o responsepostmap.json -b cookies.txt -X POST http://0.0.0.0:80/ \
+          -F "name=MyScene1" \
+          -F "description=My custom scene" \
+          -F "is_public=true" \
+          -F "user_content_data=@aname.scn" \
+          -F "user_content_preview=@aname2.jpg"
+          echo -e "\nNeetest\n\n"
+
+          
           curl --trace ascii.txt -v -L -o responsepostmap.json -b cookies.txt -X POST http://0.0.0.0:80/api/v1/dashboard/maps \
           -F "name=MyScene1" \
           -F "description=My custom scene" \
