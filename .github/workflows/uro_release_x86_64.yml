@@ -51,7 +51,7 @@ jobs:
           -F "name=MyScene1" \
           -F "description=My custom scene" \
           -F "is_public=true" \
-          -F "name=user_content_data; file=@aname.scn" \
+          -F "name=user_content_data; data=@aname.scn" \
           -F "filename=autogen.jpg; user_content_preview=@exampleimage.jpg"
           sleep 21s
           cat requests.log
