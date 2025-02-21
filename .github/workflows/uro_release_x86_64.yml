@@ -18,10 +18,11 @@ jobs:
 
       - name: python
         run: |
+          echo "Test" > aname.txt
           echo '
           import request
           multipart_form_data = {
-              "upload": ("ustom_file_name.zip", open("myfile.zip", "rb")),
+              "upload": ("aname1.txt", open("aname.txt", "rb")),
               "ction": (None, "tore"),
               "ath": (None, "/path1")
           }
