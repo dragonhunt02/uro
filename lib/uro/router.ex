@@ -134,12 +134,12 @@ defmodule Uro.Router do
 
     scope "/avatars" do
       pipe_through([:dashboard_avatars])
-      get "/", Uro.AvatarController, :index
+      get "/", Uro.AvatarController, :indexUploads
     end
 
     scope "/maps" do
       pipe_through([:dashboard_maps])
-      get "/", Uro.MapController, :index
+      get "/", Uro.MapController, :indexUploads
     end
 
     #scope "/props" do
