@@ -26,7 +26,7 @@ jobs:
               "description": "My custom scene",
               "name": "MyScene",
               "description":"My custom scene",
-              "is_public": true,
+              "is_public": True,
           }
           import logging
           import urllib3
@@ -105,7 +105,7 @@ jobs:
 
           echo "Testscene" > example.scn
           echo "Testimg" > exampleimage.jpg
-          CADDY_ID=$( docker ps --format "{{.ID}} {{.Image}}" | awk '$2 ~ /^.*-caddy/ {print $1}' )
+          CADDY_ID=$( docker ps --format "{{.ID}} {{.Image}}" | awk '$2 ~ /^.*caddy.*/ {print $1}' )
           
           #curl -v -L -s -o responsepostmap.json -b cookies.txt -X POST http://0.0.0.0:80/api/v1/dashboard/maps \
           #-H "Content-Type: application/json" \
