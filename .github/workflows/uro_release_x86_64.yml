@@ -21,14 +21,15 @@ jobs:
           echo '
           import request
           multipart_form_data = {
-              'upload': ('custom_file_name.zip', open('myfile.zip', 'rb')),
-              'action': (None, 'store'),
-              'path': (None, '/path1')
+              "upload": ("ustom_file_name.zip", open("myfile.zip", "rb")),
+              "ction": (None, "tore"),
+              "ath": (None, "/path1")
           }
-          response = requests.post('https://0.0.0.0/post', files=multipart_form_data)
+          response = requests.post("https://0.0.0.0/post", files=multipart_form_data)
           print(response.content)
           ' > request.py
           cat request.py
+          python3 request.py
           exit 1
 
       - name: Install system dependencies
