@@ -123,8 +123,8 @@ jobs:
           echo -e "\nDashPostMaps end\n\n\n"
 
           echo "Caddy: ${CADDY_ID}"
+          docker logs ${CADDY_ID}
           python3 request.py
-          #docker logs ${CADDY_ID}
 
           
           exit 1
