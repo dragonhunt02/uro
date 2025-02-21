@@ -67,6 +67,18 @@ jobs:
           #curl -v -k -L https://0.0.0.0:443/
 
           
+          echo -e "\nNew endpoints\n\n\n"
+          curl -v -L -s -o responsedashmap.json -b cookies.txt http://0.0.0.0:80/api/v1/dashboard/maps
+          cat responsedashmap.json
+          echo -e "\nDashMaps end\n\n\n"
+
+          curl -v -L -s -o responsepostmap.json -b cookies.txt -X POST http://0.0.0.0:80/api/v1/dashboard/maps \
+          -H "Content-Type: application/json" \
+          -d '{"name": "MyScene", "description": "My custom scene", "is_public": true, "user_content_data": {"key1": "value1", "key2": "value2"}}'
+          cat responsepostmap.json
+          echo -e "\nDashPostMaps end\n\n\n"
+
+          
           exit 1
           export DEBIAN_FRONTEND=noninteractive
           apt update
