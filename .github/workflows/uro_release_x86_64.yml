@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    timeout-minutes: 6
+    timeout-minutes: 7
     runs-on: ubuntu-24.04
  #   container:
   #    image: elixir:1.16.3-otp-26
