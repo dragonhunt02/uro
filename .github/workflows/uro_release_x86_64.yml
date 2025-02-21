@@ -25,6 +25,12 @@ jobs:
               "ction": (None, "tore"),
               "ath": (None, "/path1")
           }
+          import logging
+          from http.client import HTTPConnection
+          HTTPConnection.debuglevel = 1
+          log = logging.getLogger('urllib3')
+          log.setLevel(logging.DEBUG)
+
           response = requests.post("https://0.0.0.0/post", files=multipart_form_data)
           print(response.content)
           ' > request.py
