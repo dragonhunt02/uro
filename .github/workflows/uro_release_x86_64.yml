@@ -18,13 +18,15 @@ jobs:
 
       - name: python
         run: |
-          echo "Test" > aname.txt
+          echo "Test" > aname.scn
           echo '
           import requests
           multipart_form_data = {
-              "upload": ("aname1.txt", open("aname.txt", "rb")),
-              "ction": (None, "tore"),
-              "ath": (None, "/path1")
+              "user_content_data": ("aname.scn", open("aname.scn", "rb")),
+              "description": "My custom scene",
+              "name": "MyScene",
+              "description":"My custom scene",
+              "is_public": true,
           }
           import logging
           import urllib3
@@ -38,12 +40,12 @@ jobs:
           #log = logging.getLogger('urllib3')
           #log.setLevel(logging.DEBUG)
 
-          response = requests.post("https://0.0.0.0/post", files=multipart_form_data)
+          response = requests.post("http://0.0.0.0:80/api/v1/dashboard/maps", files=multipart_form_data)
           print(response.content)
           ' > request.py
           cat request.py
-          python3 request.py
-          exit 1
+          #python3 request.py
+          #exit 1
 
       - name: Install system dependencies
         run: |
@@ -121,7 +123,8 @@ jobs:
           echo -e "\nDashPostMaps end\n\n\n"
 
           echo "Caddy: ${CADDY_ID}"
-          docker logs ${CADDY_ID}
+          python3 request.py
+          #docker logs ${CADDY_ID}
 
           
           exit 1
