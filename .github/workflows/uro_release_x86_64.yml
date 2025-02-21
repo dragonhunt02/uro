@@ -30,8 +30,13 @@ jobs:
           import urllib3
           from http.client import HTTPConnection
           HTTPConnection.debuglevel = 1
-          log = logging.getLogger('urllib3')
-          log.setLevel(logging.DEBUG)
+          logging.basicConfig()
+          logging.getLogger().setLevel(logging.DEBUG)
+          requests_log = logging.getLogger("requests.packages.urllib3")
+          requests_log.setLevel(logging.DEBUG)
+          requests_log.propagate = True
+          #log = logging.getLogger('urllib3')
+          #log.setLevel(logging.DEBUG)
 
           response = requests.post("https://0.0.0.0/post", files=multipart_form_data)
           print(response.content)
