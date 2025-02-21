@@ -85,8 +85,10 @@ jobs:
           -F "description=My custom scene" \
           -F "is_public=true" \
           -F "filename=autogen.jpg; user_content_preview=@exampleimage.jpg"\
-          --trace-ascii -
+          --trace-ascii ascii.txt
           cat responsepostmap.json
+          echo -e "\n\n"
+          cat ascii.txt
           echo -e "\nDashPostMaps end\n\n\n"
           
           docker logs ${CADDY_ID}
