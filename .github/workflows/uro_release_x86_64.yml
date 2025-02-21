@@ -18,7 +18,7 @@ jobs:
 
       - name: Install system dependencies
         run: |
-          sudo apt update -y
+          sudo apt update -y 
           sudo apt install -y openssl ca-certificates
           export CURL_SSL_BACKEND=openssl
           export CURL_SSL_VERSION=max_tls1_2
