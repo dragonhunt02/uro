@@ -47,7 +47,7 @@ defmodule Uro.MapController do
 
   def indexUploads(conn, _params) do
     user = Uro.Helpers.Auth.get_current_user(conn)
-    maps = UserContent.list_public_maps_by(user)
+    maps = UserContent.list_maps_uploaded_by(user)
 
     conn
     |> put_status(200)
