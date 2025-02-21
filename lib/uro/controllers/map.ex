@@ -33,6 +33,34 @@ defmodule Uro.MapController do
     })
   end
 
+  operation(:indexUploads,
+    operation_id: "listMapsUploads",
+    summary: "List Maps uploaded by logged in user",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        %Schema{}
+      }
+    ]
+  )
+
+  def indexUploads(conn, _params) do
+    user = Uro.Helpers.Auth.get_current_user(conn)
+    maps = UserContent.list_public_maps_by(user)
+
+    conn
+    |> put_status(200)
+    |> json(%{
+      data: %{
+        maps:
+          Uro.Helpers.UserContentHelper.get_api_user_content_list(maps, %{
+            merge_uploader_id: true
+          })
+      }
+    })
+  end
+
   operation(:show,
     operation_id: "getMap",
     summary: "Get Map",
