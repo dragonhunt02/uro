@@ -138,4 +138,79 @@ defmodule Uro.MapController do
         end).()
     end
   end
+
+  operation(:update,
+    operation_id: "updateMap",
+    summary: "Update Map",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        %Schema{}
+      }
+    ]
+  )
+
+  def update(conn, %{"id" => id, "map" => map_params}) do
+    user = Uro.Helpers.Auth.get_current_user(conn)
+    map = UserContent.get_map_uploaded_by_user!(id, user)
+
+    case UserContent.update_map(map, map_params) do
+      {:ok, map} ->
+        conn
+        |> put_status(200)
+        |> json(%{
+          data: %{
+            map:
+              Uro.Helpers.UserContentHelper.get_api_user_content(
+                map,
+                %{merge_uploader_id: true}
+              )
+          }
+        })
+
+      # Change prod to dev
+      {:error, %Ecto.Changeset{changes: changes, errors: errors} = changeset} ->
+        conn
+        |> put_status(500)
+        |> (fn conn ->
+          if Mix.env() == "prod" do
+            conn
+            |> json(%{changes: changes, errors: errors})
+          end
+        end).()
+    end
+  end
+
+  operation(:delete,
+    operation_id: "deleteMap",
+    summary: "Delete Map",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        %Schema{}
+      }
+    ]
+  )
+
+  def delete(conn, %{"id" => id}) do
+    user = Uro.Helpers.Auth.get_current_user(conn)
+
+    case UserContent.get_map_uploaded_by_user!(id, user) do
+      %Uro.UserContent.Map{} = map ->
+        case UserContent.delete_map(map) do
+          {:ok, _map} ->
+            conn
+            |> put_status(200)
+
+          {:error, %Ecto.Changeset{}} ->
+            conn
+            |> put_status(500)
+        end
+      _ ->
+        conn
+        |> put_status(200)
+    end
+  end
 end
