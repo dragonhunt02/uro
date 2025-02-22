@@ -69,6 +69,7 @@ Repo.transaction(fn ->
           email_confirmed_at: confirm_time
         })
         |> Repo.insert!()
+        |> Repo.update!()
       user ->
         user
         |> User.admin_changeset(%{email_confirmed_at: current_time})
