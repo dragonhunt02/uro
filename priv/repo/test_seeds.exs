@@ -15,7 +15,6 @@ alias Uro.Accounts.User
 alias Uro.Accounts.UserPrivilegeRuleset
 
 current_time = DateTime.utc_now()
-confirm_time = DateTime.truncate(current_time, :second)
 
 # Start a single transaction for all database seed operations
 Repo.transaction(fn ->
@@ -66,10 +65,9 @@ Repo.transaction(fn ->
           email_notifications: true,
           password: "adminpassword",
           password_confirmation: "adminpassword",
-          email_confirmed_at: confirm_time
+          email_confirmed_at: current_time
         })
         |> Repo.insert!()
-        |> Repo.update!()
       user ->
         user
         |> User.admin_changeset(%{email_confirmed_at: current_time})
