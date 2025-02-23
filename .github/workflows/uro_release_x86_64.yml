@@ -139,6 +139,28 @@ jobs:
           cat responsemap2.json
           echo -e "\nMaps2 end\n\n\n"
 
+
+
+          curl -s https://v-sekai.cloud/api/v1/maps \
+          | jq -r '.data.maps[0].id' > response2.json 
+          MAP_ID=$( cat response2.json )
+
+          echo -e "\nUpdate PUT Neetest1"
+          curl -v -o responseputmap.json -b cookies.txt -X PUT http://0.0.0.0:80/api/v1/dashboard/maps \
+          -F "map[name]=My1" \
+          -F "map[description]=Mscene" \
+          -F "map[is_public]=true" \
+          -F "map[user_content_data]=@aname.scn" \
+          -F "map[user_content_preview]=@aname2.jpg" \
+          -F "id=$MAP_ID"
+
+          cat responseputmap.json
+          echo -e "\nPUT Neetest \n\n"
+
+          curl -v -L -s -o responsemap3.json http://0.0.0.0:80/api/v1/maps
+          cat responsemap3.json
+          echo -e "\nMaps3 end\n\n\n"
+          
           exit 1
 
 
