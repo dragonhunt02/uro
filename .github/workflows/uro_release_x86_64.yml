@@ -141,11 +141,11 @@ jobs:
 
 
 
-          curl -s https://v-sekai.cloud/api/v1/maps \
+          curl -s https://0.0.0.0:80/api/v1/maps \
           | jq -r '.data.maps[0].id' > response2.json 
           MAP_ID=$( cat response2.json )
 
-          echo -e "\nUpdate PUT Neetest1"
+          echo -e "\nUpdate PUT Neetest1 $MAP_ID"
           curl -v -o responseputmap.json -b cookies.txt -X PUT http://0.0.0.0:80/api/v1/dashboard/maps \
           -F "map[name]=My1" \
           -F "map[description]=Mscene" \
