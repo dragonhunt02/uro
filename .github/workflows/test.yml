@@ -20,9 +20,10 @@ jobs:
         run: |
           #curl -v https://v-sekai.cloud/api/v1/maps
           
-          curl -s https://v-sekai.cloud/api/v1/maps | \
-          jq -r '.maps[].id' > response.json 
-          MAP_ID=$( cat response.json )
+          curl -s https://v-sekai.cloud/api/v1/maps -o response.json
+          cat response.json
+          cat response.json | jq -r 'data.maps[].id' > response2.json 
+          MAP_ID=$( cat response2.json )
           echo "$MAP_ID"
           
 
