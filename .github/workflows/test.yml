@@ -20,8 +20,8 @@ jobs:
         run: |
           curl -v https://v-sekai.cloud/api/v1/maps
           
-          curl -v https://v-sekai.cloud/api/v1/maps | \
-          jq '.maps[].id' response.json 
+          curl -s https://v-sekai.cloud/api/v1/maps | \
+          jq '.maps[].id' > response.json 
           MAP_ID=$( cat response.json )
           echo "$MAP_ID"
           
