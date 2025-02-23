@@ -141,6 +141,7 @@ defmodule Uro.Router do
       pipe_through([:dashboard_maps])
       get "/", Uro.MapController, :indexUploads
       post "/", Uro.MapController, :create
+      put "/", Uro.MapController, :update
     end
 
     #scope "/props" do
