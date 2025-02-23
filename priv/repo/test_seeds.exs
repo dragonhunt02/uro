@@ -67,6 +67,7 @@ Repo.transaction(fn ->
           password_confirmation: "adminpassword",
           email_confirmed_at: current_time
         })
+        |> User.confirm_email_changeset()
         |> Repo.insert!()
       user ->
         user
