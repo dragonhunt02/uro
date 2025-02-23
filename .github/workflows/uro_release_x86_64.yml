@@ -126,11 +126,11 @@ jobs:
 
           echo -e "\nNeetest1"
           curl -v -o responsepostmap.json -b cookies.txt -X POST http://0.0.0.0:80/api/v1/dashboard/maps \
-          -F "name=MyScene1" \
-          -F "description=My custom scene" \
-          -F "is_public=true" \
-          -F "user_content_data=@aname.scn" \
-          -F "user_content_preview=@aname2.jpg"
+          -F "map[name]=MyScene1" \
+          -F "map[description]=My custom scene" \
+          -F "map[is_public]=true" \
+          -F "map[user_content_data]=@aname.scn" \
+          -F "map[user_content_preview]=@aname2.jpg"
 
           cat responsepostmap.json
           echo -e "\nNeetest2 \n\n"
