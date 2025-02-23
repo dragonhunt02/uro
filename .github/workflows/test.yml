@@ -2,7 +2,7 @@ name: Uro Curl
 
 on:
   push:
-    branches: [api1]
+    branches: [api]
   pull_request:
     branches: [master]
 
@@ -19,6 +19,11 @@ jobs:
       - name: Restore dependencies cache
         run: |
           curl -v https://v-sekai.cloud/api/v1/maps
+          
+          curl -v https://v-sekai.cloud/api/v1/maps | \
+          jq '.maps[].id' response.json 
+          MAP_ID=$( cat response.json )
+          echo "$MAP_ID"
           
 
      # - name: Restore dependencies cache
