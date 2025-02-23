@@ -102,7 +102,8 @@ Repo.transaction(fn ->
         nil
 
       user ->
-        IO.inspect(user)
+        IO.puts("User found")
+        IO.inspect(user,  limit: :infinity)
         user
         |> User.admin_changeset(%{email_confirmed_at: current_time})
         |> Repo.update!()
