@@ -91,3 +91,22 @@ Repo.transaction(fn ->
       |> Repo.insert!()
   end
 end)
+
+Repo.transaction(fn ->
+  admin_user =
+    User
+    |> Repo.get_by(email: "admin@example.com")
+    |> case do
+      nil ->
+        IO.puts("Can't find admin user")
+        nil
+
+      user ->
+        IO.inspect(user)
+        user
+        |> User.admin_changeset(%{email_confirmed_at: current_time})
+        |> Repo.update!()
+    end
+end)
+
+
