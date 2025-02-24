@@ -146,7 +146,7 @@ jobs:
 
           
           echo -e "\nDashb GetMap start\n\n\n"
-          curl -v -L -s -o responsegetmap.json "http://0.0.0.0:80/api/v1/dashoboard/maps/$MAP_ID"
+          curl -v -L -s -o responsegetmap.json "http://0.0.0.0:80/api/v1/dashboard/maps/$MAP_ID"
           cat responsegetmap.json
           echo -e "\nDashb GetMap end\n\n\n"
 
