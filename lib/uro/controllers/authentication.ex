@@ -309,4 +309,40 @@ defmodule Uro.AuthenticationController do
     |> Pow.Plug.delete()
     |> json(nil)
   end
+
+  operation(:renew,
+    operation_id: "renew",
+    summary: "Renew Session",
+    description: "Renew the current session token.",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        Session.json_schema()
+      },
+      unauthorized: {
+        "",
+        "application/json",
+        error_json_schema()
+      }
+    ]
+  )
+
+  def renew(conn, _params) do
+    config = Pow.Plug.fetch_config(conn)
+
+    conn
+    |> Uro.Plug.Authentication.fetch(conn, config)
+    |> case do
+      {conn, nil} ->
+        conn
+        |> put_status(401)
+        |> json(%{error: %{status: 401, message: "Invalid token"}})
+
+      {conn, user} ->
+        json(conn, %{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token], user: user}})
+    end
+  end
 end
+
+
