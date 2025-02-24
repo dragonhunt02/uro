@@ -79,6 +79,7 @@ jobs:
           #docker exec ${URO_ID} touch uploads/test_scene1.scn
           #docker exec ${URO_ID} touch uploads/teststring.jpg
 
+          echo "Image file test avatarp" > priv/repo/test_content/test_image.jpg
           docker exec ${URO_ID} mix run priv/repo/test_seeds.exs
           docker exec ${URO_ID} mix run priv/repo/test_user_content.exs
           sleep 10s
@@ -93,6 +94,17 @@ jobs:
           curl -v -L -s -o response.json http://0.0.0.0:80/api/v1/avatars
           cat response.json
           echo -e "\nAvatars end\n\n\n"
+
+
+          curl -s http://0.0.0.0:80/api/v1/avatars \
+          | jq -r '.data.avatars[0].user_content_preview' > avatarpath.json 
+          AVATARP=$( cat avatarpath.json )
+          curl -v -L -o file.jpg "http://0.0.0.0:80${AVATARP}"
+          cat file.jpg
+          echo -e "\n\nAvatar downloaded\n\n"
+
+          
+          echo -e "\nDashb GetMap start\n\n\n"
           
           #echo -e "\nDockerlogs disabled\n\n\n"
           #docker logs ${URO_ID}
