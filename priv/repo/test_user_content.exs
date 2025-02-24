@@ -24,20 +24,22 @@ uploader = user.id
 
 # uploader = get_uploader_id_by_username("adminuser")
 
-process_file = fn (path) -> 
+process_file = fn (path, content_type) -> 
   file = %Plug.Upload{
     path: path,
     filename: Path.basename(path),
-    content_type: "image/jpeg"
+    content_type: content_type
   }
+  file
 end
+
 
 error = UserContent.create_avatar(%{
       name: "TestAvatar1",
       description: "First test avatar",
-      user_content_data: "uploads/test_avatar1.scn",
+      user_content_data: process_file.("uploads/test_avatar1.scn", "application/octet-stream"),
       uploader_id: uploader,
-      user_content_preview: process_file.("uploads/test_image.jpg"),
+      user_content_preview: process_file.("uploads/test_image.jpg", "image/jpeg"),
       is_public: true
 })
 
