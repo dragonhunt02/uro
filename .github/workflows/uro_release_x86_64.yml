@@ -146,13 +146,13 @@ jobs:
           MAP_ID=$( cat response2.json )
 
           echo -e "\nUpdate PUT Neetest1 $MAP_ID"
-          curl -v -o responseputmap.json -b cookies.txt -X PUT http://0.0.0.0:80/api/v1/dashboard/maps \
+          curl -v -o responseputmap.json -b cookies.txt -X PUT "http://0.0.0.0:80/api/v1/dashboard/maps/$MAP_ID" \
           -F "map[name]=My1" \
           -F "map[description]=Mscene" \
           -F "map[is_public]=true" \
           -F "map[user_content_data]=@aname.scn" \
-          -F "map[user_content_preview]=@aname2.jpg" \
-          -F "id=$MAP_ID"
+          -F "map[user_content_preview]=@aname2.jpg"
+          # -F "id=$MAP_ID"
 
           cat responseputmap.json
           echo -e "\nPUT Neetest \n\n"
