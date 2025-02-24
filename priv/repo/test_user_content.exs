@@ -30,6 +30,7 @@ defp process_file(path) do
     filename: Path.basename(path),
     content_type: "image/jpeg"
 }
+end
 
 error = UserContent.create_avatar(%{
       name: "TestAvatar1",
