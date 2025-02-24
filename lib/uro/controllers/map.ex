@@ -112,9 +112,8 @@ defmodule Uro.MapController do
 
   def showUpload(conn, %{"id" => id}) do
     user = Uro.Helpers.Auth.get_current_user(conn)
-    map = UserContent.get_map_uploaded_by_user(user)
-    map
-    |> case do
+
+    case UserContent.get_map_uploaded_by_user!(id, user) do
       %Uro.UserContent.Map{} = map ->
         conn
         |> put_status(200)
