@@ -11,7 +11,7 @@ alias Uro.Repo
 #def get_uploader_id_by_username(username) do
 
 # Copy test assets
-case File.cp_r("priv/repo/test_content", "uploads") do
+case File.cp_r("priv/repo/test_content/", "uploads/") do
   {:ok, _} -> IO.puts("Test Files copied successfully.")
   {:error, reason} -> IO.puts("Failed to copy files: #{reason}")
 end
@@ -37,9 +37,11 @@ end
 error = UserContent.create_avatar(%{
       name: "TestAvatar1",
       description: "First test avatar",
-      user_content_data: process_file.("uploads/test_avatar1.scn", "application/octet-stream"),
+      #user_content_data: process_file.("uploads/test_avatar1.scn", "application/octet-stream"),
+      user_content_data: "uploads/test_avatar1.scn",
       uploader_id: uploader,
-      user_content_preview: process_file.("uploads/test_image.jpg", "image/jpeg"),
+      #user_content_preview: process_file.("uploads/test_image.jpg", "image/jpeg"),
+      user_content_preview: "uploads/test_image.jpg",
       is_public: true
 })
 
