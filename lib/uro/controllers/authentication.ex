@@ -332,7 +332,7 @@ defmodule Uro.AuthenticationController do
     config = Pow.Plug.fetch_config(conn)
 
     conn
-    |> Uro.Plug.Authentication.fetch(conn, config)
+    |> Uro.Plug.Authentication.fetch(config)
     |> case do
       {conn, nil} ->
         conn
