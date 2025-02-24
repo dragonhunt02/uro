@@ -173,6 +173,8 @@ jobs:
           cat responserenewmap.json
           echo -e "\nRENEW Neetest \n\n"
           
+          docker logs ${URO_ID}
+          
           exit 1
 
 
