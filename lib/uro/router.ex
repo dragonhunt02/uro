@@ -140,6 +140,7 @@ defmodule Uro.Router do
     scope "/maps" do
       pipe_through([:dashboard_maps])
       get "/", Uro.MapController, :indexUploads
+      get "/:id", Uro.MapController, :showUpload
       post "/", Uro.MapController, :create
       put "/:id", Uro.MapController, :update
       delete "/:id", Uro.MapController, :delete
