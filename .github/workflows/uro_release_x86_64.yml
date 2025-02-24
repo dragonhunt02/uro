@@ -166,6 +166,12 @@ jobs:
           curl -v -L -s -o responsemap3.json http://0.0.0.0:80/api/v1/maps
           cat responsemap3.json
           echo -e "\nMaps3 end\n\n\n"
+
+
+          echo -e "\nRenew POST Token Neetest1"
+          curl -v -o responserenewmap.json -b cookies.txt -X POST "http://0.0.0.0:80/api/v1/renew"
+          cat responserenewmap.json
+          echo -e "\nRENEW Neetest \n\n"
           
           exit 1
 
