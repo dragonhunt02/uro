@@ -14,16 +14,6 @@ defmodule Uro.Router do
     json_error(conn, code: :internal_server_error)
   end
 
-  defmacro dashboard_routes(controller) do
-    quote do
-      get "/", unquote(controller), :indexUploads
-      get "/:id", unquote(controller), :showUpload
-      post "/", unquote(controller), :create
-      put "/:id", unquote(controller), :update
-      delete "/:id", unquote(controller), :delete
-    end
-  end
-
   pipeline :api do
     plug(:accepts, ["json"])
     plug(:fetch_session)
@@ -153,7 +143,12 @@ defmodule Uro.Router do
 
     scope "/maps" do
       pipe_through([:dashboard_maps])
-      dashboard_routes(Uro.MapController)
+
+      get "/", Uro.MapController, :indexUploads
+      get "/:id", Uro.MapController, :showUpload
+      post "/", Uro.MapController, :create
+      put "/:id", Uro.MapController, :update
+      delete "/:id", Uro.MapController, :delete
     end
 
     #scope "/props" do
