@@ -340,7 +340,7 @@ defmodule Uro.AuthenticationController do
         |> json(%{error: %{status: 401, message: "Invalid token"}})
 
       {conn, user} ->
-        json(conn, %{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token], user: user}})
+        json(conn, %{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token], user: User.to_json_schema(user, conn)}})
     end
   end
 end
