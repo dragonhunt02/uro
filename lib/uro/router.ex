@@ -87,6 +87,10 @@ defmodule Uro.Router do
     end
   end
 
+  scope "/renew" do
+    post("/", Uro.AuthenticationController, :renew)
+  end
+
   resources("/avatars", Uro.AvatarController, only: [:index, :show])
   resources("/maps", Uro.MapController, only: [:index, :show])
 
