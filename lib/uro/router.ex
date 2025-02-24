@@ -34,17 +34,17 @@ defmodule Uro.Router do
   end
 
   pipeline :dashboard_avatars do
-    plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
+    #plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
     plug(Uro.Plug.RequireAvatarUploadPermission)
   end
 
   pipeline :dashboard_maps do
-    plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
+    #plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
     plug(Uro.Plug.RequireMapUploadPermission)
   end
 
   pipeline :dashboard_props do
-    plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
+    #plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
     plug(Uro.Plug.RequirePropUploadPermission)
   end
 
@@ -127,7 +127,7 @@ defmodule Uro.Router do
   end
 
   scope "/dashboard" do
-    #pipe_through([:authenticated_dashboard])
+    pipe_through([:authenticated])
 
     get("/", Uro.AuthenticationController, :get_current_session)
     delete("/", Uro.AuthenticationController, :logout)
