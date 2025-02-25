@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: fix
+          ref: api-fix
           fetch-depth: 0
       - name: Dispatch to workflow 
         run: |
@@ -34,12 +34,15 @@ jobs:
       - name: Dispatch to workflow 
         run: |
 
-            git diff origin/patch1
-            exit 1
+            #git diff origin/patch1
+            #exit 1
+            
             sudo apt install -y tree git
+            
             #sudo add-apt-repository ppa:rabbitmq/rabbitmq-erlang
             #sudo apt update
             #sudo apt install -y elixir erlang
+            
             curl -fsSO https://elixir-lang.org/install.sh
             sh install.sh elixir@1.16.3 otp@26.2.5.6
             rm install.sh
@@ -58,7 +61,10 @@ jobs:
             
 
             git log -n 5
-            git reset --soft HEAD~21
+            git reset --soft HEAD~216
+
+            rm .github/workflows/test.yml
+            
             mix local.hex --force
             mix deps.get
             mix format
@@ -66,7 +72,7 @@ jobs:
             git config --global user.email "jackhunt43@libero.it"
             git config --global user.name "dragonhunt02"
             git add -A
-            git commit -a -m 'Fix docker development image, add env validation and small fixes'
+            git commit -a -m 'Implements admin/avatar/maps api and small fixes'
             git log -n 5
             git status
             git push -f
