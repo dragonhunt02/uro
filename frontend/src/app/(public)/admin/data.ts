@@ -9,7 +9,6 @@ import { getQueryClient } from "~/query";
 
 export function useAdminStatus() {
 	const session = useOptionalSession();
-	// if (!session) return null;
 
 	const { data: admin_status = null } = useSuspenseQuery({
 		queryFn:
