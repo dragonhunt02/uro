@@ -53,7 +53,7 @@ defmodule Uro.AvatarController do
     |> put_status(200)
     |> json(%{
       data: %{
-        maps:
+        avatars:
           Uro.Helpers.UserContentHelper.get_api_user_content_list(avatars, %{
             merge_uploader_id: true
           })
