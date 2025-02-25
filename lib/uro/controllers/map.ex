@@ -164,11 +164,11 @@ defmodule Uro.MapController do
         })
 
       # Change prod to dev
-      {:error, %Ecto.Changeset{changes: changes, errors: errors} = changeset} ->
+      {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
         conn
         |> put_status(500)
         |> (fn conn ->
-          if Mix.env() == "prod" do
+          if Mix.env() == "dev" do
             conn
             |> json(%{changes: changes, errors: errors})
           end
@@ -207,11 +207,11 @@ defmodule Uro.MapController do
         })
 
       # Change prod to dev
-      {:error, %Ecto.Changeset{changes: changes, errors: errors} = changeset} ->
+      {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
         conn
         |> put_status(500)
         |> (fn conn ->
-          if Mix.env() == "prod" do
+          if Mix.env() == "dev" do
             conn
             |> json(%{changes: changes, errors: errors})
           end
