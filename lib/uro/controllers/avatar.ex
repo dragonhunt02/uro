@@ -57,7 +57,7 @@ defmodule Uro.AvatarController do
           Uro.Helpers.UserContentHelper.get_api_user_content_list(avatars, %{
             merge_uploader_id: true
           })
-      }
+      }})
   end
 
   operation(:show,
