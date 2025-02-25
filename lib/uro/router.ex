@@ -34,17 +34,14 @@ defmodule Uro.Router do
   end
 
   pipeline :dashboard_avatars do
-    #plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
     plug(Uro.Plug.RequireAvatarUploadPermission)
   end
 
   pipeline :dashboard_maps do
-    #plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
     plug(Uro.Plug.RequireMapUploadPermission)
   end
 
   pipeline :dashboard_props do
-    #plug(Pow.Plug.RequireAuthenticated, error_handler: Uro.FallbackController)
     plug(Uro.Plug.RequirePropUploadPermission)
   end
 
