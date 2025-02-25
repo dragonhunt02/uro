@@ -79,7 +79,7 @@ jobs:
           #docker exec ${URO_ID} touch uploads/test_scene1.scn
           #docker exec ${URO_ID} touch uploads/teststring.jpg
 
-          echo "Image file test avatarp" > priv/repo/test_content/test_image.jpg
+          docker exec ${URO_ID} bash -c 'echo "Image file test avatarp" > priv/repo/test_content/test_image.jpg'
           docker exec ${URO_ID} mix run priv/repo/test_seeds.exs
           docker exec ${URO_ID} mix run priv/repo/test_user_content.exs
           sleep 10s
