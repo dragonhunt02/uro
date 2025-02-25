@@ -8,7 +8,7 @@ http://vsekai.local {
 		reverse_proxy uro:4000
 	}
 
-	handle_path /uploads/* {
+	handle /uploads/* {
 		reverse_proxy uro:4000
 	}
 
@@ -21,7 +21,7 @@ http://0.0.0.0 {
 		reverse_proxy uro:4000
 	}
 
-	handle_path /uploads/* {
+	handle /uploads/* {
 		reverse_proxy uro:4000
 	}
 
@@ -34,7 +34,7 @@ https://vsekai.local {
 		reverse_proxy uro:4000
 	}
 
-	handle_path /uploads/* {
+	handle /uploads/* {
 		reverse_proxy uro:4000
 	}
 
