@@ -233,7 +233,7 @@ defmodule Uro.AvatarController do
 
     case UserContent.get_avatar_uploaded_by_user!(id, user) do
       %Uro.UserContent.Avatar{} = avatar ->
-        case UserContent.delete_map(avatar) do
+        case UserContent.delete_avatar(avatar) do
           {:ok, _avatar} ->
             conn
             |> put_status(200)
