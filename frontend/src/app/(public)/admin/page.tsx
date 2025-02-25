@@ -6,12 +6,11 @@ import { restoreReturnIntent } from "~/hooks/return-intent/common";
 import { useAdminStatus } from "./data";
 
 export default function AdminStatusPage() {
-	 const adminStatus = useAdminStatus();
+	const adminStatus = useAdminStatus();
 	const { returnIntent } = useReturnIntent();
 
 	if (adminStatus?.status?.is_admin == 'false')
-		restoreReturnIntent("/404");
-	//returnIntent?.href || "/");
+		restoreReturnIntent(returnIntent?.href || "/");
 
 	return (
 		<div className="flex h-full grow items-center justify-center">
@@ -22,7 +21,7 @@ export default function AdminStatusPage() {
 				<p className="opacity-75">
 					Status: {" "}
 					<span className="font-medium">{adminStatus?.status?.is_admin}</span>
-					You can upload files.
+					You have admin panel access.
 				</p>
 				<div className="flex gap-2">
 				</div>
