@@ -206,7 +206,6 @@ defmodule Uro.MapController do
           }
         })
 
-      # Change prod to dev
       {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
         conn
         |> put_status(500)
