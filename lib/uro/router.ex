@@ -135,7 +135,12 @@ defmodule Uro.Router do
 
     scope "/avatars" do
       pipe_through([:dashboard_avatars])
+
       get "/", Uro.AvatarController, :indexUploads
+      get "/:id", Uro.AvatarController, :showUpload
+      post "/", Uro.AvatarController, :create
+      put "/:id", Uro.AvatarController, :update
+      delete "/:id", Uro.AvatarController, :delete
     end
 
     scope "/maps" do
