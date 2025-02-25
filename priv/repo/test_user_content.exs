@@ -7,9 +7,9 @@
 alias Uro.UserContent
 alias Uro.Repo
 
-# Create upload database entries
+# Create upload database entries with user "adminuser"
+
 user = Repo.get_by(Uro.Accounts.User, username: "adminuser")
-IO.inspect user
 uploader = user.id
 
 process_file = fn (path, content_type) -> 
