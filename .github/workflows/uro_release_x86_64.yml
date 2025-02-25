@@ -90,6 +90,19 @@ jobs:
           curl -v -L -s -o responsemap.json http://0.0.0.0:80/api/v1/maps
           cat responsemap.json
           echo -e "\nMaps end\n\n\n"
+
+
+          echo -e "\nNeeAvatartest1"
+          curl -v -o responsepostava.json -b cookies.txt -X POST http://0.0.0.0:80/api/v1/dashboard/avatars \
+          -F "avatar[name]=CustomAvatar1" \
+          -F "avatar[description]=My custom avatar" \
+          -F "avatar[is_public]=true" \
+          -F "avatar[user_content_data]=@aname.scn" \
+          -F "avatar[user_content_preview]=@aname2.jpg"
+
+          cat responsepostava.json
+          echo -e "\nNeeAvatartest2 \n\n"
+          
           
           curl -v -L -s -o response.json http://0.0.0.0:80/api/v1/avatars
           cat response.json
