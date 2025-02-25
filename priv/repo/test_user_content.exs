@@ -7,22 +7,10 @@
 alias Uro.UserContent
 alias Uro.Repo
 
-#current_time = DateTime.utc_now()
-#def get_uploader_id_by_username(username) do
-
-# Copy test assets
-#case File.cp_r("priv/repo/test_content/", "uploads/") do
-#  {:ok, _} -> IO.puts("Test Files copied successfully.")
-#  {:error, reason} -> IO.puts("Failed to copy files: #{reason}")
-#end
-
 # Create upload database entries
 user = Repo.get_by(Uro.Accounts.User, username: "adminuser")
 IO.inspect user
 uploader = user.id
-#end
-
-# uploader = get_uploader_id_by_username("adminuser")
 
 process_file = fn (path, content_type) -> 
   file = %Plug.Upload{
@@ -34,7 +22,7 @@ process_file = fn (path, content_type) ->
 end
 
 
-error = UserContent.create_avatar(%{
+avatar1 = UserContent.create_avatar(%{
       name: "TestAvatar1",
       description: "First test avatar",
       user_content_data: process_file.("priv/repo/test_content/test_avatar1.scn", "application/octet-stream"),
@@ -43,9 +31,7 @@ error = UserContent.create_avatar(%{
       is_public: true
 })
 
-IO.inspect error
-
-error = UserContent.create_map(%{
+scene1 = UserContent.create_map(%{
       name: "TestScene1",
       description: "First test scene",
       user_content_data: process_file.("priv/repo/test_content/test_scene1.scn", "application/octet-stream"),
@@ -54,9 +40,7 @@ error = UserContent.create_map(%{
       is_public: true
 })
 
-IO.inspect error
-
-error = UserContent.create_map(%{
+scene2 = UserContent.create_map(%{
       name: "TestScene2",
       description: "Second test scene",
       user_content_data: process_file.("priv/repo/test_content/test_scene2.scn", "application/octet-stream"),
@@ -64,5 +48,3 @@ error = UserContent.create_map(%{
       user_content_preview: process_file.("priv/repo/test_content/test_image.jpg", "image/jpeg"),
       is_public: true
 })
-
-IO.inspect error
