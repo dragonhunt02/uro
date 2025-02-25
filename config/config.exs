@@ -156,8 +156,8 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 config :waffle,
-  storage: Waffle.Storage.Local,
-  storage_dir: "priv/uploads"
+  storage: Waffle.Storage.Local
+  # storage_dir: "uploads"
 
 import_config "#{Mix.env()}.exs"
 
