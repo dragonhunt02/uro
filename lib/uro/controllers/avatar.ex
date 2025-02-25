@@ -58,6 +58,7 @@ defmodule Uro.AvatarController do
             merge_uploader_id: true
           })
       }
+  end
 
   operation(:show,
     operation_id: "getAvatar",
