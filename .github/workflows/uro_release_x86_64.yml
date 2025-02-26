@@ -97,9 +97,9 @@ jobs:
           -F "user[username]=TestUser" \
           -F "user[email]=test@example.com" \
           -F "user[password]=123456789" \
-          -F "user[password_confirmation]=123456789" \
-          -F "user[email_notifications]=true" \
           -F "apiKey=1234"
+          # -F "user[password_confirmation]=123456789" \
+          # -F "user[email_notifications]=true"
 
           cat responsesignup.json
           echo -e "\nSignup end \n\n"
