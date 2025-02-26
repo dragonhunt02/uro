@@ -189,11 +189,11 @@ defmodule Uro.UserController do
   def createClient(conn, %{"user" => user_params, "apiKey" => api_key} = params) do
     user_params = Map.put(user_params, "display_name", user_params["username"])
     Repo.transaction(fn ->
-      with :ok <- (fn params ->
+      with :ok <- (fn ->
           if api_key == System.get_env("SIGNUP_APIKEY") do
             :ok
           end
-        end).(params),
+        end).(),
            {:ok, user} <- Accounts.create(user_params),
            :ok <- Accounts.send_confirmation_email(user),
            conn <- Pow.Plug.create(conn, user) do
