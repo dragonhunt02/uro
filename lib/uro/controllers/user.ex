@@ -52,6 +52,37 @@ defmodule Uro.UserController do
     end
   end
 
+  operation(:showCurrent,
+    operation_id: "getUserCurrent",
+    summary: "Get Current User",
+    parameters: [
+      user_id: [
+        in: :path,
+        schema: User.loose_key_json_schema()
+      ]
+    ],
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        User.json_schema()
+      },
+      not_found: {
+        "User not found",
+        "application/json",
+        error_json_schema()
+      }
+    ]
+  )
+
+  def showCurrent(conn, %{"user_id" => id}) do
+    with {:ok, user} <- user_from_key(conn, "me") do
+      conn
+      |> put_status(:ok)
+      |> json(User.to_json_schema(user, conn))
+    end
+  end
+
   operation(:index,
     operation_id: "listUsers",
     summary: "List Users",
