@@ -198,7 +198,7 @@ defmodule Uro.UserController do
 
     Repo.transaction(fn ->
       with :ok <- (fn ->
-          if api_key == System.get_env("SIGNUP_APIKEY") do
+          if api_key == System.get_env("SIGNUP_API_KEY") do
             :ok
           end
         end).(),
