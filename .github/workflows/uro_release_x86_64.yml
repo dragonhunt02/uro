@@ -104,7 +104,7 @@ jobs:
           cat responsesignup.json
           echo -e "\nSignup end \n\n"
 
-          curl -v -L -s -o responseusers.json http://0.0.0.0:80/api/v1/users
+          curl -v -L -s -o responseusers.json -b cookies.txt http://0.0.0.0:80/api/v1/users
           cat responseusers.json
           echo -e "\nList user end\n\n\n"
 
