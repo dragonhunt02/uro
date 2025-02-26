@@ -138,6 +138,74 @@ defmodule Uro.UserController do
     end
   end
 
+  operation(:createClient,
+    operation_id: "signupClient",
+    summary: "Create an Account from Game client request",
+    request_body:
+      {"", "application/json",
+       %Schema{
+         type: :object,
+         required: [
+           :display_name,
+           :username,
+           :email,
+           :password,
+           :key
+         ],
+         properties: %{
+           display_name: User.sensitive_json_schema().properties.display_name,
+           username: User.sensitive_json_schema().properties.username,
+           email: User.sensitive_json_schema().properties.email,
+           password: %Schema{type: :string},
+           captcha: %Schema{
+             type: :string
+           }
+         }
+       }},
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        Session.json_schema()
+      },
+      unprocessable_entity: {
+        "",
+        "application/json",
+        error_json_schema()
+      }
+    ]
+  )
+
+  def createClient(conn, params) do
+    Repo.transaction(fn ->
+      with :ok <- (fn params ->
+          if Map.get(params, "apiKey") == System.get_env("SIGNUP_APIKEY") do
+            :ok
+          end
+        end).()
+           {:ok, user} <- Accounts.create(params),
+           :ok <- Accounts.send_confirmation_email(user),
+           conn <- Pow.Plug.create(conn, user) do
+        {user, conn}
+      else
+        any ->
+          Repo.rollback(any)
+      end
+    end)
+    |> case do
+      {:ok, {_, conn}} ->
+        {:ok, session} = current_session(conn)
+
+        json(
+          conn,
+          Session.to_json_schema(session)
+        )
+
+      {:error, conn} ->
+        conn
+    end
+  end
+
   operation(:resend_confirmation_email,
     operation_id: "resendConfirmationEmail",
     summary: "Resend Confirmation Email",
