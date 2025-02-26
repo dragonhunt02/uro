@@ -75,7 +75,7 @@ defmodule Uro.UserController do
     ]
   )
 
-  def showCurrent(conn, %{"user_id" => id}) do
+  def showCurrent(conn, _params) do
     with {:ok, user} <- user_from_key(conn, "me") do
       conn
       |> put_status(:ok)
@@ -186,14 +186,14 @@ defmodule Uro.UserController do
     ]
   )
 
-  def createClient(conn, params) do
+  def createClient(conn, %{"user" => user_params, "apiKey" => api_key} = params) do
     Repo.transaction(fn ->
       with :ok <- (fn params ->
-          if Map.get(params, "apiKey") == System.get_env("SIGNUP_APIKEY") do
+          if api_key == System.get_env("SIGNUP_APIKEY") do
             :ok
           end
         end).(params),
-           {:ok, user} <- Accounts.create(params),
+           {:ok, user} <- Accounts.create(user_params),
            :ok <- Accounts.send_confirmation_email(user),
            conn <- Pow.Plug.create(conn, user) do
         {user, conn}
