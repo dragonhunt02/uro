@@ -107,7 +107,10 @@ jobs:
           curl -v -L -s -o responseusers.json -b cookies.txt http://0.0.0.0:80/api/v1/users
           cat responseusers.json
           echo -e "\nList user end\n\n\n"
+          
+          docker logs ${URO_ID}
 
+          echo -e "\nEnd signup logs"
           
           curl -v -L -s -o responsemap.json http://0.0.0.0:80/api/v1/maps
           cat responsemap.json
