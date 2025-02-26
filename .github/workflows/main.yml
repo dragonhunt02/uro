@@ -61,18 +61,18 @@ jobs:
             
 
             git log -n 5
-            git reset --soft HEAD~216
+            git reset --soft HEAD~7
 
-            rm .github/workflows/test.yml
+            #rm .github/workflows/test.yml
             
-            mix local.hex --force
-            mix deps.get
-            mix format
+            #mix local.hex --force
+            #mix deps.get
+            #mix format
 
             git config --global user.email "jackhunt43@libero.it"
             git config --global user.name "dragonhunt02"
             git add -A
-            git commit -a -m 'Implements admin/avatar/maps api and small fixes'
+            git commit -a -m 'Implements admin/avatar/maps/profile/session/registration apis and small fixes'
             git log -n 5
             git status
             git push -f
