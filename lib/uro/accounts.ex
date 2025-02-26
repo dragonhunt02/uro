@@ -24,12 +24,14 @@ defmodule Uro.Accounts do
   end
 
   def create(params) do
+    IO.inspect(params)
     Repo.transaction(fn ->
       with {:ok, user} <- pow_create(params),
            {:ok, user} <- create_user_associations(user) do
         user
       else
         {:error, reason} ->
+          IO.inspect(reason)
           Repo.rollback(reason)
 
         any ->
