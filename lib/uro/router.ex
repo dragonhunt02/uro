@@ -68,7 +68,25 @@ defmodule Uro.Router do
   get("/openapi", OpenApiSpex.Plug.RenderSpec, [])
   get("/docs", Uro.OpenAPI.Viewer, [])
 
+#### Used by game client only ####
+# TODO: merge into other routes
+
+# Signup using header x-api-key
+  scope "/registration" do
+    post "/", Uro.UserController, :createClient
+  end
+
+  scope "/profile" do
+    pipe_through([:authenticated])
+    get("/", Uro.AuthenticationController, :get_current_user)
+  end
+
+##################################
+
   scope "/session" do
+    # TODO: used by game client only, move to '/login' route
+    post("/", Uro.AuthenticationController, :login)
+
     pipe_through([:authenticated])
 
     get("/", Uro.AuthenticationController, :get_current_session)
