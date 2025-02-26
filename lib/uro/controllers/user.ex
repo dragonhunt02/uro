@@ -187,6 +187,7 @@ defmodule Uro.UserController do
   )
 
   def createClient(conn, %{"user" => user_params, "apiKey" => api_key} = params) do
+    user_params = Map.put(user_params, "display_name", user_params["username"])
     Repo.transaction(fn ->
       with :ok <- (fn params ->
           if api_key == System.get_env("SIGNUP_APIKEY") do
