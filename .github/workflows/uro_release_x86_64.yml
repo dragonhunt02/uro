@@ -97,7 +97,7 @@ jobs:
           -F "user[username]=TestUser" \
           -F "user[email]=test@example.com" \
           -F "user[password]=123456789" \
-          -F "apiKey=1234"
+          -F "apiKey=eNoZ4kXHgT0z9ZTYGsq7eE0rQYvR6YBi"
           # -F "user[password_confirmation]=123456789" \
           # -F "user[email_notifications]=true"
 
