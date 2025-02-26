@@ -78,7 +78,7 @@ defmodule Uro.Router do
 
   scope "/profile" do
     pipe_through([:authenticated])
-    get("/", Uro.AuthenticationController, :get_current_user)
+    get("/", Uro.UserController, :showCurrent)
   end
 
 ##################################
