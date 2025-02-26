@@ -141,27 +141,6 @@ defmodule Uro.UserController do
   operation(:createClient,
     operation_id: "signupClient",
     summary: "Create an Account from Game client request",
-    request_body:
-      {"", "application/json",
-       %Schema{
-         type: :object,
-         required: [
-           :display_name,
-           :username,
-           :email,
-           :password,
-           :key
-         ],
-         properties: %{
-           display_name: User.sensitive_json_schema().properties.display_name,
-           username: User.sensitive_json_schema().properties.username,
-           email: User.sensitive_json_schema().properties.email,
-           password: %Schema{type: :string},
-           captcha: %Schema{
-             type: :string
-           }
-         }
-       }},
     responses: [
       ok: {
         "",
