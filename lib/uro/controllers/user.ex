@@ -186,15 +186,23 @@ defmodule Uro.UserController do
     ]
   )
 
-  def createClient(conn, %{"user" => user_params, "apiKey" => api_key} = params) do
-    user_params = Map.put(user_params, "display_name", user_params["username"])
+  def createClient(conn, %{"user" => user_params, "apiKey" => api_key}) do
+    #user_params = Map.put(user_params, "display_name", user_params["username"])
+
+    create_params = %{
+      "username" => Map.get(user_params, "username"),
+      "display_name" => Map.get(user_params, "username"),
+      "email" => Map.get(user_params, "email"),
+      "password" => Map.get(user_params, "password")
+    }
+
     Repo.transaction(fn ->
       with :ok <- (fn ->
           if api_key == System.get_env("SIGNUP_APIKEY") do
             :ok
           end
         end).(),
-           {:ok, user} <- Accounts.create(user_params),
+           {:ok, user} <- Accounts.create(create_params),
            :ok <- Accounts.send_confirmation_email(user),
            conn <- Pow.Plug.create(conn, user) do
         {user, conn}
