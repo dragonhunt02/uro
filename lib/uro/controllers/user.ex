@@ -192,7 +192,7 @@ defmodule Uro.UserController do
           if Map.get(params, "apiKey") == System.get_env("SIGNUP_APIKEY") do
             :ok
           end
-        end).()
+        end).(params),
            {:ok, user} <- Accounts.create(params),
            :ok <- Accounts.send_confirmation_email(user),
            conn <- Pow.Plug.create(conn, user) do
