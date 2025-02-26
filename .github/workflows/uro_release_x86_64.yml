@@ -86,6 +86,28 @@ jobs:
           curl -v -L http://0.0.0.0:80/
           curl -v -L http://0.0.0.0:80/api/v1/health
           curl -v -i -c cookies.txt -X POST -H "Content-Type: application/json" -d '{"username":"adminuser","password":"adminpassword"}' http://0.0.0.0:80/api/v1/login
+
+          curl -v -L -s -o responsecurrent.json -b cookies.txt http://0.0.0.0:80/api/v1/profile
+          cat responsecurrent.json
+          echo -e "\nCurrent user end\n\n\n"
+
+
+          echo -e "\nSignuptest"
+          curl -v -o responsesignup.json -X POST http://0.0.0.0:80/api/v1/registration \
+          -F "user[username]=TestUser" \
+          -F "user[email]=test@example.com" \
+          -F "user[password]=123456789" \
+          -F "user[password_confirmation]=123456789" \
+          -F "user[email_notifications]=true" \
+          -F "apiKey=1234"
+
+          cat responsesignup.json
+          echo -e "\nSignup end \n\n"
+
+          curl -v -L -s -o responseusers.json http://0.0.0.0:80/api/v1/users
+          cat responseusers.json
+          echo -e "\nList user end\n\n\n"
+
           
           curl -v -L -s -o responsemap.json http://0.0.0.0:80/api/v1/maps
           cat responsemap.json
