@@ -85,7 +85,7 @@ defmodule Uro.Router do
 
   scope "/session" do
     # TODO: used by game client only, move to '/login' route
-    post("/", Uro.AuthenticationController, :login)
+    post("/", Uro.AuthenticationController, :loginClient)
 
     pipe_through([:authenticated])
 
