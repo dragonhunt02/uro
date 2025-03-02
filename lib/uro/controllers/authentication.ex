@@ -9,6 +9,7 @@ defmodule Uro.AuthenticationController do
   alias Uro.Accounts
   alias Uro.Accounts.User
   alias Uro.Endpoint
+  alias Uro.Helpers
   alias Uro.Session
 
   action_fallback(Uro.FallbackController)
@@ -360,7 +361,10 @@ defmodule Uro.AuthenticationController do
     |> validate_credentials(credentials)
     |> case do
       {:ok, conn} ->
-        get_current_session(conn, nil)
+        user = Helpers.Auth.get_current_user(conn)
+        conn
+        |> put_status(200)
+        |> json( %{data: %{access_token: conn.assigns[:access_token], renewal_token: "", user: User.to_json_schema(user, conn)}} )
 
       {:error, _} ->
         {:error, :invalid_credentials}
