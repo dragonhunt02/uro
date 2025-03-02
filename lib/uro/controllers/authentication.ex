@@ -291,6 +291,82 @@ defmodule Uro.AuthenticationController do
     end
   end
 
+  operation(:loginClient,
+    operation_id: "loginClient",
+    summary: "Login Game Client",
+    description: "Create a new session for game client.",
+    request_body: {
+      "",
+      "application/json",
+      %Schema{
+        title: "LoginRequest",
+        description: "Request payload for logging in.",
+        type: :object,
+        required: [:user],
+        properties: %{
+          user: %Schema{
+            title: "LoginCredentials",
+            description: "A set of credentials for logging in.",
+            oneOf: [
+              %Schema{
+                title: "UsernameAndPassword",
+                type: :object,
+                required: [:username, :password],
+                properties: %{
+                  username: User.sensitive_json_schema().properties.username,
+                  password: %Schema{type: :string}
+                }
+              },
+              %Schema{
+                title: "EmailAndPassword",
+                type: :object,
+                required: [:email, :password],
+                properties: %{
+                  email: User.sensitive_json_schema().properties.email,
+                  password: %Schema{type: :string}
+                }
+              },
+              %Schema{
+                title: "UsernameOrEmailAndPassword",
+                type: :object,
+                required: [:username_or_email, :password],
+                properties: %{
+                  username_or_email: %Schema{type: :string},
+                  password: %Schema{type: :string}
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        Session.json_schema()
+      },
+      unauthorized: {
+        "Invalid credentials",
+        "application/json",
+        error_json_schema()
+      }
+    ]
+  )
+
+
+  def loginClient(conn, %{ "user" => credentials}) do
+    conn
+    |> validate_credentials(credentials)
+    |> case do
+      {:ok, conn} ->
+        get_current_session(conn, nil)
+
+      {:error, _} ->
+        {:error, :invalid_credentials}
+    end
+  end
+
   operation(:logout,
     operation_id: "logout",
     summary: "Logout",
