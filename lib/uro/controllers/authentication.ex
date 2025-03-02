@@ -305,7 +305,7 @@ defmodule Uro.AuthenticationController do
         required: [:user],
         properties: %{
           user: %Schema{
-            title: "LoginCredentials",
+            title: "LoginCredentialsClient",
             description: "A set of credentials for logging in.",
             oneOf: [
               %Schema{
