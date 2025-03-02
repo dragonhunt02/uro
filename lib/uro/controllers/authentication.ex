@@ -299,13 +299,13 @@ defmodule Uro.AuthenticationController do
       "",
       "application/json",
       %Schema{
-        title: "LoginRequest",
+        title: "LoginRequestClient",
         description: "Request payload for logging in.",
         type: :object,
         required: [:user],
         properties: %{
           user: %Schema{
-            title: "LoginCredentialsClient",
+            title: "LoginCredentials",
             description: "A set of credentials for logging in.",
             oneOf: [
               %Schema{
