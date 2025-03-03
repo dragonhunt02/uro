@@ -56,7 +56,7 @@ defmodule Uro.Router do
   end
 
   pipeline :authenticated_user do
-    plug(ChoosePlug, error_handler: Uro.FallbackController)
+    plug(ChoosePlug)
     #Uro.Plug.RequireUser)
   end
 
