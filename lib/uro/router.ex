@@ -24,7 +24,7 @@ defmodule Uro.Router do
         # Game client
         Uro.Plug.RequireUser.call(conn, opts)
       else
-        Pow.Plug.RequireAuthenticated.call(conn, opts)
+        Pow.Plug.RequireAuthenticated.call(conn, opts ++ [error_handler: Uro.FallbackController])
       end
     end
 
