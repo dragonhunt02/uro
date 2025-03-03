@@ -22,7 +22,7 @@ defmodule Uro.Router do
     def call(conn, _opts) do
       if has_authorization_header?(conn) do
         # Game client
-        Uro.Plug.RequireUser(conn, _opts)
+        Uro.Plug.RequireUser.call(conn, _opts)
       else
         Pow.Plug.RequireAuthenticated.call(conn, _opts)
       end
