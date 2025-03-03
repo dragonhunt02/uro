@@ -22,7 +22,7 @@ defmodule Uro.Router do
     def call(conn, opts) do
       if has_authorization_header?(conn) do
         # Game client
-        Uro.Plug.RequireUser.call(conn)
+        Uro.Plug.RequireUser.call(conn, opts)
       else
         Pow.Plug.RequireAuthenticated.call(conn, opts)
       end
@@ -56,7 +56,7 @@ defmodule Uro.Router do
   end
 
   pipeline :authenticated_user do
-    plug(ChoosePlug)
+    plug(ChoosePlug, error_handler: Uro.FallbackController)
     #Uro.Plug.RequireUser)
   end
 
