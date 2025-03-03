@@ -5,18 +5,18 @@ defmodule Uro.Plug.RequireUser do
   def init(options), do: options
 
   @doc false
-  @spec call(Conn.t(), atom()) :: Conn.t()
-  def call(conn, handler) do
+  @spec call(Conn.t() :: Conn.t()
+  def call(conn) do
     conn
     |> Uro.Helpers.User.is_session_user?()
-    |> maybe_halt(conn, handler)
+    |> maybe_halt(conn)
   end
 
   @doc false
   defp maybe_halt(true, conn, _handler), do: conn
 
   @doc false
-  defp maybe_halt(false, conn, _handler) do
+  defp maybe_halt(false, conn) do
     conn
     |> put_status(403)
     |> send_resp(403, "Unauthorized 403")
