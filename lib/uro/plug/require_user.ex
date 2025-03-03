@@ -13,7 +13,7 @@ defmodule Uro.Plug.RequireUser do
   end
 
   @doc false
-  defp maybe_halt(true, conn, _handler), do: conn
+  defp maybe_halt(true, conn), do: conn
 
   @doc false
   defp maybe_halt(false, conn) do
