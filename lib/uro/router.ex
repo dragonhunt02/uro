@@ -14,6 +14,28 @@ defmodule Uro.Router do
     json_error(conn, code: :internal_server_error)
   end
 
+  defmodule ChoosePlug do
+    import Plug.Conn
+
+    def init(default), do: default
+
+    def call(conn, _opts) do
+      if has_authorization_header?(conn) do
+        # Game client
+        Uro.Plug.RequireUser(conn, _opts)
+      else
+        Pow.Plug.RequireAuthenticated.call(conn, _opts)
+      end
+    end
+
+    defp has_authorization_header?(conn) do
+      case get_req_header(conn, "authorization") do
+        [] -> false
+        [_ | _] -> true
+      end
+    end
+  end
+
   pipeline :api do
     plug(:accepts, ["json"])
     plug(:fetch_session)
@@ -34,7 +56,8 @@ defmodule Uro.Router do
   end
 
   pipeline :authenticated_user do
-    plug(Uro.Plug.RequireUser)
+    plug(ChoosePlug, error_handler: Uro.FallbackController)
+    #Uro.Plug.RequireUser)
   end
 
   pipeline :dashboard_avatars do
