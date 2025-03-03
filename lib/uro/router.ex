@@ -19,12 +19,12 @@ defmodule Uro.Router do
 
     def init(default), do: default
 
-    def call(conn, _opts) do
+    def call(conn, opts) do
       if has_authorization_header?(conn) do
         # Game client
-        Uro.Plug.RequireUser.call(conn, _opts)
+        Uro.Plug.RequireUser.call(conn)
       else
-        Pow.Plug.RequireAuthenticated.call(conn, _opts)
+        Pow.Plug.RequireAuthenticated.call(conn, opts)
       end
     end
 
