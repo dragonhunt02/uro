@@ -33,6 +33,10 @@ defmodule Uro.Router do
     plug(Uro.Plug.RequireAdmin)
   end
 
+  pipeline :authenticated_user do
+    plug(Uro.Plug.RequireUser)
+  end
+
   pipeline :dashboard_avatars do
     plug(Uro.Plug.RequireAvatarUploadPermission)
   end
@@ -77,7 +81,7 @@ defmodule Uro.Router do
   end
 
   scope "/profile" do
-    pipe_through([:authenticated])
+    pipe_through([:authenticated_user])
     get("/", Uro.UserController, :showCurrent)
   end
 
@@ -87,7 +91,7 @@ defmodule Uro.Router do
     # TODO: used by game client only, move to '/login' route
     post("/", Uro.AuthenticationController, :loginClient)
 
-    pipe_through([:authenticated])
+    pipe_through([:authenticated_user])
 
     get("/", Uro.AuthenticationController, :get_current_session)
     delete("/", Uro.AuthenticationController, :logout)
@@ -146,7 +150,7 @@ defmodule Uro.Router do
   end
 
   scope "/dashboard" do
-    pipe_through([:authenticated])
+    pipe_through([:authenticated_user])
 
     get("/", Uro.AuthenticationController, :get_current_session)
     delete("/", Uro.AuthenticationController, :logout)
