@@ -154,6 +154,7 @@ defmodule Uro.AvatarController do
         |> put_status(200)
         |> json(%{
           data: %{
+            id: to_string(avatar.id),
             avatar:
               Uro.Helpers.UserContentHelper.get_api_user_content(
                 avatar,
@@ -196,6 +197,7 @@ defmodule Uro.AvatarController do
         |> put_status(200)
         |> json(%{
           data: %{
+            id: to_string(avatar.id),
             avatar:
               Uro.Helpers.UserContentHelper.get_api_user_content(
                 avatar,
