@@ -387,7 +387,8 @@ defmodule Uro.AuthenticationController do
   def logout(conn, _) do
     conn
     |> Pow.Plug.delete()
-    |> json(nil)
+    |> json(%{data: %{}}) 
+    # TODO: Remove '{ data : {} }' response requirement from game client, use nil
   end
 
   operation(:renew,
