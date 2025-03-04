@@ -155,6 +155,7 @@ defmodule Uro.MapController do
         |> put_status(200)
         |> json(%{
           data: %{
+            id: to_string(map.id),
             map:
               Uro.Helpers.UserContentHelper.get_api_user_content(
                 map,
@@ -198,6 +199,7 @@ defmodule Uro.MapController do
         |> put_status(200)
         |> json(%{
           data: %{
+            id: to_string(map.id),
             map:
               Uro.Helpers.UserContentHelper.get_api_user_content(
                 map,
