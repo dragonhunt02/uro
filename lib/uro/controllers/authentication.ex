@@ -415,7 +415,7 @@ defmodule Uro.AuthenticationController do
     config = Pow.Plug.fetch_config(conn)
 
     conn
-    |> Uro.Plug.Authentication.fetch(config)
+    |> Uro.Plug.Authentication.renew2(config)
     |> case do
       {conn, nil} ->
         conn
@@ -423,7 +423,8 @@ defmodule Uro.AuthenticationController do
         |> json(%{error: %{status: 401, message: "Invalid token"}})
 
       {conn, user} ->
-        json(conn, %{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token], user: User.to_json_schema(user, conn)}})
+        #json(conn, %{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token], user: User.to_json_schema(user, conn)}})
+        json(conn, %{data: %{access_token: conn.assigns[:access_token], renewal_token: conn.assigns[:renewal_token], user: User.to_json_schema(user, conn)}})
     end
   end
 end
