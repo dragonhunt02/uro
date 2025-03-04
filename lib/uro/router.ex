@@ -24,11 +24,14 @@ defmodule Uro.Router do
         # Game client
         Uro.Plug.RequireUser.call(conn, opts)
       else
+        #assign(conn, :error_handler, Uro.FallbackController)
         IO.puts("inspect requireuser")
         IO.inspect(conn, limit: :infinity)
         IO.inspect(opts, limit: :infinity)
         IO.inspect(Keyword.merge(opts, error_handler: Uro.FallbackController), limit: :infinity)
-        Pow.Plug.RequireAuthenticated.call(conn, Keyword.merge(opts, error_handler: Uro.FallbackController))
+        opts = Keyword.merge(opts, error_handler: Uro.FallbackController)
+        Pow.Plug.RequireAuthenticated.call(conn, Pow.Plug.RequireAuthenticated.init(opts))
+        #Pow.Plug.RequireAuthenticated.call(conn, Keyword.merge(opts, error_handler: Uro.FallbackController))
       end
     end
 
