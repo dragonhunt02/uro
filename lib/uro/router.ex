@@ -22,6 +22,15 @@ defmodule Uro.Router do
     def call(conn, opts) do
       if has_authorization_header?(conn) do
         # Game client
+        token = get_req_header(conn, "authorization") 
+        case token do
+          [] ->
+            conn
+
+          [auth_header] ->
+            conn
+            |> assign(:signed_access_token, token)
+        end
         Uro.Plug.RequireUser.call(conn, Uro.Plug.RequireUser.init(opts))
       else
         #assign(conn, :error_handler, Uro.FallbackController)
