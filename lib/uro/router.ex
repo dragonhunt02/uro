@@ -25,6 +25,7 @@ defmodule Uro.Router do
         Uro.Plug.RequireUser.call(conn, opts)
       else
         IO.puts("inspect requireuser")
+        IO.inspect(conn, limit: :infinity)
         IO.inspect(opts, limit: :infinity)
         IO.inspect(Keyword.merge(opts, error_handler: Uro.FallbackController), limit: :infinity)
         Pow.Plug.RequireAuthenticated.call(conn, Keyword.merge(opts, error_handler: Uro.FallbackController))
