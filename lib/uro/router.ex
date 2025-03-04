@@ -22,7 +22,7 @@ defmodule Uro.Router do
     def call(conn, opts) do
       if has_authorization_header?(conn) do
         # Game client
-        Uro.Plug.RequireUser.call(conn, opts)
+        Uro.Plug.RequireUser.call(conn, Uro.Plug.RequireUser.init(opts))
       else
         #assign(conn, :error_handler, Uro.FallbackController)
         IO.puts("inspect requireuser")
