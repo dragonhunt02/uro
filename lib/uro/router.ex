@@ -24,6 +24,9 @@ defmodule Uro.Router do
         # Game client
         Uro.Plug.RequireUser.call(conn, opts)
       else
+        IO.puts("inspect requireuser")
+        IO.inspect(opts, limit: :infinity)
+        IO.inspect(Keyword.merge(opts, error_handler: Uro.FallbackController), limit: :infinity)
         Pow.Plug.RequireAuthenticated.call(conn, Keyword.merge(opts, error_handler: Uro.FallbackController))
       end
     end
@@ -56,7 +59,7 @@ defmodule Uro.Router do
   end
 
   pipeline :authenticated_user do
-    plug(ChoosePlug, error_handler: Uro.FallbackController)
+    plug(ChoosePlug)
     #Uro.Plug.RequireUser)
   end
 
