@@ -8,6 +8,7 @@ defmodule Uro.AuthenticationController do
   alias PowAssent.Plug
   alias Uro.Accounts
   alias Uro.Accounts.User
+  alias Uro.Accounts.UserPrivilegeRuleset
   alias Uro.Endpoint
   alias Uro.Helpers
   alias Uro.Session
@@ -362,9 +363,10 @@ defmodule Uro.AuthenticationController do
     |> case do
       {:ok, conn} ->
         user = Helpers.Auth.get_current_user(conn)
+        ruleset = UserPrivilegeRuleset.to_json_schema(user.user_privilege_ruleset)
         conn
         |> put_status(200)
-        |> json( %{data: %{access_token: conn.assigns[:access_token], renewal_token: "", user: User.to_json_schema(user, conn)}} )
+        |> json( %{data: %{access_token: conn.assigns[:access_token], renewal_token: "", user: User.to_json_schema(user, conn), user_privilege_ruleset: ruleset}} )
 
       {:error, _} ->
         {:error, :invalid_credentials}
