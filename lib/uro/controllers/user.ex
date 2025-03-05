@@ -10,6 +10,7 @@ defmodule Uro.UserController do
   alias OpenApiSpex.Schema
   alias Uro.Accounts
   alias Uro.Accounts.User
+  alias Uro.Accounts.UserPrivilegeRuleset
   alias Uro.Repo
   alias Uro.Session
   alias Uro.Turnstile
@@ -77,9 +78,10 @@ defmodule Uro.UserController do
 
   def showCurrent(conn, _params) do
     with {:ok, user} <- user_from_key(conn, "me") do
+      ruleset = UserPrivilegeRuleset.to_json_schema(user.user_privilege_ruleset)
       conn
       |> put_status(:ok)
-      |> json(User.to_json_schema(user, conn))
+      |> json( %{data: %{access_token: conn.assigns[:access_token], renewal_token: conn.assigns[:access_token], user: User.to_json_schema(user, conn), user_privilege_ruleset: ruleset}} )
     end
   end
 
