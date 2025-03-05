@@ -101,7 +101,7 @@ defmodule Uro.ShardController do
       {:ok, shard} ->
         conn
         |> put_status(200)
-        |> json(%{id: shard.id})
+        |> json(%{data: %{id: shard.id}})
 
       {:error, %Ecto.Changeset{}} ->
         json_error(conn)
@@ -147,7 +147,7 @@ defmodule Uro.ShardController do
   end
 
   def update(conn, %{"id" => id}) do
-    update(conn, %{"id" => id, "shard" => %{}})
+    update(conn, %{data: %{"id" => id, "shard" => %{}}})
   end
 
   operation(:delete,
