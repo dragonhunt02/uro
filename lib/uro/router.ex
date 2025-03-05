@@ -130,6 +130,10 @@ defmodule Uro.Router do
     # TODO: used by game client only, move to '/login' route
     post("/", Uro.AuthenticationController, :loginClient)
 
+    scope "/renew" do
+      post("/", Uro.AuthenticationController, :renew)
+    end
+
     pipe_through([:authenticated_user])
 
     get("/", Uro.AuthenticationController, :get_current_session)
@@ -143,10 +147,6 @@ defmodule Uro.Router do
       get("/", Uro.AuthenticationController, :login_with_provider)
       get("/callback", Uro.AuthenticationController, :provider_callback)
     end
-  end
-
-  scope "/renew" do
-    post("/", Uro.AuthenticationController, :renew)
   end
 
   resources("/avatars", Uro.AvatarController, only: [:index, :show])
