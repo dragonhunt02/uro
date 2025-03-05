@@ -366,7 +366,7 @@ defmodule Uro.AuthenticationController do
         ruleset = UserPrivilegeRuleset.to_json_schema(user.user_privilege_ruleset)
         conn
         |> put_status(200)
-        |> json( %{data: %{access_token: conn.assigns[:access_token], renewal_token: "", user: User.to_json_schema(user, conn), user_privilege_ruleset: ruleset}} )
+        |> json( %{data: %{access_token: conn.assigns[:access_token], renewal_token: conn.assigns[:access_token], user: User.to_json_schema(user, conn), user_privilege_ruleset: ruleset}} )
 
       {:error, _} ->
         {:error, :invalid_credentials}
@@ -411,11 +411,13 @@ defmodule Uro.AuthenticationController do
     ]
   )
 
+  # All tokens are in permanent cache storage and renewal is handled in fetch(),
+  # so this is only for game client compatibility
   def renew(conn, _params) do
     config = Pow.Plug.fetch_config(conn)
 
     conn
-    |> Uro.Plug.Authentication.renew2(config)
+    |> Uro.Plug.Authentication.fetch(config)
     |> case do
       {conn, nil} ->
         conn
@@ -423,8 +425,9 @@ defmodule Uro.AuthenticationController do
         |> json(%{error: %{status: 401, message: "Invalid token"}})
 
       {conn, user} ->
+        ruleset = UserPrivilegeRuleset.to_json_schema(user.user_privilege_ruleset)
         #json(conn, %{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token], user: User.to_json_schema(user, conn)}})
-        json(conn, %{data: %{access_token: conn.assigns[:access_token], renewal_token: conn.assigns[:renewal_token], user: User.to_json_schema(user, conn)}})
+        json(conn, %{data: %{access_token: conn.assigns[:access_token], renewal_token: conn.assigns[:access_token], user: User.to_json_schema(user, conn), user_privilege_ruleset: ruleset}})
     end
   end
 end
