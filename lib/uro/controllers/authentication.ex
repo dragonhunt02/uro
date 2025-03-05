@@ -356,7 +356,6 @@ defmodule Uro.AuthenticationController do
     ]
   )
 
-
   def loginClient(conn, %{ "user" => credentials}) do
     conn
     |> validate_credentials(credentials)
@@ -426,10 +425,7 @@ defmodule Uro.AuthenticationController do
 
       {conn, user} ->
         ruleset = UserPrivilegeRuleset.to_json_schema(user.user_privilege_ruleset)
-        #json(conn, %{data: %{access_token: conn.private[:api_access_token], renewal_token: conn.private[:api_renewal_token], user: User.to_json_schema(user, conn)}})
         json(conn, %{data: %{access_token: conn.assigns[:access_token], renewal_token: conn.assigns[:access_token], user: User.to_json_schema(user, conn), user_privilege_ruleset: ruleset}})
     end
   end
 end
-
-
