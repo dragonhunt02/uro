@@ -147,7 +147,7 @@ defmodule Uro.ShardController do
   end
 
   def update(conn, %{"id" => id}) do
-    update(conn, %{data: %{"id" => id, "shard" => %{}}})
+    update(conn, %{"id" => id, "shard" => %{}})
   end
 
   operation(:delete,
