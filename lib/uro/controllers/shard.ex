@@ -56,6 +56,7 @@ defmodule Uro.ShardController do
 
   def index(conn, _params) do
     shards = VSekai.list_fresh_shards()
+    #public_shards = Uro.Helpers.Shard.get_api_shard_list_public(shards)
 
     conn
     |> put_status(200)
@@ -104,7 +105,8 @@ defmodule Uro.ShardController do
         |> json(%{data: %{id: shard.id}})
 
       {:error, %Ecto.Changeset{}} ->
-        json_error(conn)
+        conn
+        |> json_error(400)
     end
   end
 
@@ -136,13 +138,15 @@ defmodule Uro.ShardController do
         {:ok, shard} ->
           conn
           |> put_status(200)
-          |> json(shard)
+          |> json(%{data: %{id: to_string(shard.id)}})
 
         {:error, %Ecto.Changeset{}} ->
-          json_error(conn)
+          conn
+          |> json_error(400)
       end
     else
-      json_error(conn)
+      conn
+      |> json_error(400)
     end
   end
 
