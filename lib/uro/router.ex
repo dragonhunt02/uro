@@ -33,6 +33,10 @@ defmodule Uro.Router do
     plug(Uro.Plug.RequireAdmin)
   end
 
+  pipeline :authenticated_user do
+    plug(Uro.Plug.ChooseAuth)
+  end
+
   pipeline :dashboard_avatars do
     plug(Uro.Plug.RequireAvatarUploadPermission)
   end
@@ -68,26 +72,30 @@ defmodule Uro.Router do
   get("/openapi", OpenApiSpex.Plug.RenderSpec, [])
   get("/docs", Uro.OpenAPI.Viewer, [])
 
-  #### Used by game client only ####
-  # TODO: merge into other routes
+#### Used by game client only ####
+# TODO: merge into other routes
 
-  # User signup using apiKey client secret
+# User signup using apiKey client secret
   scope "/registration" do
     post "/", Uro.UserController, :createClient
   end
 
   scope "/profile" do
-    pipe_through([:authenticated])
+    pipe_through([:authenticated_user])
     get("/", Uro.UserController, :showCurrent)
   end
 
-  ##################################
+##################################
 
   scope "/session" do
     # TODO: used by game client only, move to '/login' route
-    post("/", Uro.AuthenticationController, :login)
+    post("/", Uro.AuthenticationController, :loginClient)
 
-    pipe_through([:authenticated])
+    scope "/renew" do
+      post("/", Uro.AuthenticationController, :renew)
+    end
+
+    pipe_through([:authenticated_user])
 
     get("/", Uro.AuthenticationController, :get_current_session)
     delete("/", Uro.AuthenticationController, :logout)
@@ -142,7 +150,7 @@ defmodule Uro.Router do
   end
 
   scope "/dashboard" do
-    pipe_through([:authenticated])
+    pipe_through([:authenticated_user])
 
     get("/", Uro.AuthenticationController, :get_current_session)
     delete("/", Uro.AuthenticationController, :logout)
@@ -167,9 +175,9 @@ defmodule Uro.Router do
       delete "/:id", Uro.MapController, :delete
     end
 
-    # scope "/props" do
+    #scope "/props" do
     #  pipe_through([:dashboard_props])
     #  get "/", Uro.PropController, :index
-    # end
+    #end
   end
 end
