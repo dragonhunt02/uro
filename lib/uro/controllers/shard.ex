@@ -65,7 +65,6 @@ defmodule Uro.ShardController do
   def index(conn, _params) do
     shards = VSekai.list_fresh_shards()
     shards_json = Enum.map(shards, fn x -> Shard.to_json_schema(x) end)
-    # Uro.Helpers.Shard.get_api_shard_list_public(shards)
     IO.puts("get shards")
     IO.inspect(shards_json, limit: :infinity)
 
@@ -187,6 +186,7 @@ defmodule Uro.ShardController do
       Uro.VSekai.Shard
       |> Repo.get!(id)
       |> Repo.preload(:user)
+      |> Repo.preload(user: [:user_privilege_ruleset])
 
     if can_connection_modify_shard(conn, shard) do
       case VSekai.delete_shard(shard) do
