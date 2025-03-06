@@ -57,7 +57,8 @@ defmodule Uro.AvatarController do
           Uro.Helpers.UserContentHelper.get_api_user_content_list(avatars, %{
             merge_uploader_id: true
           })
-      }})
+      }
+    })
   end
 
   operation(:show,
@@ -148,7 +149,13 @@ defmodule Uro.AvatarController do
 
   def create(conn, %{"avatar" => avatar_params}) do
     case UserContent.create_avatar(
-      Uro.Helpers.UserContentHelper.get_correct_user_content_params(conn, avatar_params, "user_content_data", "user_content_preview")) do
+           Uro.Helpers.UserContentHelper.get_correct_user_content_params(
+             conn,
+             avatar_params,
+             "user_content_data",
+             "user_content_preview"
+           )
+         ) do
       {:ok, avatar} ->
         conn
         |> put_status(200)
@@ -167,11 +174,13 @@ defmodule Uro.AvatarController do
         conn
         |> put_status(500)
         |> (fn conn ->
-          if Mix.env() == "dev" do
-            conn
-            |> json(%{changes: changes, errors: errors})
-          end
-        end).()
+              if Mix.env() == "dev" do
+                json(
+                  conn,
+                  %{changes: changes, errors: errors}
+                )
+              end
+            end).()
     end
   end
 
@@ -210,11 +219,13 @@ defmodule Uro.AvatarController do
         conn
         |> put_status(500)
         |> (fn conn ->
-          if Mix.env() == "dev" do
-            conn
-            |> json(%{changes: changes, errors: errors})
-          end
-        end).()
+              if Mix.env() == "dev" do
+                json(
+                  conn,
+                  %{changes: changes, errors: errors}
+                )
+              end
+            end).()
     end
   end
 
@@ -237,16 +248,23 @@ defmodule Uro.AvatarController do
       %Uro.UserContent.Avatar{} = avatar ->
         case UserContent.delete_avatar(avatar) do
           {:ok, _avatar} ->
-            conn
-            |> put_status(200)
+            put_status(
+              conn,
+              200
+            )
 
           {:error, %Ecto.Changeset{}} ->
-            conn
-            |> put_status(500)
+            put_status(
+              conn,
+              500
+            )
         end
+
       _ ->
-        conn
-        |> put_status(200)
+        put_status(
+          conn,
+          200
+        )
     end
   end
 end

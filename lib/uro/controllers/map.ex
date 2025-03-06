@@ -149,7 +149,13 @@ defmodule Uro.MapController do
 
   def create(conn, %{"map" => map_params}) do
     case UserContent.create_map(
-      Uro.Helpers.UserContentHelper.get_correct_user_content_params(conn, map_params, "user_content_data", "user_content_preview")) do
+           Uro.Helpers.UserContentHelper.get_correct_user_content_params(
+             conn,
+             map_params,
+             "user_content_data",
+             "user_content_preview"
+           )
+         ) do
       {:ok, map} ->
         conn
         |> put_status(200)
@@ -169,11 +175,13 @@ defmodule Uro.MapController do
         conn
         |> put_status(500)
         |> (fn conn ->
-          if Mix.env() == "dev" do
-            conn
-            |> json(%{changes: changes, errors: errors})
-          end
-        end).()
+              if Mix.env() == "dev" do
+                json(
+                  conn,
+                  %{changes: changes, errors: errors}
+                )
+              end
+            end).()
     end
   end
 
@@ -212,11 +220,13 @@ defmodule Uro.MapController do
         conn
         |> put_status(500)
         |> (fn conn ->
-          if Mix.env() == "dev" do
-            conn
-            |> json(%{changes: changes, errors: errors})
-          end
-        end).()
+              if Mix.env() == "dev" do
+                json(
+                  conn,
+                  %{changes: changes, errors: errors}
+                )
+              end
+            end).()
     end
   end
 
@@ -239,16 +249,23 @@ defmodule Uro.MapController do
       %Uro.UserContent.Map{} = map ->
         case UserContent.delete_map(map) do
           {:ok, _map} ->
-            conn
-            |> put_status(200)
+            put_status(
+              conn,
+              200
+            )
 
           {:error, %Ecto.Changeset{}} ->
-            conn
-            |> put_status(500)
+            put_status(
+              conn,
+              500
+            )
         end
+
       _ ->
-        conn
-        |> put_status(200)
+        put_status(
+          conn,
+          200
+        )
     end
   end
 end

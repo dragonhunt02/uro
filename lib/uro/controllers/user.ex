@@ -79,9 +79,17 @@ defmodule Uro.UserController do
   def showCurrent(conn, _params) do
     with {:ok, user} <- user_from_key(conn, "me") do
       ruleset = UserPrivilegeRuleset.to_json_schema(user.user_privilege_ruleset)
+
       conn
       |> put_status(:ok)
-      |> json( %{data: %{access_token: conn.assigns[:access_token], renewal_token: conn.assigns[:access_token], user: User.to_json_schema(user, conn), user_privilege_ruleset: ruleset}} )
+      |> json(%{
+        data: %{
+          access_token: conn.assigns[:access_token],
+          renewal_token: conn.assigns[:access_token],
+          user: User.to_json_schema(user, conn),
+          user_privilege_ruleset: ruleset
+        }
+      })
     end
   end
 

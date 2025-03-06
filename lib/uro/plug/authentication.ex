@@ -122,7 +122,7 @@ defmodule Uro.Plug.Authentication do
       ["Bearer" <> " " <> access_token | _] ->
         {:ok, access_token}
 
-      [ access_token | _] ->
+      [access_token | _] ->
         {:ok, access_token}
 
       _ ->

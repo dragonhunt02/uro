@@ -79,6 +79,7 @@ defmodule Uro.VSekai do
   def create_shard(attrs \\ %{}) do
     shard_data = Map.get(attrs, "shard", %{})
     flattened_attrs = Map.merge(Map.drop(attrs, ["shard"]), shard_data)
+
     %Shard{}
     |> Shard.changeset(flattened_attrs)
     |> Repo.insert()

@@ -60,7 +60,7 @@ defmodule Uro.ShardController do
 
     conn
     |> put_status(200)
-    |> json(%{data: %{shards: shards_json }})
+    |> json(%{data: %{shards: shards_json}})
   end
 
   operation(:create,

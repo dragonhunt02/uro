@@ -356,16 +356,24 @@ defmodule Uro.AuthenticationController do
     ]
   )
 
-  def loginClient(conn, %{ "user" => credentials}) do
+  def loginClient(conn, %{"user" => credentials}) do
     conn
     |> validate_credentials(credentials)
     |> case do
       {:ok, conn} ->
         user = Helpers.Auth.get_current_user(conn)
         ruleset = UserPrivilegeRuleset.to_json_schema(user.user_privilege_ruleset)
+
         conn
         |> put_status(200)
-        |> json( %{data: %{access_token: conn.assigns[:access_token], renewal_token: conn.assigns[:access_token], user: User.to_json_schema(user, conn), user_privilege_ruleset: ruleset}} )
+        |> json(%{
+          data: %{
+            access_token: conn.assigns[:access_token],
+            renewal_token: conn.assigns[:access_token],
+            user: User.to_json_schema(user, conn),
+            user_privilege_ruleset: ruleset
+          }
+        })
 
       {:error, _} ->
         {:error, :invalid_credentials}
@@ -388,7 +396,8 @@ defmodule Uro.AuthenticationController do
   def logout(conn, _) do
     conn
     |> Pow.Plug.delete()
-    |> json(%{data: %{}}) 
+    |> json(%{data: %{}})
+
     # TODO: Remove '{ data : {} }' response requirement from game client, use nil
   end
 
@@ -425,7 +434,15 @@ defmodule Uro.AuthenticationController do
 
       {conn, user} ->
         ruleset = UserPrivilegeRuleset.to_json_schema(user.user_privilege_ruleset)
-        json(conn, %{data: %{access_token: conn.assigns[:access_token], renewal_token: conn.assigns[:access_token], user: User.to_json_schema(user, conn), user_privilege_ruleset: ruleset}})
+
+        json(conn, %{
+          data: %{
+            access_token: conn.assigns[:access_token],
+            renewal_token: conn.assigns[:access_token],
+            user: User.to_json_schema(user, conn),
+            user_privilege_ruleset: ruleset
+          }
+        })
     end
   end
 end
