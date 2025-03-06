@@ -25,6 +25,11 @@ defmodule Uro.ShardController do
   end
 
   def can_connection_modify_shard(conn, shard) do
+    IO.puts("can modify conn?")
+    IO.inspect(shard.user, limit: :infinity)
+    IO.puts("signed in?")
+    IO.inspect(Uro.Helpers.Auth.signed_in?(conn))
+    IO.inspect(Uro.Helpers.Auth.get_current_user(conn), limit: :infinity)
     if shard.user != nil and
          Uro.Helpers.Auth.signed_in?(conn) and
          shard.user == Uro.Helpers.Auth.get_current_user(conn) do
@@ -191,10 +196,12 @@ defmodule Uro.ShardController do
           |> json(%{data: %{id: to_string(shard.id)}})
 
         {:error, %Ecto.Changeset{}} ->
-          json_error(conn)
+          conn
+          |> json_error(400)
       end
     else
-      json_error(conn)
+      conn
+      |> json_error(400)
     end
   end
 end
