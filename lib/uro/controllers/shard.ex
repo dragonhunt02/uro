@@ -29,6 +29,9 @@ defmodule Uro.ShardController do
     IO.inspect(shard.user, limit: :infinity)
     IO.puts("signed in?")
     IO.inspect(Uro.Helpers.Auth.signed_in?(conn))
+    IO.puts("user equal?")
+    IO.inspect(shard.user == Uro.Helpers.Auth.get_current_user(conn))
+  
     IO.inspect(Uro.Helpers.Auth.get_current_user(conn), limit: :infinity)
     if shard.user != nil and
          Uro.Helpers.Auth.signed_in?(conn) and
@@ -113,8 +116,7 @@ defmodule Uro.ShardController do
         |> json(%{data: %{id: to_string(shard.id)}})
 
       {:error, %Ecto.Changeset{}} ->
-        conn
-        |> json_error(400)
+        json_error(conn)
     end
   end
 
@@ -149,12 +151,10 @@ defmodule Uro.ShardController do
           |> json(%{data: %{id: to_string(shard.id)}})
 
         {:error, %Ecto.Changeset{}} ->
-          conn
-          |> json_error(400)
+          json_error(conn)
       end
     else
-      conn
-      |> json_error(400)
+      json_error(conn)
     end
   end
 
@@ -196,12 +196,10 @@ defmodule Uro.ShardController do
           |> json(%{data: %{id: to_string(shard.id)}})
 
         {:error, %Ecto.Changeset{}} ->
-          conn
-          |> json_error(400)
+          json_error(conn)
       end
     else
-      conn
-      |> json_error(400)
+      json_error(conn)
     end
   end
 end
