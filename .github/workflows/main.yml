@@ -61,7 +61,7 @@ jobs:
             
 
             git log -n 5
-            git reset --soft HEAD~18
+            git reset --soft HEAD~2
 
             #rm .github/workflows/test.yml
             
