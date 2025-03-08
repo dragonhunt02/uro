@@ -4,7 +4,7 @@ defmodule Uro.Uploaders.UserContentData do
   alias Uro.Helpers.Validation
 
   @versions [:original]
-  @extension_whitelist ~w(.scn)
+  @extension_whitelist ~w(.scn .glb .vrm)
 
   # Whitelist file extensions:
   def validate({file, _}) do
