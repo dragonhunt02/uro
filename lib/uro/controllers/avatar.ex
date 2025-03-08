@@ -170,6 +170,8 @@ defmodule Uro.AvatarController do
           if Mix.env() == "dev" do
             conn
             |> json(%{changes: changes, errors: errors})
+          else
+            conn
           end
         end).()
     end
@@ -213,6 +215,8 @@ defmodule Uro.AvatarController do
           if Mix.env() == "dev" do
             conn
             |> json(%{changes: changes, errors: errors})
+          else
+            conn
           end
         end).()
     end
