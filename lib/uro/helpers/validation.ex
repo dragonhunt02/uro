@@ -1,6 +1,6 @@
 defmodule Uro.Helpers.Validation do
   @moduledoc """
-  Helper module to check file magic numbers.
+  Helper module to validate files.
   """
 
 require Logger
