@@ -16,7 +16,7 @@ require Logger
     }
 
 @spec check_magic_number(%Plug.Upload{}) :: boolean
-def check_magic_number(%Plug.Upload{file_name: file_name, path: path}) do
+def check_magic_number(%Plug.Upload{filename: file_name, path: path}) do
   file_extension = file_name |> Path.extname() |> String.downcase()
   magic_number = Map.get(@magic_numbers, file_extension)
 
