@@ -16,6 +16,7 @@ defmodule Uro.Router do
 
   defmodule ChoosePlug do
     import Plug.Conn
+    require Logger
 
     def init(default), do: default
 
