@@ -15,8 +15,8 @@ require Logger
     ".scn" => <<0x43, 0x53, 0x54, 0x43>>
     }
 
-@spec check_magic_number(%Plug.Upload{}) :: boolean
-def check_magic_number(%Plug.Upload{filename: file_name, path: path}) do
+@spec check_magic_number(%{filename: String.t(), path: String.t()}) :: boolean
+def check_magic_number(%{filename: file_name, path: path}) do
   file_extension = file_name |> Path.extname() |> String.downcase()
   magic_number = Map.get(@magic_numbers, file_extension)
 
