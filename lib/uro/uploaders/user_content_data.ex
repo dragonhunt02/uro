@@ -1,6 +1,7 @@
 defmodule Uro.Uploaders.UserContentData do
   use Waffle.Definition
   use Waffle.Ecto.Definition
+  alias Uro.Helpers.Validation
 
   @versions [:original]
   @extension_whitelist ~w(.scn)
@@ -11,7 +12,8 @@ defmodule Uro.Uploaders.UserContentData do
     IO.inspect(file)
     IO.puts("End debug")
     file_extension = file.file_name |> Path.extname() |> String.downcase()
-    Enum.member?(@extension_whitelist, file_extension)
+    with true <- Enum.member?(@extension_whitelist, file_extension),
+         true <- Validation.check_magic_number(file), do: true, else: (_ -> false)
   end
 
   # Override the persisted filenames:
