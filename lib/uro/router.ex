@@ -39,7 +39,10 @@ defmodule Uro.Router do
         IO.inspect(opts, limit: :infinity)
         IO.inspect(Keyword.merge(opts, error_handler: Uro.FallbackController), limit: :infinity)
         opts = Keyword.merge(opts, error_handler: Uro.FallbackController)
-        Pow.Plug.RequireAuthenticated.call(conn, Pow.Plug.RequireAuthenticated.init(opts))
+        Logger.info("Before Pow.Plug.RequireAuthenticated.call/2: #{inspect(conn)}")
+        conn = Pow.Plug.RequireAuthenticated.call(conn, Pow.Plug.RequireAuthenticated.init(opts))
+        Logger.info("After Pow.Plug.RequireAuthenticated.call/2: #{inspect(conn)}")
+        conn
         #Pow.Plug.RequireAuthenticated.call(conn, Keyword.merge(opts, error_handler: Uro.FallbackController))
       end
     end
