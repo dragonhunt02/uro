@@ -1,9 +1,9 @@
 defmodule Uro.Helpers.Validation do
-require Logger
-
   @moduledoc """
   Helper module to check file magic numbers.
   """
+
+require Logger
 
   @magic_numbers %{
     ".jpg" => <<0xFF, 0xD8, 0xFF>>,
