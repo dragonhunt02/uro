@@ -23,16 +23,19 @@ def check_magic_number(%Plug.Upload{file_name: file_name, path: path}) do
   if magic_number == nil do
     Logger.warning("File extension not recognized: #{file_extension} in #{file_name}")
     false
-  else
-      with {:ok, file} <- :file.open(path, [:read]),
-           {:ok, file_content} <- :file.read(file, expected_length),
-           _ <- :file.close(file),
-           true <- byte_size(file_content) >= expected_length,
-           true <- String.starts_with?(file_content, magic_number) do
-        true
     else
-      _ -> false
+      expected_length = byte_size(magic_number)
+      case :file.open(path, [:read]) do
+        {:ok, file_handle} ->
+          result = with {:ok, file_content} <- :file.read(file_handle, expected_length),
+                       true <- byte_size(file_content) >= expected_length,
+                       true <- String.starts_with?(file_content, magic_number), do: true, else: (_ -> false)
+          :file.close(file_handle)
+          result
+
+        _ ->
+          false
+      end
     end
   end
-end
 end
