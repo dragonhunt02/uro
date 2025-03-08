@@ -165,7 +165,7 @@ defmodule Uro.AvatarController do
           }
         })
 
-      {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
+      {:error, %Ecto.Changeset{changes: changes, errors: errors} = changeset} ->
         conn
         |> (fn conn ->
           case System.get_env("MIX_ENV") do
