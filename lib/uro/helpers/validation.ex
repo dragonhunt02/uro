@@ -33,3 +33,4 @@ def check_magic_number(%Plug.Upload{file_name: file_name, path: path}) do
     end
   end
 end
+end
