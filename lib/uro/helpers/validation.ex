@@ -21,7 +21,7 @@ def check_magic_number(%Plug.Upload{file_name: file_name, path: path}) do
   magic_number = Map.get(@magic_numbers, file_extension)
 
   if magic_number == nil do
-    Logger.warning("File extension not recognized: #{file_extension}")
+    Logger.warning("File extension not recognized: #{file_extension} in #{file_name}")
     false
   else
     with {:ok, file_content} <- File.read(path),
