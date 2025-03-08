@@ -4,6 +4,8 @@ defmodule Uro.AvatarController do
   alias OpenApiSpex.Schema
   alias Uro.UserContent
 
+  action_fallback Uro.FallbackController
+
   tags(["avatars"])
 
   operation(:index,
@@ -165,16 +167,18 @@ defmodule Uro.AvatarController do
 
       {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
         conn
-        |> put_status(500)
         |> (fn conn ->
-          if Mix.env() == "dev" do
-            conn
-            |> json(%{changes: changes, errors: errors})
-          else
-            conn
-            |> halt()
+          case System.get_env("MIX_ENV") do
+            "dev" ->
+              #conn |> json(%{ changes: changes, errors: to_string(errors)})
+              {:error, changeset}
+            _ ->
+              conn 
+              |> put_status(500)
+              |> json(%{})
           end
         end).()
+    end
     end
   end
 
