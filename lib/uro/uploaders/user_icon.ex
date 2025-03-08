@@ -1,7 +1,7 @@
 defmodule Uro.Uploaders.UserIcon do
   use Waffle.Definition
   use Waffle.Ecto.Definition
-  alias Uro.Helper.Validation
+  alias Uro.Helpers.Validation
 
   @versions [:original]
   @extension_whitelist ~w(.jpg .jpeg .gif .png)
