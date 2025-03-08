@@ -179,7 +179,6 @@ defmodule Uro.AvatarController do
           end
         end).()
     end
-    end
   end
 
   operation(:update,
