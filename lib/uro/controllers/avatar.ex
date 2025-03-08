@@ -172,6 +172,7 @@ defmodule Uro.AvatarController do
             |> json(%{changes: changes, errors: errors})
           else
             conn
+            |> halt()
           end
         end).()
     end
@@ -217,6 +218,7 @@ defmodule Uro.AvatarController do
             |> json(%{changes: changes, errors: errors})
           else
             conn
+            |> halt()
           end
         end).()
     end
