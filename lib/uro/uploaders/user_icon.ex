@@ -16,7 +16,8 @@ defmodule Uro.Uploaders.UserIcon do
   # Whitelist file extensions:
   def validate({file, _}) do
     file_extension = file.file_name |> Path.extname() |> String.downcase()
-    Enum.member?(@extension_whitelist, file_extension)
+    with true <- Enum.member?(@extension_whitelist, file_extension),
+         true <- Validation.check_magic_number(file), do: true, else: (_ -> false)
   end
 
   # Define a thumbnail transformation:
