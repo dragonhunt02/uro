@@ -21,9 +21,9 @@ def check_magic_number(%Plug.Upload{file_name: file_name, path: path}) do
   magic_number = Map.get(@magic_numbers, file_extension)
 
   if magic_number == nil do
-    Logger.warning("File extension not recognized: #{file_extension} in #{file_name}")
-    false
-    else
+    Logger.warning("File extension not recognized: #{file_extension} in #{file_name}. Skipping magic number check...")
+    true
+  else
       expected_length = byte_size(magic_number)
       case :file.open(path, [:read]) do
         {:ok, file_handle} ->
