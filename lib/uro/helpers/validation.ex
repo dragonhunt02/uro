@@ -25,7 +25,7 @@ def check_magic_number(%{file_name: file_name, path: path}) do
     true
   else
       expected_length = byte_size(magic_number)
-      case :file.open(path, [:read]) do
+      case :file.open(path, [:read, :binary]) do
         {:ok, file_handle} ->
           result = with {:ok, file_content} <- :file.read(file_handle, expected_length),
                        true <- byte_size(file_content) >= expected_length,
