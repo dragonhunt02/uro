@@ -29,7 +29,7 @@ def check_magic_number(%Plug.Upload{file_name: file_name, path: path}) do
         {:ok, file_handle} ->
           result = with {:ok, file_content} <- :file.read(file_handle, expected_length),
                        true <- byte_size(file_content) >= expected_length,
-                       true <- String.starts_with?(file_content, magic_number), do: true, else: (_ -> false)
+                       true <- :binary.part(file_content, 0, expected_length) == magic_number, do: true, else: (_ -> false)
           :file.close(file_handle)
           result
 
