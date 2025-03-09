@@ -12,12 +12,12 @@ defmodule Uro.SharedContent.Releases do
   end
 
   @doc false
-  def changeset(avatar, attrs) do
-    shared_content_changeset(avatar, attrs)
+  def changeset(releases, attrs) do
+    shared_content_changeset(content, attrs)
   end
 
   @doc false
-  def upload_changeset(avatar, attrs) do
-    shared_content_upload_changeset(avatar, attrs)
+  def upload_changeset(releases, attrs) do
+    shared_content_upload_changeset(content, attrs)
   end
 end
