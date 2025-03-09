@@ -162,9 +162,11 @@ defmodule Uro.Router do
     pipe_through([:authenticated_admin])
 
     get("/", Uro.AdminController, :status)
+  end
 
+  scope "/storage" do
     scope "/upload" do
-      get "/", Uro.AdminController, :index
+      post "/", Uro.StorageController, :create
     end
   end
 
