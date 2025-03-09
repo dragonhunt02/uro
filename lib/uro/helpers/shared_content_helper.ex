@@ -58,7 +58,7 @@ defmodule Uro.Helpers.SharedContentHelper do
       "shared_content_data" => shared_content_data,
       "is_public" => Map.get(shared_content_params, "is_public", false),
       "uploader_id" => conn.assigns[:current_user].id,
-      checksum: to_string(shared_content.checksum)
+      "checksum" => Map.get(shared_content_params, "checksum", "")
     }
   end
 end
