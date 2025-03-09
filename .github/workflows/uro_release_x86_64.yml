@@ -2,7 +2,7 @@ name: Uro Development x86_64
 
 on:
   push:
-    branches: [whitelist-filter]
+    branches: [whitelist2]
   pull_request:
     branches: [master]
 
