@@ -48,7 +48,7 @@ defmodule Uro.SharedContent.SharedContent do
       field :version, :string
       field :tags, {:array, :string}
       field :permissions, :map
-      field :shared_content_data, Uro.Uploaders.UserContentData.Type
+      field :shared_content_data, Uro.Uploaders.SharedContentData.Type
       belongs_to :uploader, Uro.Accounts.User, foreign_key: :uploader_id, type: :binary_id
     end
   end
