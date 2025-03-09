@@ -1,4 +1,4 @@
-defmodule MyApp.Repo.Migrations.CreateSharedFiles do
+defmodule Uro.Repo.Migrations.CreateSharedFiles do
   use Ecto.Migration
 
   def change do
