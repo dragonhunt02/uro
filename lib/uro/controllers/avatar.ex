@@ -165,7 +165,7 @@ defmodule Uro.AvatarController do
           }
         })
 
-      {:error, %Ecto.Changeset{changes: changes, errors: errors} = changeset} ->
+      {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
         {:error, changeset}
     end
   end
@@ -201,7 +201,7 @@ defmodule Uro.AvatarController do
           }
         })
 
-      {:error, %Ecto.Changeset{changes: changes, errors: errors} = changeset} ->
+      {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
         {:error, changeset}
     end
   end
@@ -229,7 +229,8 @@ defmodule Uro.AvatarController do
             |> put_status(200)
 
           {:error, %Ecto.Changeset{}} ->
-            {:error, changeset}
+            conn
+            |> put_status(500)
         end
       _ ->
         conn
