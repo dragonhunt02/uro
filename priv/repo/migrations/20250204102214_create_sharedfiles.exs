@@ -2,7 +2,7 @@ defmodule Uro.Repo.Migrations.CreateSharedFiles do
   use Ecto.Migration
 
   def change do
-    create table(:shared_files) do
+    create table(:shared_files, primary_key: false) do
       add :id, :uuid, primary_key: true
       add :name, :string
       add :description, :string
@@ -13,7 +13,6 @@ defmodule Uro.Repo.Migrations.CreateSharedFiles do
       add :checksum, :string
       add :upload_date, :utc_datetime
       add :uploader_id, references(:users, type: :uuid)
-      add :is_public, :boolean
       add :version, :string
       add :tags, {:array, :string}
       add :permissions, :map
