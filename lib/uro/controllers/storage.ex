@@ -10,8 +10,8 @@ defmodule Uro.StorageController do
   tags(["storage"])
 
   operation(:index,
-    operation_id: "listFiles",
-    summary: "List Avatars",
+    operation_id: "listSharedFiles",
+    summary: "List all storage files",
     responses: [
       ok: {
         "",
@@ -22,14 +22,14 @@ defmodule Uro.StorageController do
   )
 
   def index(conn, _params) do
-    avatars = UserContent.list_public_avatars()
+    file_list = SharedContent.list_public_files()
 
     conn
     |> put_status(200)
     |> json(%{
       data: %{
-        avatars:
-          Uro.Helpers.UserContentHelper.get_api_user_content_list(avatars, %{
+        files:
+          Uro.Helpers.SharedContentHelper.get_api_shared_content_list(file_list, %{
             merge_uploader_id: true
           })
       }
