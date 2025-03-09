@@ -140,7 +140,7 @@ defmodule Uro.SharedContent do
     |> Ecto.Multi.insert(:shared_content, SharedFile.changeset(shared_content, attrs))
     |> Ecto.Multi.update(
       :shared_content_with_upload,
-      &Avatar.upload_changeset(&1.shared_content, attrs)
+      &SharedFile.upload_changeset(&1.shared_content, attrs)
     )
     |> Repo.transaction()
     |> case do
