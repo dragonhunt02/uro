@@ -166,18 +166,7 @@ defmodule Uro.AvatarController do
         })
 
       {:error, %Ecto.Changeset{changes: changes, errors: errors} = changeset} ->
-        conn
-        |> (fn conn ->
-          case System.get_env("MIX_ENV") do
-            "dev" ->
-              #conn |> json(%{ changes: changes, errors: to_string(errors)})
-              {:error, changeset}
-            _ ->
-              conn 
-              |> put_status(500)
-              |> json(%{})
-          end
-        end).()
+        {:error, changeset}
     end
   end
 
@@ -212,18 +201,8 @@ defmodule Uro.AvatarController do
           }
         })
 
-      {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
-        conn
-        |> put_status(500)
-        |> (fn conn ->
-          if Mix.env() == "dev" do
-            conn
-            |> json(%{changes: changes, errors: errors})
-          else
-            conn
-            |> halt()
-          end
-        end).()
+      {:error, %Ecto.Changeset{changes: changes, errors: errors} = changeset} ->
+        {:error, changeset}
     end
   end
 
@@ -250,8 +229,7 @@ defmodule Uro.AvatarController do
             |> put_status(200)
 
           {:error, %Ecto.Changeset{}} ->
-            conn
-            |> put_status(500)
+            {:error, changeset}
         end
       _ ->
         conn
