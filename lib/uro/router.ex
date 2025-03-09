@@ -165,6 +165,10 @@ defmodule Uro.Router do
   end
 
   scope "/storage" do
+
+    # lists all server ispublic files, add auth require
+    get "/", Uro.StorageController, :index
+
     scope "/upload" do
       post "/", Uro.StorageController, :create
     end
