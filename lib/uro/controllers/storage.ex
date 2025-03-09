@@ -22,7 +22,7 @@ defmodule Uro.StorageController do
   )
 
   def index(conn, _params) do
-    file_list = SharedContent.list_public_files()
+    file_list = SharedContent.list_public_shared_files()
 
     conn
     |> put_status(200)
@@ -86,7 +86,7 @@ defmodule Uro.StorageController do
   )
 
   def create(conn, %{"storage" => storage_params}) do
-    case SharedContent.create_file(
+    case SharedContent.create_shared_file(
       Uro.Helpers.SharedContentHelper.get_correct_shared_content_params(conn, storage_params, "shared_content_data")) do
       {:ok, stored_file} ->
         conn
