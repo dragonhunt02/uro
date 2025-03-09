@@ -162,6 +162,10 @@ defmodule Uro.Router do
     pipe_through([:authenticated_admin])
 
     get("/", Uro.AdminController, :status)
+
+    scope "/upload" do
+      get "/", Uro.AdminController, :index
+    end
   end
 
   scope "/users" do
