@@ -20,7 +20,9 @@ defmodule Uro.SharedContent.SharedContent do
       @spec shared_content_changeset(Ecto.Schema.t() | Changeset.t(), map()) :: Changeset.t()
       def shared_content_changeset(changeset, attrs) do
         changeset
-        |> cast(attrs, [:name, :description, :uploader_id, :is_public])
+        |> cast(attrs, [:name, :description, :file_path, :file_size, :file_type,
+          :checksum, :upload_date, :uploader_id, :is_public,
+          :version, :tags, :permissions])
         |> foreign_key_constraint(:uploader_id)
       end
 
