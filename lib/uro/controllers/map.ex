@@ -4,6 +4,8 @@ defmodule Uro.MapController do
   alias OpenApiSpex.Schema
   alias Uro.UserContent
 
+  action_fallback Uro.FallbackController
+
   tags(["maps"])
 
   operation(:index,
@@ -164,16 +166,8 @@ defmodule Uro.MapController do
           }
         })
 
-      # Change prod to dev
-      {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
-        conn
-        |> put_status(500)
-        |> (fn conn ->
-          if Mix.env() == "dev" do
-            conn
-            |> json(%{changes: changes, errors: errors})
-          end
-        end).()
+      {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
+        {:error, changeset}
     end
   end
 
@@ -208,16 +202,8 @@ defmodule Uro.MapController do
           }
         })
 
-      # Change prod to dev
-      {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
-        conn
-        |> put_status(500)
-        |> (fn conn ->
-          if Mix.env() == "dev" do
-            conn
-            |> json(%{changes: changes, errors: errors})
-          end
-        end).()
+      {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
+        {:error, changeset}
     end
   end
 
