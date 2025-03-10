@@ -21,7 +21,7 @@ export const useListSharedFiles = () => {
         //throw new Error("Network response was not ok");
         return null;
       }
-      return response.json();
+      return response; //.json();
     },
     queryKey: ["shared-files"],
     refetchOnWindowFocus: "always"
