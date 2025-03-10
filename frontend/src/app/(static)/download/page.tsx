@@ -7,29 +7,26 @@ import { Section, SectionTitle } from '~/app/(static)/section';
 import { Footer } from '~/app/footer';
 import { api } from '~/api';
 import { useListSharedFiles } from '~/hooks/downloads';
-import TableComponent from '~/components/TableComponent';
+import { TableComponent, Data } from '~/components/TableComponent';
 
 // Define the type for the table data
-interface Data {
-  id: number;
-  name: string;
-}
 
+/*
 // Define sample data for the table
 const sampleData: Data[] = [
-  { id: 1, name: 'John Doe' },
-  { id: 2, name: 'Jane Smith'}
+  { id: '1', name: 'John Doe' },
+  { id: '2', name: 'Jane Smith'}
 ];
-
+*/
 export default function AboutPage() {
-//export const AboutPage: React.FC = () => {
-  //const [data, setData] = useState<Data[]>([]);
+// export const AboutPage: React.FC = () => {
+  // const [data, setData] = useState<Data[]>([]);
   {
-  const sharedFiles = useListSharedFiles();
-  const data1: Data[] = sharedFiles?.data?.data?.files ?? [];
+  const sharedFiles = useListSharedFiles(); // as any;
+  const data1 = sharedFiles?.data?.data?.files ?? [];
   console.log("Type")
   console.log(sharedFiles)
-    
+   console.log(data1)
   //const data: Data[] = sharedFiles.data ?? [];
   //const data: Data[] = sharedFiles ? (sharedFiles as Data[]) : [];
 
@@ -70,7 +67,7 @@ export default function AboutPage() {
           </p>
         </Section>
         <Section>
-          <SectionTitle>Sample Data Table</SectionTitle>
+          <SectionTitle>Downloads</SectionTitle>
           <TableComponent data={data1} />
         </Section>
       </div>
@@ -79,4 +76,4 @@ export default function AboutPage() {
   );
 };
 };
-//export default AboutPage;
+
