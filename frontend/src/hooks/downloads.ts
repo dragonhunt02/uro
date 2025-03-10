@@ -17,7 +17,7 @@ export const useListSharedFiles = () => {
   const { data: sharedFiles } = useQuery({
     queryFn: async () => {
       const response = await listSharedFiles();
-      if (!response.ok) {
+      if (!response) {
         //throw new Error("Network response was not ok");
         return null;
       }
