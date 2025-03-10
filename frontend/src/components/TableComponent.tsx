@@ -2,13 +2,15 @@
 import type { ComponentProps, FC } from "react";
 
 // Define the type for the table data
-interface Data {
-  id: number;
+export interface Data {
+  id: string;
   name: string;
+  // path: string | null;
+  checksum?: string | null | undefined;
 }
 
 // Define the props for the table component using ComponentProps
-const TableComponent: React.FC<ComponentProps<'table'> & { data: Data[] }> = ({ data, ...props }) => {
+export const TableComponent: React.FC<ComponentProps<'table'> & { data: Data[] }> = ({ data, ...props }) => {
   return (
     <table {...props} className="min-w-full divide-y divide-gray-200">
       <thead className="bg-gray-50">
@@ -28,5 +30,3 @@ const TableComponent: React.FC<ComponentProps<'table'> & { data: Data[] }> = ({ 
     </table>
   );
 };
-
-export default TableComponent;
