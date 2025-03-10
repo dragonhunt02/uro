@@ -52,31 +52,6 @@ defmodule Uro.SharedContent do
   end
 
   @doc """
-  Returns the list of avatars uploaded by a user.
-
-  ## Examples
-
-      iex> list_avatars_uploaded_by(user)
-      [%Avatar{}, ...]
-
-  """
-  def list_avatars_uploaded_by(user) do
-    Avatar
-    |> where(uploader_id: ^user.id)
-    |> Repo.all()
-    |> Repo.preload([:uploader])
-  end
-
-  @doc """
-  Returns the list of avatars uploaded by a user with pagination.
-  """
-  def list_avatars_uploaded_by_with_pagination(params, user) do
-    Avatar
-    |> where(uploader_id: ^user.id)
-    |> Repo.paginate(params)
-  end
-
-  @doc """
   Gets a single avatar.
 
   Raises `Ecto.NoResultsError` if the Avatar does not exist.
