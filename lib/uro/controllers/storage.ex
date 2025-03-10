@@ -82,7 +82,7 @@ defmodule Uro.StorageController do
         |> json(%{
           data: %{
             files:
-              Uro.Helpers.SharedContentHelper.get_api_user_content(
+              Uro.Helpers.SharedContentHelper.get_api_shared_content(
                 sharedFile,
                 %{merge_uploader_id: true, merge_is_public: true}
               )
