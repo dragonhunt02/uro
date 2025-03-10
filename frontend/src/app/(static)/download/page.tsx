@@ -23,7 +23,11 @@ const sampleData: Data[] = [
 
 const AboutPage: React.FC = () => {
   //const [data, setData] = useState<Data[]>([]);
-  const sharedFiles: Data[] = useListSharedFiles();
+  {
+  const sharedFiles = useListSharedFiles();
+  const data: Data[] = sharedFiles ? (sharedFiles as Data[]) : [];
+
+//  const sharedFiles: Data[] = useListSharedFiles();
 
 /*
   useEffect(() => {
