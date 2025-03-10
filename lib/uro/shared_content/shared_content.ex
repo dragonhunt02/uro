@@ -17,16 +17,16 @@ defmodule Uro.SharedContent.SharedContent do
                ]}
       import unquote(__MODULE__), only: [shared_content_fields: 0]
 
-      @json_schema %Schema{
+      @json_schema %OpenApiSpex.Schema{
         title: "SharedContent",
         type: :object,
         properties: %{
-          id: %Schema{type: :string, format: :uuid, description: "File ID"},
-          name: %Schema{type: :string, description: "File name"},
-          checksum: %Schema{type: :string, nullable: true, description: "File checksum"},
-          description: %Schema{type: :string, description: "File description"},
-          uploader_id: %Schema{type: :string, format: :uuid, description: "Uploader ID"},
-          shared_content_data: %Schema{type: :string, description: "Shared content URL"}
+          id: %OpenApiSpex.Schema{type: :string, format: :uuid, description: "File ID"},
+          name: %OpenApiSpex.Schema{type: :string, description: "File name"},
+          checksum: %OpenApiSpex.Schema{type: :string, nullable: true, description: "File checksum"},
+          description: %OpenApiSpex.Schema{type: :string, description: "File description"},
+          uploader_id: %OpenApiSpex.Schema{type: :string, format: :uuid, description: "Uploader ID"},
+          shared_content_data: %OpenApiSpex.Schema{type: :string, description: "Shared content URL"}
         },
         required: [:id, :name, :description, :uploader_id, :shared_content_data]
       }
