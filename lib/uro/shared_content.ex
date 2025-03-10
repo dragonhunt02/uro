@@ -153,51 +153,51 @@ defmodule Uro.SharedContent do
   end
 
   @doc """
-  Updates a avatar.
+  Updates a file.
 
   ## Examples
 
-      iex> update_avatar(avatar, %{field: new_value})
+      iex> update_shared_file(shared_file, %{field: new_value})
       {:ok, %Avatar{}}
 
-      iex> update_avatar(avatar, %{field: bad_value})
+      iex> update_shared_file(shared_file, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_avatar(%Avatar{} = avatar, attrs) do
-    avatar
-    |> Avatar.changeset(attrs)
-    |> Avatar.upload_changeset(attrs)
+  def update_shared_file(%SharedFile{} = shared_file, attrs) do
+    shared_file
+    |> SharedFile.changeset(attrs)
+    |> SharedFile.upload_changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a avatar.
+  Deletes a file.
 
   ## Examples
 
-      iex> delete_avatar(avatar)
-      {:ok, %Avatar{}}
+      iex> delete_shared_file(shared_file)
+      {:ok, %SharedFile{}}
 
-      iex> delete_avatar(avatar)
+      iex> delete_shared_file(shared_file)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_avatar(%Avatar{} = avatar) do
-    Repo.delete(avatar)
+  def delete_shared_file(%SharedFile{} = shared_file) do
+    Repo.delete(shared_file)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking avatar changes.
+  Returns an `%Ecto.Changeset{}` for tracking file changes.
 
   ## Examples
 
-      iex> change_avatar(avatar)
-      %Ecto.Changeset{source: %Avatar{}}
+      iex> change_shared_file(shared_file)
+      %Ecto.Changeset{source: %SharedFile{}}
 
   """
-  def change_avatar(%Avatar{} = avatar) do
-    Avatar.changeset(avatar, %{})
+  def change_shared_file(%SharedFile{} = shared_file) do
+    SharedFile.changeset(avatar, %{})
   end
 
 
