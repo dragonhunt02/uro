@@ -169,6 +169,9 @@ defmodule Uro.Router do
     # lists all server ispublic files, add auth require
     get "/", Uro.StorageController, :index
 
+    put "/:id", Uro.StorageController, :update
+    delete "/:id", Uro.StorageController, :delete
+
     scope "/upload" do
       post "/", Uro.StorageController, :create
     end
