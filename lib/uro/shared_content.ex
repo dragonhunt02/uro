@@ -110,18 +110,6 @@ defmodule Uro.SharedContent do
   end
 
   @doc """
-  Gets a single avatar uploaded by a specified user.
-
-  Raises `Ecto.NoResultsError` if the Avatar does not exist or was not uploaded by this user.
-  """
-  def get_avatar_uploaded_by_user!(id, user) do
-    Avatar
-    |> where(uploader_id: ^user.id)
-    |> Repo.get!(id)
-    |> Repo.preload([:uploader])
-  end
-
-  @doc """
   Creates a storage file.
 
   ## Examples
