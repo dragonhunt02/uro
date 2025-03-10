@@ -24,18 +24,7 @@ defmodule Uro.StorageController do
             properties: %{
               files: %Schema{
                 type: :array,
-                items: %Schema{
-                  type: :object,
-                  properties: %{
-                    id: %Schema{type: :string, format: :uuid, description: "File ID"},
-                    name: %Schema{type: :string, description: "File name"},
-                    checksum: %Schema{type: :string, nullable: true, description: "File checksum"},
-                    description: %Schema{type: :string, description: "File description"},
-                    uploader_id: %Schema{type: :string, format: :uuid, description: "Uploader ID"},
-                    shared_content_data: %Schema{type: :string, description: "Shared content URL"}
-                  },
-                  required: [:id, :name, :description, :uploader_id, :shared_content_data]
-                },
+                items: SharedContent.SharedFile.json_schema(),
                 description: "List of files"
               }
             }
