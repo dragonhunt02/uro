@@ -6,6 +6,7 @@ import { urls } from '~/environment';
 import { Section, SectionTitle } from '~/app/(static)/section';
 import { Footer } from '~/app/footer';
 import { api } from '~/api';
+import { useListSharedFiles } from '~/hooks/downloads';
 import TableComponent from '~/components/TableComponent';
 
 // Define the type for the table data
@@ -21,7 +22,8 @@ const sampleData: Data[] = [
 ];
 
 const AboutPage: React.FC = () => {
-  const [data, setData] = useState<Data[]>([]);
+  //const [data, setData] = useState<Data[]>([]);
+  const sharedFiles: Data[] = useListSharedFiles();
 
 /*
   useEffect(() => {
@@ -59,7 +61,7 @@ const AboutPage: React.FC = () => {
         </Section>
         <Section>
           <SectionTitle>Sample Data Table</SectionTitle>
-          <TableComponent data={sampleData} />
+          <TableComponent data={sharedFiles} />
         </Section>
       </div>
       <Footer />
