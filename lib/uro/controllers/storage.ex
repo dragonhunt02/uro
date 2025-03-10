@@ -13,13 +13,38 @@ defmodule Uro.StorageController do
     operation_id: "listSharedFiles",
     summary: "List all storage files",
     responses: [
-      ok: {
-        "",
-        "application/json",
-        %Schema{}
+    ok: {
+      "A successful response returning a list of storage files",
+      "application/json",
+      %Schema{
+        type: :object,
+        properties: %{
+          data: %Schema{
+            type: :object,
+            properties: %{
+              files: %Schema{
+                type: :array,
+                items: %Schema{
+                  type: :object,
+                  properties: %{
+                    id: %Schema{type: :string, format: :uuid, description: "File ID"},
+                    name: %Schema{type: :string, description: "File name"},
+                    checksum: %Schema{type: :string, nullable: true, description: "File checksum"},
+                    description: %Schema{type: :string, description: "File description"},
+                    uploader_id: %Schema{type: :string, format: :uuid, description: "Uploader ID"},
+                    shared_content_data: %Schema{type: :string, description: "Shared content URL"}
+                  },
+                  required: [:id, :name, :description, :uploader_id, :shared_content_data]
+                },
+                description: "List of files"
+              }
+            }
+          }
+        }
       }
-    ]
-  )
+    }
+  ]
+)
 
   def index(conn, _params) do
     file_list = SharedContent.list_public_shared_files()
