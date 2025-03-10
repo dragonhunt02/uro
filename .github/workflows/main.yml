@@ -67,7 +67,7 @@ jobs:
             
             #mix local.hex --force
             #mix deps.get
-            #mix format
+            #mix format 
 
             git config --global user.email "jackhunt43@libero.it"
             git config --global user.name "dragonhunt02"
