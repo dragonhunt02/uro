@@ -26,6 +26,7 @@ export default function AboutPage() {
   //const [data, setData] = useState<Data[]>([]);
   {
   const sharedFiles = useListSharedFiles();
+  const data1: Data[] = sharedFiles?.data?.data?.files ?? [];
   console.log("Type")
   console.log(sharedFiles)
     
@@ -70,7 +71,7 @@ export default function AboutPage() {
         </Section>
         <Section>
           <SectionTitle>Sample Data Table</SectionTitle>
-          <TableComponent data={sampleData} />
+          <TableComponent data={data1} />
         </Section>
       </div>
       <Footer />
