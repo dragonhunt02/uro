@@ -17,6 +17,22 @@ defmodule Uro.SharedContent.SharedContent do
                ]}
       import unquote(__MODULE__), only: [shared_content_fields: 0]
 
+      @json_schema %Schema{
+        title: "SharedContent",
+        type: :object,
+        properties: %{
+          id: %Schema{type: :string, format: :uuid, description: "File ID"},
+          name: %Schema{type: :string, description: "File name"},
+          checksum: %Schema{type: :string, nullable: true, description: "File checksum"},
+          description: %Schema{type: :string, description: "File description"},
+          uploader_id: %Schema{type: :string, format: :uuid, description: "Uploader ID"},
+          shared_content_data: %Schema{type: :string, description: "Shared content URL"}
+        },
+        required: [:id, :name, :description, :uploader_id, :shared_content_data]
+      }
+
+      def json_schema(), do: @json_schema
+
       @spec shared_content_changeset(Ecto.Schema.t() | Changeset.t(), map()) :: Changeset.t()
       def shared_content_changeset(changeset, attrs) do
         changeset
