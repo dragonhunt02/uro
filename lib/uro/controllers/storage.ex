@@ -132,8 +132,8 @@ defmodule Uro.StorageController do
   end
 
   operation(:update,
-    operation_id: "updateAvatar",
-    summary: "Update Avatar",
+    operation_id: "updateSharedFile",
+    summary: "Update File",
     responses: [
       ok: {
         "",
@@ -143,20 +143,19 @@ defmodule Uro.StorageController do
     ]
   )
 
-  def update(conn, %{"id" => id, "avatar" => avatar_params}) do
-    user = Uro.Helpers.Auth.get_current_user(conn)
-    avatar = UserContent.get_avatar_uploaded_by_user!(id, user)
+  def update(conn, %{"id" => id, "file" => file_params}) do
+    shared_file = SharedContent.get_shared_file!(id)
 
-    case UserContent.update_avatar(avatar, avatar_params) do
-      {:ok, avatar} ->
+    case SharedContent.update_shared_file(shared_file, file_params) do
+      {:ok, sharedFile} ->
         conn
         |> put_status(200)
         |> json(%{
           data: %{
-            id: to_string(avatar.id),
-            avatar:
-              Uro.Helpers.UserContentHelper.get_api_user_content(
-                avatar,
+            id: to_string(sharedFile.id),
+            files:
+              Uro.Helpers.SharedContentHelper.get_api_user_content(
+                sharedFile,
                 %{merge_uploader_id: true}
               )
           }
@@ -168,8 +167,8 @@ defmodule Uro.StorageController do
   end
 
   operation(:delete,
-    operation_id: "deleteAvatar",
-    summary: "Delete Avatar",
+    operation_id: "deleteSharedFile",
+    summary: "Delete File",
     responses: [
       ok: {
         "",
@@ -180,12 +179,10 @@ defmodule Uro.StorageController do
   )
 
   def delete(conn, %{"id" => id}) do
-    user = Uro.Helpers.Auth.get_current_user(conn)
-
-    case UserContent.get_avatar_uploaded_by_user!(id, user) do
-      %Uro.UserContent.Avatar{} = avatar ->
-        case UserContent.delete_avatar(avatar) do
-          {:ok, _avatar} ->
+    case SharedContent.get_shared_file!(id) do
+      %Uro.SharedContent.SharedFile{} = sharedFile ->
+        case SharedContent.delete_shared_file(sharedFile) do
+          {:ok, _sharedFile} ->
             conn
             |> put_status(200)
 
