@@ -97,12 +97,12 @@ defmodule Uro.SharedContent do
   end
 
   @doc """
-  Gets a single public avatar.
+  Gets a single public file.
 
-  Raises `Ecto.NoResultsError` if the Avatar does not exist or is inaccessible.
+  Raises `Ecto.NoResultsError` if the SharedFile does not exist or is inaccessible.
 
   """
-  def get_public_avatar!(id) do
+  def get_public_shared_file!(id) do
     SharedFile
     |> where(is_public: true)
     |> Repo.get!(id)
