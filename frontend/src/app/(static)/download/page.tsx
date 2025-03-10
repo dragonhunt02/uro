@@ -26,7 +26,9 @@ export default function AboutPage() {
   //const [data, setData] = useState<Data[]>([]);
   {
   const sharedFiles = useListSharedFiles();
-  const data: Data[] = sharedFiles ? (sharedFiles as Data[]) : [];
+    
+  const data: Data[] = sharedFiles.data ?? [];
+  //const data: Data[] = sharedFiles ? (sharedFiles as Data[]) : [];
 
 //  const sharedFiles: Data[] = useListSharedFiles();
 
