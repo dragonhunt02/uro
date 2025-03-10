@@ -30,19 +30,19 @@ defmodule Uro.SharedContent.SharedContent do
         changeset
         |> cast_attachments(attrs, [:shared_content_data])
         |> validate_required([:name, :uploader_id, :shared_content_data])
-        |> populate_file_data()
+        |> populate_file_data(attrs)
       end
 
-      defp populate_file_data(changeset) do
-        case get_field(changeset, :shared_content_data) do
-          %Waffle.File{path: path} ->
+      defp populate_file_data(changeset, attrs) do
+        case Map.get(attrs, "shared_content_data") do
+          %Plug.Upload{path: path} ->
             file_info = File.stat!(path)
 
             changeset
             |> put_change(:file_path, path)
             |> put_change(:file_size, file_info.size)
             # |> put_change(:file_type, MIME.from_path(path))
-            |> put_change(:upload_date, DateTime.utc_now())
+            |> put_change(:upload_date, DateTime.utc_now(:second))
             |> put_change(:checksum, generate_checksum(path))
           _ ->
             changeset
@@ -51,7 +51,7 @@ defmodule Uro.SharedContent.SharedContent do
 
       defp generate_checksum(file_path) do
         :crypto.hash(:sha256, File.read!(file_path))
-        |> Base.encode16()
+        |> Base.encode16(case: :lower)
       end
 
     end
