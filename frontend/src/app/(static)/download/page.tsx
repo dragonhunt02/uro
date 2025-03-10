@@ -21,7 +21,8 @@ const sampleData: Data[] = [
   { id: 2, name: 'Jane Smith'}
 ];
 
-export const AboutPage: React.FC = () => {
+export default function AboutPage() {
+//export const AboutPage: React.FC = () => {
   //const [data, setData] = useState<Data[]>([]);
   {
   const sharedFiles = useListSharedFiles();
