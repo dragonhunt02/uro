@@ -11,7 +11,7 @@ defmodule Uro.StorageController do
 
   operation(:index,
     operation_id: "listSharedFiles",
-    summary: "List all storage files",
+    summary: "List all public storage files",
     responses: [
     ok: {
       "A successful response returning a list of storage files",
@@ -51,29 +51,43 @@ defmodule Uro.StorageController do
   end
 
   operation(:show,
-    operation_id: "getAvatar",
-    summary: "Get Avatar",
+    operation_id: "getSharedFile",
+    summary: "Get File",
     responses: [
-      ok: {
-        "",
-        "application/json",
-        %Schema{}
+    ok: {
+      "A successful response returning a single public file",
+      "application/json",
+      %Schema{
+        type: :object,
+        properties: %{
+          data: %Schema{
+            type: :object,
+            properties: %{
+              files: %Schema{
+                type: :object,
+                properties: SharedContent.SharedFile.json_schema(),
+                description: "A single file"
+              }
+            }
+          }
+        }
       }
+    }
     ]
   )
 
   def show(conn, %{"id" => id}) do
     id
-    |> UserContent.get_avatar!()
+    |> SharedContent.get_public_shared_file!(id)
     |> case do
-      %Uro.UserContent.Avatar{} = avatar ->
+      %Uro.SharedContent.SharedFile{} = sharedFile ->
         conn
         |> put_status(200)
         |> json(%{
           data: %{
-            avatar:
+            files:
               Uro.Helpers.UserContentHelper.get_api_user_content(
-                avatar,
+                sharedFile,
                 %{merge_uploader_id: true, merge_is_public: true}
               )
           }
