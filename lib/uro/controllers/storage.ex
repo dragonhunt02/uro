@@ -78,7 +78,7 @@ defmodule Uro.StorageController do
 
   def show(conn, %{"id" => id}) do
     id
-    |> SharedContent.get_public_shared_file!(id)
+    |> SharedContent.get_public_shared_file!()
     |> case do
       %Uro.SharedContent.SharedFile{} = sharedFile ->
         conn
