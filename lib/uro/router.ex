@@ -165,7 +165,7 @@ defmodule Uro.Router do
   end
 
   scope "/storage" do
-    get "/:id", Uro.AvatarController, :show
+    get "/:id", Uro.StorageController, :show
     # lists all server ispublic files, add auth require
     get "/", Uro.StorageController, :index
 
