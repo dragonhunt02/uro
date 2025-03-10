@@ -63,11 +63,7 @@ defmodule Uro.StorageController do
           data: %Schema{
             type: :object,
             properties: %{
-              files: %Schema{
-                type: :object,
-                properties: SharedContent.SharedFile.json_schema(),
-                description: "A single file"
-              }
+              files: SharedContent.SharedFile.json_schema()
             }
           }
         }
