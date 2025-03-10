@@ -29,7 +29,7 @@ export const useListSharedFiles = () => {
 
   return sharedFiles;
 };
-
+/*
 export const useListSharedFiles = () => {
 	const { withReturnIntent } = useReturnIntent();
 	const { pathname } = useLocation();
@@ -51,3 +51,4 @@ export const useListSharedFiles = () => {
 	return session;
 };
 
+*/
