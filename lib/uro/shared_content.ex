@@ -58,14 +58,14 @@ defmodule Uro.SharedContent do
 
   ## Examples
 
-      iex> get_avatar!(123)
+      iex> get_shared_file!(123)
       %Avatar{}
 
-      iex> get_avatar!(456)
+      iex> get_shared_file!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_avatar!(id) do
+  def get_shared_file!(id) do
     SharedFile
     |> Repo.get!(id)
     |> Repo.preload([:uploader])
