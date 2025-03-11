@@ -231,9 +231,14 @@ defmodule Uro.Router do
       delete "/:id", Uro.MapController, :delete
     end
 
-    #scope "/props" do
-    #  pipe_through([:dashboard_props])
-    #  get "/", Uro.PropController, :index
-    #end
+    scope "/props" do
+      pipe_through([:dashboard_props])
+
+      get "/", Uro.PropController, :indexUploads
+      get "/:id", Uro.PropController, :showUpload
+      post "/", Uro.PropController, :create
+      put "/:id", Uro.PropController, :update
+      delete "/:id", Uro.PropController, :delete
+    end
   end
 end
