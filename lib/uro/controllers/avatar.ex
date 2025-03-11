@@ -227,14 +227,15 @@ defmodule Uro.AvatarController do
           {:ok, _avatar} ->
             conn
             |> put_status(200)
+            |> json(%{ data: %{} })
 
-          {:error, %Ecto.Changeset{}} ->
-            conn
-            |> put_status(500)
+          {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
+            {:error, changeset}
         end
       _ ->
         conn
         |> put_status(200)
+        |> json(%{ data: %{} })
     end
   end
 end
