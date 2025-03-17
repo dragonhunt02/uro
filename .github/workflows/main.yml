@@ -61,9 +61,9 @@ jobs:
             
 
             git log -n 5
-            git reset --soft HEAD~21
+            git reset --soft HEAD~2
 
-            rm -r priv/repo/migrations/*.md
+            #rm -r priv/repo/migrations/*.md
             
             #mix local.hex --force
             #mix deps.get
