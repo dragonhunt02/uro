@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: api-fix
+          ref: cockroach-db
           fetch-depth: 0
       - name: Dispatch to workflow 
         run: |
@@ -61,9 +61,9 @@ jobs:
             
 
             git log -n 5
-            git reset --soft HEAD~2
+            git reset --soft HEAD~21
 
-            #rm -r priv/repo/test_content/
+            rm -r priv/repo/migrations/*.md
             
             #mix local.hex --force
             #mix deps.get
@@ -72,7 +72,7 @@ jobs:
             git config --global user.email "jackhunt43@libero.it"
             git config --global user.name "dragonhunt02"
             git add -A
-            git commit -a -m 'Implements admin/avatar/maps/profile/session/shards/registration apis and small fixes'
+            git commit -a -m 'Implement fixes to use CockroachDB'
             git log -n 5
             git status
             git push -f
