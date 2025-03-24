@@ -7,7 +7,6 @@ defmodule Uro.SharedContent do
   alias Uro.Repo
 
   alias Uro.SharedContent.SharedFile
-  alias Uro.UserContent.Avatar
 
   @doc """
   Returns the list of all storage files.
@@ -27,8 +26,8 @@ defmodule Uro.SharedContent do
   @doc """
   Returns the list of avatars with pagination
   """
-  def list_avatars_paginated(params) do
-    Avatar
+  def list_shared_files_paginated(params) do
+    SharedFile
     |> Repo.paginate(params)
   end
 
@@ -45,8 +44,8 @@ defmodule Uro.SharedContent do
   @doc """
   Returns the list of avatars marked as public with pagination
   """
-  def list_public_avatars_paginated(params) do
-    Avatar
+  def list_public_shared_files_paginated(params) do
+    SharedFile
     |> where(is_public: true)
     |> Repo.paginate(params)
   end
