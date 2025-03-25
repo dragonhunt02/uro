@@ -36,9 +36,9 @@ defmodule Uro.SharedContent.SharedContent do
       @spec shared_content_changeset(Ecto.Schema.t() | Changeset.t(), map()) :: Changeset.t()
       def shared_content_changeset(changeset, attrs) do
         changeset
-        |> cast(attrs, [:name, :description, :file_path, :file_size, :file_type,
-          :checksum, :upload_date, :uploader_id, :is_public,
-          :version, :tags, :permissions])
+        |> cast(attrs, [:name, :description, :file_size,
+          :checksum, :uploader_id, :is_public,
+          :version, :tags])
         |> foreign_key_constraint(:uploader_id)
       end
 
@@ -55,9 +55,7 @@ defmodule Uro.SharedContent.SharedContent do
             file_info = File.stat!(path)
 
             changeset
-            |> put_change(:file_path, path)
             |> put_change(:file_size, file_info.size)
-            # |> put_change(:file_type, MIME.from_path(path))
             |> put_change(:upload_date, DateTime.utc_now(:second))
             |> put_change(:checksum, generate_checksum(path))
           _ ->
@@ -78,15 +76,11 @@ defmodule Uro.SharedContent.SharedContent do
     quote do
       field :name, :string
       field :description, :string
-      field :file_path, :string
       field :file_size, :integer
-      field :file_type, :string
       field :checksum, :string
-      field :upload_date, :utc_datetime
       field :is_public, :boolean
       field :version, :string
       field :tags, {:array, :string}
-      field :permissions, :map
       field :shared_content_data, Uro.Uploaders.SharedContentData.Type
       belongs_to :uploader, Uro.Accounts.User, foreign_key: :uploader_id, type: :binary_id
     end
