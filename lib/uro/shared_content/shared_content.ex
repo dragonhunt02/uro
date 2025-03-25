@@ -12,10 +12,10 @@ defmodule Uro.SharedContent.SharedContent do
                  :description,
                  :name,
                  :shared_content_data,
-                 :file_size,
-                 :checksum,
                  :uploader_id,
                  :is_public,
+                 :checksum,
+                 :file_size,
                  :version
                ]}
       import unquote(__MODULE__), only: [shared_content_fields: 0]
@@ -81,9 +81,9 @@ defmodule Uro.SharedContent.SharedContent do
     quote do
       field :name, :string
       field :description, :string
-      field :file_size, :integer
-      field :checksum, :string
       field :is_public, :boolean
+      field :checksum, :string
+      field :file_size, :integer
       field :version, :string
       field :tags, {:array, :string}
       field :shared_content_data, Uro.Uploaders.SharedContentData.Type
