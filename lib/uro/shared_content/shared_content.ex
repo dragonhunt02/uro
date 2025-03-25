@@ -26,12 +26,11 @@ defmodule Uro.SharedContent.SharedContent do
         properties: %{
           id: %OpenApiSpex.Schema{type: :string, format: :uuid, description: "File ID"},
           name: %OpenApiSpex.Schema{type: :string, description: "File name"},
-          checksum: %OpenApiSpex.Schema{type: :string, nullable: true, description: "File checksum"},
           description: %OpenApiSpex.Schema{type: :string, description: "File description"},
           uploader_id: %OpenApiSpex.Schema{type: :string, format: :uuid, description: "Uploader ID"},
           shared_content_data: %OpenApiSpex.Schema{type: :string, description: "Shared content URL"},
+          checksum: %OpenApiSpex.Schema{type: :string, nullable: true, description: "File SHA256 checksum"},
           file_size: %OpenApiSpex.Schema{type: :integer, description: "File size in bytes"},
-          checksum: %OpenApiSpex.Schema{type: :string, description: "SHA256 checksum"},
           version: %OpenApiSpex.Schema{type: :string, description: "File version"},
         },
         required: [:id, :name, :description, :uploader_id, :shared_content_data]
