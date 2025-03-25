@@ -31,7 +31,7 @@ defmodule Uro.SharedContent.SharedContent do
           shared_content_data: %OpenApiSpex.Schema{type: :string, description: "Shared content URL"},
           checksum: %OpenApiSpex.Schema{type: :string, nullable: true, description: "File SHA256 checksum"},
           file_size: %OpenApiSpex.Schema{type: :integer, description: "File size in bytes"},
-          version: %OpenApiSpex.Schema{type: :string, description: "File version"},
+          version: %OpenApiSpex.Schema{type: :string, description: "File version"}
         },
         required: [:id, :name, :description, :uploader_id, :shared_content_data]
       }
@@ -61,7 +61,6 @@ defmodule Uro.SharedContent.SharedContent do
 
             changeset
             |> put_change(:file_size, file_info.size)
-            |> put_change(:upload_date, DateTime.utc_now(:second))
             |> put_change(:checksum, generate_checksum(path))
           _ ->
             changeset
