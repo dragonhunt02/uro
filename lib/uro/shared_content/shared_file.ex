@@ -8,7 +8,7 @@ defmodule Uro.SharedContent.SharedFile do
   schema "shared_files" do
     shared_content_fields()
 
-    timestamps()
+    timestamps(inserted_at: :created_at)
   end
 
   @doc false
