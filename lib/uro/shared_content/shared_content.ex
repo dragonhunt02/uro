@@ -12,8 +12,11 @@ defmodule Uro.SharedContent.SharedContent do
                  :description,
                  :name,
                  :shared_content_data,
+                 :file_size,
+                 :checksum,
                  :uploader_id,
-                 :is_public
+                 :is_public,
+                 :version
                ]}
       import unquote(__MODULE__), only: [shared_content_fields: 0]
 
@@ -26,7 +29,10 @@ defmodule Uro.SharedContent.SharedContent do
           checksum: %OpenApiSpex.Schema{type: :string, nullable: true, description: "File checksum"},
           description: %OpenApiSpex.Schema{type: :string, description: "File description"},
           uploader_id: %OpenApiSpex.Schema{type: :string, format: :uuid, description: "Uploader ID"},
-          shared_content_data: %OpenApiSpex.Schema{type: :string, description: "Shared content URL"}
+          shared_content_data: %OpenApiSpex.Schema{type: :string, description: "Shared content URL"},
+          file_size: %OpenApiSpex.Schema{type: :integer, description: "File size in bytes"},
+          checksum: %OpenApiSpex.Schema{type: :string, description: "SHA256 checksum"},
+          version: %OpenApiSpex.Schema{type: :string, description: "File version"},
         },
         required: [:id, :name, :description, :uploader_id, :shared_content_data]
       }
