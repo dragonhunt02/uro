@@ -2,7 +2,7 @@ name: Uro Curl
 
 on:
   push:
-    branches: [api]
+    branches: [whitelist3]
   pull_request:
     branches: [master]
 
@@ -18,7 +18,8 @@ jobs:
     steps:
       - name: Restore dependencies cache
         run: |
-          #curl -v https://v-sekai.cloud/api/v1/maps
+          curl -v https://v-sekai.cloud/api/v1/maps
+          curl -v https://v-sekai.cloud/api/v1/avatars
           
           curl -s https://v-sekai.cloud/api/v1/maps \
           | jq -r '.data.maps[0].id' > response2.json 
