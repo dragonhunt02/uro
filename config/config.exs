@@ -161,15 +161,6 @@ config :waffle,
 
 # storage_dir: "uploads"
 
-config :waffle,
-  storage: Waffle.Storage.Local
-
-# storage_dir: "uploads"
-
-config :waffle,
-  storage: Waffle.Storage.Local
-  # storage_dir: "uploads"
-
 import_config "#{Mix.env()}.exs"
 
 if Mix.env() == "dev" do
