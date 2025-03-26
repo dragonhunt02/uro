@@ -4,21 +4,7 @@ defmodule Uro.MapController do
   alias OpenApiSpex.Schema
   alias Uro.UserContent
 
-  action_fallback Uro.FallbackController
-
   tags(["maps"])
-
-  operation(:index,
-    operation_id: "listMaps",
-    summary: "List Maps",
-    responses: [
-      ok: {
-        "",
-        "application/json",
-        %Schema{}
-      }
-    ]
-  )
 
   operation(:index,
     operation_id: "listMaps",
@@ -108,6 +94,176 @@ defmodule Uro.MapController do
         put_status(
           conn,
           400
+        )
+    end
+  end
+
+  operation(:showUpload,
+    operation_id: "getMapUpload",
+    summary: "Get uploaded Map",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        %Schema{}
+      }
+    ]
+  )
+
+  def showUpload(conn, %{"id" => id}) do
+    user = Uro.Helpers.Auth.get_current_user(conn)
+
+    case UserContent.get_map_uploaded_by_user!(id, user) do
+      %Uro.UserContent.Map{} = map ->
+        conn
+        |> put_status(200)
+        |> json(%{
+          data: %{
+            map:
+              Uro.Helpers.UserContentHelper.get_api_user_content(
+                map,
+                %{merge_uploader_id: true, merge_is_public: true}
+              )
+          }
+        })
+
+      _ ->
+        put_status(
+          conn,
+          400
+        )
+    end
+  end
+
+  operation(:create,
+    operation_id: "createMap",
+    summary: "Create Map",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        %Schema{}
+      }
+    ]
+  )
+
+  def create(conn, %{"map" => map_params}) do
+    case UserContent.create_map(
+           Uro.Helpers.UserContentHelper.get_correct_user_content_params(
+             conn,
+             map_params,
+             "user_content_data",
+             "user_content_preview"
+           )
+         ) do
+      {:ok, map} ->
+        conn
+        |> put_status(200)
+        |> json(%{
+          data: %{
+            id: to_string(map.id),
+            map:
+              Uro.Helpers.UserContentHelper.get_api_user_content(
+                map,
+                %{merge_uploader_id: true}
+              )
+          }
+        })
+
+      {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
+        conn
+        |> put_status(500)
+        |> (fn conn ->
+              if Mix.env() == "dev" do
+                json(
+                  conn,
+                  %{changes: changes, errors: errors}
+                )
+              end
+            end).()
+    end
+  end
+
+  operation(:update,
+    operation_id: "updateMap",
+    summary: "Update Map",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        %Schema{}
+      }
+    ]
+  )
+
+  def update(conn, %{"id" => id, "map" => map_params}) do
+    user = Uro.Helpers.Auth.get_current_user(conn)
+    map = UserContent.get_map_uploaded_by_user!(id, user)
+
+    case UserContent.update_map(map, map_params) do
+      {:ok, map} ->
+        conn
+        |> put_status(200)
+        |> json(%{
+          data: %{
+            id: to_string(map.id),
+            map:
+              Uro.Helpers.UserContentHelper.get_api_user_content(
+                map,
+                %{merge_uploader_id: true}
+              )
+          }
+        })
+
+      {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
+        conn
+        |> put_status(500)
+        |> (fn conn ->
+              if Mix.env() == "dev" do
+                json(
+                  conn,
+                  %{changes: changes, errors: errors}
+                )
+              end
+            end).()
+    end
+  end
+
+  operation(:delete,
+    operation_id: "deleteMap",
+    summary: "Delete Map",
+    responses: [
+      ok: {
+        "",
+        "application/json",
+        %Schema{}
+      }
+    ]
+  )
+
+  def delete(conn, %{"id" => id}) do
+    user = Uro.Helpers.Auth.get_current_user(conn)
+
+    case UserContent.get_map_uploaded_by_user!(id, user) do
+      %Uro.UserContent.Map{} = map ->
+        case UserContent.delete_map(map) do
+          {:ok, _map} ->
+            put_status(
+              conn,
+              200
+            )
+
+          {:error, %Ecto.Changeset{}} ->
+            put_status(
+              conn,
+              500
+            )
+        end
+
+      _ ->
+        put_status(
+          conn,
+          200
         )
     end
   end
