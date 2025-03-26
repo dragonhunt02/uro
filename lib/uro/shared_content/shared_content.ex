@@ -67,8 +67,17 @@ defmodule Uro.SharedContent.SharedContent do
         end
       end
 
+      #defp generate_checksum1(file_path) do
+      #  :crypto.hash(:sha256, File.read!(file_path))
+      #  |> Base.encode16(case: :lower)
+      #end
+
       defp generate_checksum(file_path) do
-        :crypto.hash(:sha256, File.read!(file_path))
+        file_stream = File.stream!(file_path, [], 4096) # 4KB chunks
+        hash = Enum.reduce(file_stream, :crypto.hash_init(:sha256), fn chunk, acc ->
+          :crypto.hash_update(acc, chunk)
+        end)
+        :crypto.hash_final(hash)
         |> Base.encode16(case: :lower)
       end
 
