@@ -6,6 +6,7 @@ defmodule Uro.SharedContent.SharedContent do
     quote do
       use Ecto.Schema
       use Waffle.Ecto.Schema
+      alias Uro.Helpers
 
       @derive {Jason.Encoder,
                only: [
@@ -61,26 +62,11 @@ defmodule Uro.SharedContent.SharedContent do
 
             changeset
             |> put_change(:file_size, file_info.size)
-            |> put_change(:checksum, generate_checksum(path))
+            |> put_change(:checksum, Helpers.Validation.generate_file_sha256(path))
           _ ->
             changeset
         end
       end
-
-      #defp generate_checksum1(file_path) do
-      #  :crypto.hash(:sha256, File.read!(file_path))
-      #  |> Base.encode16(case: :lower)
-      #end
-
-      defp generate_checksum(file_path) do
-        file_stream = File.stream!(file_path, [], 4096) # 4KB chunks
-        hash = Enum.reduce(file_stream, :crypto.hash_init(:sha256), fn chunk, acc ->
-          :crypto.hash_update(acc, chunk)
-        end)
-        :crypto.hash_final(hash)
-        |> Base.encode16(case: :lower)
-      end
-
     end
   end
 
