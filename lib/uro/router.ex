@@ -121,6 +121,19 @@ defmodule Uro.Router do
     get("/", Uro.AdminController, :status)
   end
 
+  scope "/storage" do
+    get "/:id", Uro.StorageController, :show
+    # lists all server ispublic files, add auth require
+    get "/", Uro.StorageController, :index
+
+    put "/:id", Uro.StorageController, :update
+    delete "/:id", Uro.StorageController, :delete
+
+    scope "/upload" do
+      post "/", Uro.StorageController, :create
+    end
+  end
+
   scope "/users" do
     post "/", Uro.UserController, :create
 
@@ -175,9 +188,14 @@ defmodule Uro.Router do
       delete "/:id", Uro.MapController, :delete
     end
 
-    # scope "/props" do
-    #  pipe_through([:dashboard_props])
-    #  get "/", Uro.PropController, :index
-    # end
+    scope "/props" do
+      pipe_through([:dashboard_props])
+
+      get "/", Uro.PropController, :indexUploads
+      get "/:id", Uro.PropController, :showUpload
+      post "/", Uro.PropController, :create
+      put "/:id", Uro.PropController, :update
+      delete "/:id", Uro.PropController, :delete
+    end
   end
 end
