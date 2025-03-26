@@ -84,7 +84,7 @@ defmodule Uro.SharedContent do
   ## Examples
 
       iex> get_shared_file!(123)
-      %Avatar{}
+      %SharedFile{}
 
       iex> get_shared_file!(456)
       ** (Ecto.NoResultsError)
