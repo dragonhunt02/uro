@@ -122,6 +122,9 @@ defmodule Uro.Router do
   end
 
   scope "/storage" do
+    scope "/tag" do
+      get "/:tag", Uro.StorageController, :indexByTag
+    end
     get "/:id", Uro.StorageController, :show
     # lists all server ispublic files, add auth require
     get "/", Uro.StorageController, :index
