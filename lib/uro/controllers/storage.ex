@@ -50,6 +50,47 @@ defmodule Uro.StorageController do
     })
   end
 
+  operation(:indexByTag,
+    operation_id: "listSharedFilesByTag",
+    summary: "List all public storage files by tag",
+    responses: [
+    ok: {
+      "A successful response returning a list of storage files",
+      "application/json",
+      %Schema{
+        type: :object,
+        properties: %{
+          data: %Schema{
+            type: :object,
+            properties: %{
+              files: %Schema{
+                type: :array,
+                items: SharedContent.SharedFile.json_schema(),
+                description: "List of files"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+)
+
+  def indexByTag(conn, %{"tag" => tag}) do
+    file_list = SharedContent.list_public_shared_files_by_tag(tag)
+
+    conn
+    |> put_status(200)
+    |> json(%{
+      data: %{
+        files: 
+          Uro.Helpers.SharedContentHelper.get_api_shared_content_list(file_list, %{
+            merge_uploader_id: true
+          })
+      }
+    })
+  end
+
   operation(:show,
     operation_id: "getSharedFile",
     summary: "Get File",
