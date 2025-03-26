@@ -51,6 +51,32 @@ defmodule Uro.SharedContent do
   end
 
   @doc """
+  Returns the list of public shared files filtered by tag
+  """
+  def list_public_shared_files_by_tag(tag) do
+    SharedFile
+    |> where(is_public: true)
+    |> Repo.all()
+    |> Repo.preload([:uploader])
+    |> Enum.filter(fn shared_file ->
+      tag in shared_file.tags
+    end)
+  end
+
+  @doc """
+  Returns the list of public shared files matching all tags in a list
+  """
+  def list_public_shared_files_by_taglist(tag_list) when is_list(tag_list) do
+    SharedFile
+    |> where(is_public: true)
+    |> Repo.all()
+    |> Repo.preload([:uploader])
+    |> Enum.filter(fn shared_file ->
+      Enum.all?(tag_list, fn tag -> tag in shared_file.tags end)
+    end)
+  end
+
+  @doc """
   Gets a single avatar.
 
   Raises `Ecto.NoResultsError` if the Avatar does not exist.
