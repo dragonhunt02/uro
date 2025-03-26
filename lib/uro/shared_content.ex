@@ -9,7 +9,7 @@ defmodule Uro.SharedContent do
   alias Uro.SharedContent.SharedFile
 
   @doc """
-  Returns the list of all storage files.
+  Returns the list of all shared files.
 
   ## Examples
 
@@ -24,7 +24,7 @@ defmodule Uro.SharedContent do
   end
 
   @doc """
-  Returns the list of avatars with pagination
+  Returns the list of shared files with pagination
   """
   def list_shared_files_paginated(params) do
     SharedFile
@@ -32,7 +32,7 @@ defmodule Uro.SharedContent do
   end
 
   @doc """
-  Returns the list of avatars marked as public
+  Returns the list of public shared files
   """
   def list_public_shared_files() do
     SharedFile
@@ -42,7 +42,7 @@ defmodule Uro.SharedContent do
   end
 
   @doc """
-  Returns the list of avatars marked as public with pagination
+  Returns the list of public shared files with pagination
   """
   def list_public_shared_files_paginated(params) do
     SharedFile
@@ -77,9 +77,9 @@ defmodule Uro.SharedContent do
   end
 
   @doc """
-  Gets a single avatar.
+  Gets a single shared file.
 
-  Raises `Ecto.NoResultsError` if the Avatar does not exist.
+  Raises `Ecto.NoResultsError` if the SharedFile does not exist.
 
   ## Examples
 
@@ -97,7 +97,7 @@ defmodule Uro.SharedContent do
   end
 
   @doc """
-  Gets a single public file.
+  Gets a single public shared file.
 
   Raises `Ecto.NoResultsError` if the SharedFile does not exist or is inaccessible.
 
@@ -110,7 +110,7 @@ defmodule Uro.SharedContent do
   end
 
   @doc """
-  Creates a storage file.
+  Creates a shared file.
 
   ## Examples
 
@@ -141,12 +141,12 @@ defmodule Uro.SharedContent do
   end
 
   @doc """
-  Updates a file.
+  Updates a shared file.
 
   ## Examples
 
       iex> update_shared_file(shared_file, %{field: new_value})
-      {:ok, %Avatar{}}
+      {:ok, %SharedFile{}}
 
       iex> update_shared_file(shared_file, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
@@ -160,7 +160,7 @@ defmodule Uro.SharedContent do
   end
 
   @doc """
-  Deletes a file.
+  Deletes a shared file.
 
   ## Examples
 
@@ -187,7 +187,5 @@ defmodule Uro.SharedContent do
   def change_shared_file(%SharedFile{} = shared_file) do
     SharedFile.changeset(shared_file, %{})
   end
-
-
 
 end
