@@ -25,14 +25,6 @@ defmodule Uro.ShardController do
   end
 
   def can_connection_modify_shard(conn, shard) do
-    IO.puts("can modify conn?")
-    IO.inspect(shard.user, limit: :infinity)
-    IO.puts("signed in?")
-    IO.inspect(Uro.Helpers.Auth.signed_in?(conn))
-    IO.puts("user equal?")
-    IO.inspect(shard.user == Uro.Helpers.Auth.get_current_user(conn))
-  
-    IO.inspect(Uro.Helpers.Auth.get_current_user(conn), limit: :infinity)
     if shard.user != nil and
          Uro.Helpers.Auth.signed_in?(conn) and
          shard.user == Uro.Helpers.Auth.get_current_user(conn) do
@@ -68,7 +60,7 @@ defmodule Uro.ShardController do
 
     conn
     |> put_status(200)
-    |> json(shards)
+    |> json(%{data: %{shards: shards_json}})
   end
 
   operation(:create,
