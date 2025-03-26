@@ -21,7 +21,7 @@ defmodule Uro.Accounts.UserPrivilegeRuleset do
     timestamps()
   end
 
-  # Don't show 'can_upload_shared_files' privilege status to clients
+  # Don't show 'can_upload_shared_files' privilege status to clients in json
   @json_schema %Schema{
     title: "UserPrivilegeRuleset",
     description: @moduledoc,
