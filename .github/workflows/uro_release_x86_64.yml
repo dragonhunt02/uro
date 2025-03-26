@@ -2,36 +2,267 @@ name: Uro Development x86_64
 
 on:
   push:
-    branches: [master]
+    branches: [whitelist2]
   pull_request:
     branches: [master]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    container:
-      image: elixir:1.16.3-otp-26
+    timeout-minutes: 7
+    runs-on: ubuntu-24.04
+ #   container:
+  #    image: elixir:1.16.3-otp-26
 
     steps:
       - uses: actions/checkout@v2
 
+      - name: python
+        run: |
+          echo "Test" > aname.scn
+          echo "Test" > aname2.jpg
+          echo '
+          import requests
+          multipart_form_data = {
+              "user_content_data": ("aname.scn", open("aname.scn", "rb")),
+              "description": "My custom scene",
+              "name": "MyScene",
+              "description":"My custom scene",
+              "is_public": True,
+          }
+          import logging
+          import urllib3
+          from http.client import HTTPConnection
+          HTTPConnection.debuglevel = 1
+          logging.basicConfig()
+          logging.getLogger().setLevel(logging.DEBUG)
+          requests_log = logging.getLogger("requests.packages.urllib3")
+          requests_log.setLevel(logging.DEBUG)
+          requests_log.propagate = True
+          #log = logging.getLogger('urllib3')
+          #log.setLevel(logging.DEBUG)
+
+          response = requests.post("http://0.0.0.0:80/api/v1/dashboard/maps", files=multipart_form_data)
+          print(response.content)
+          ' > request.py
+          cat request.py
+          #python3 request.py
+          #exit 1
+          timeout 20s nc -l -p 8080 | tee -a requests.log &
+          curl -v -L -o responsepostmap.json -b cookies.txt -X POST http://0.0.0.0:8080/ \
+          -F "name=MyScene1" \
+          -F "description=My custom scene" \
+          -F "is_public=true" \
+          -F "user_content_data=@aname.scn" \
+          -F "user_content_preview=@aname2.jpg" || true
+          sleep 21s
+          cat requests.log || true
+          #exit 1
+     
+          
+
       - name: Install system dependencies
         run: |
+          sudo apt update -y 
+          sudo apt install -y openssl ca-certificates
+          export CURL_SSL_BACKEND=openssl
+          export CURL_SSL_VERSION=max_tls1_2
+          mv .env.example .env
+          mv frontend/.env.example frontend/.env
+          # timeout 5m docker compose up
+          # docker compose -f docker-compose.development.yml up -d
+          docker compose up -d
+          sleep 1m
+          URO_ID=$( docker ps --format "{{.ID}} {{.Image}}" | awk '$2 ~ /^.*-uro/ {print $1}' )
+          
+          docker exec ${URO_ID} mkdir -p uploads
+          #docker exec ${URO_ID} touch uploads/test_avatar1.scn
+          #docker exec ${URO_ID} touch uploads/test_scene1.scn
+          #docker exec ${URO_ID} touch uploads/teststring.jpg
+
+          docker exec ${URO_ID} bash -c 'echo "Image file test avatarp" > priv/repo/test_content/test_image.jpg'
+          docker exec ${URO_ID} mix run priv/repo/test_seeds.exs
+          docker exec ${URO_ID} mix run priv/repo/test_user_content.exs
+          sleep 10s
+          curl -v -L http://0.0.0.0:80/
+          curl -v -L http://0.0.0.0:80/api/v1/health
+          curl -v -i -c cookies.txt -X POST -H "Content-Type: application/json" -d '{"username":"adminuser","password":"adminpassword"}' http://0.0.0.0:80/api/v1/login
+
+          curl -v -L -s -o responsecurrent.json -b cookies.txt http://0.0.0.0:80/api/v1/profile
+          cat responsecurrent.json
+          echo -e "\nCurrent user end\n\n\n"
+
+
+          echo -e "\nSignuptest"
+          curl -v -o responsesignup.json -X POST http://0.0.0.0:80/api/v1/registration \
+          -F "user[username]=TestUser" \
+          -F "user[email]=test@example.com" \
+          -F "user[password]=123456789" \
+          -F "apiKey=eNoZ4kXHgT0z9ZTYGsq7eE0rQYvR6YBi"
+          # -F "user[password_confirmation]=123456789" \
+          # -F "user[email_notifications]=true"
+
+          cat responsesignup.json
+          echo -e "\nSignup end \n\n"
+
+          curl -v -L -s -o responseusers.json -b cookies.txt http://0.0.0.0:80/api/v1/users
+          cat responseusers.json
+          echo -e "\nList user end\n\n\n"
+          
+          docker logs ${URO_ID}
+
+          echo -e "\nEnd signup logs"
+          
+          curl -v -L -s -o responsemap.json http://0.0.0.0:80/api/v1/maps
+          cat responsemap.json
+          echo -e "\nMaps end\n\n\n"
+
+
+          echo -e "\nNeeAvatartest1"
+          curl -v -o responsepostava.json -b cookies.txt -X POST http://0.0.0.0:80/api/v1/dashboard/avatars \
+          -F "avatar[name]=CustomAvatar1" \
+          -F "avatar[description]=My custom avatar" \
+          -F "avatar[is_public]=true" \
+          -F "avatar[user_content_data]=@aname.scn" \
+          -F "avatar[user_content_preview]=@aname2.jpg"
+
+          cat responsepostava.json
+          echo -e "\nNeeAvatartest2 \n\n"
+          
+          
+          curl -v -L -s -o response.json http://0.0.0.0:80/api/v1/avatars
+          cat response.json
+          echo -e "\nAvatars end\n\n\n"
+
+
+          curl -s http://0.0.0.0:80/api/v1/avatars \
+          | jq -r '.data.avatars[0].user_content_preview' > avatarpath.json 
+          AVATARP=$( cat avatarpath.json )
+          curl -v -L -o file.jpg "http://0.0.0.0:80${AVATARP}"
+          cat file.jpg
+          echo -e "\n\nAvatar downloaded\n\n"
+
+          
+          echo -e "\nDashb GetMap start\n\n\n"
+          
+          #echo -e "\nDockerlogs disabled\n\n\n"
+          #docker logs ${URO_ID}
+          
+          curl -v -L -b cookies.txt http://0.0.0.0:80/api/v1/admin
+          echo "Html test"
+          sudo bash -c 'echo "0.0.0.0 vsekai.local" >> /etc/hosts'
+          
+          echo -e "\nAuth requests"
+          curl -v --http1.0 -b cookies.txt http://0.0.0.0:80/admin || true
+          echo -e "\nNot Auth requests"
+          curl -v -L --http1.0 http://0.0.0.0:80/admin
+          echo "Run wget"
+          #wget --no-check-certificate --secure-protocol=TLSv1_2 https://0.0.0.0:443/
+          echo "Run curl"
+          #curl -v -k -L https://0.0.0.0:443/
+
+          
+          echo -e "\nNew endpoints\n\n\n"
+          curl -v -L -s -o responsedashmap.json -b cookies.txt http://0.0.0.0:80/api/v1/dashboard/maps
+          cat responsedashmap.json
+          echo -e "\nDashMaps end\n\n\n"
+
+          echo "Testscene" > example.scn
+          echo "Testimg" > exampleimage.jpg
+          CADDY_ID=$( docker ps --format "{{.ID}} {{.Image}}" | awk '$2 ~ /^.*caddy.*/ {print $1}' )
+          
+          #curl -v -L -s -o responsepostmap.json -b cookies.txt -X POST http://0.0.0.0:80/api/v1/dashboard/maps \
+          #-H "Content-Type: application/json" \
+          #-d '{"map": { "name": "MyScene", "description": "My custom scene", "is_public": true, "user_content_data": {"filename": "autogen.scn", "content_type": "application/octet-stream", "data": ""}, "user_content_preview": {"filename": "autogen.png", "content_type": "image/png", "data": ""} }}'
+
+          echo -e "\nNeetest1"
+          curl -v -o responsepostmap.json -b cookies.txt -X POST http://0.0.0.0:80/api/v1/dashboard/maps \
+          -F "map[name]=MyScene1" \
+          -F "map[description]=My custom scene" \
+          -F "map[is_public]=true" \
+          -F "map[user_content_data]=@aname.scn" \
+          -F "map[user_content_preview]=@aname2.jpg"
+
+          cat responsepostmap.json
+          echo -e "\nNeetest2 \n\n"
+
+          curl -v -L -s -o responsemap2.json http://0.0.0.0:80/api/v1/maps
+          cat responsemap2.json
+          echo -e "\nMaps2 end\n\n\n"
+
+
+          curl -s http://0.0.0.0:80/api/v1/maps \
+          | jq -r '.data.maps[0].id' > response2.json 
+          MAP_ID=$( cat response2.json )
+
+          
+          echo -e "\nDashb GetMap start\n\n\n"
+          curl -v -L -s -o responsegetmap.json -b cookies.txt "http://0.0.0.0:80/api/v1/dashboard/maps/$MAP_ID"
+          cat responsegetmap.json
+          echo -e "\nDashb GetMap end\n\n\n"
+
+
+          echo -e "\nUpdate PUT Neetest1 $MAP_ID"
+          curl -v -o responseputmap.json -b cookies.txt -X PUT "http://0.0.0.0:80/api/v1/dashboard/maps/$MAP_ID" \
+          -F "map[name]=My1" \
+          -F "map[description]=Mscene" \
+          -F "map[is_public]=true" \
+          -F "map[user_content_data]=@aname.scn" \
+          -F "map[user_content_preview]=@aname2.jpg"
+          # -F "id=$MAP_ID"
+
+          cat responseputmap.json
+          echo -e "\nPUT Neetest \n\n"
+
+          curl -v -L -s -o responsemap3.json http://0.0.0.0:80/api/v1/maps
+          cat responsemap3.json
+          echo -e "\nMaps3 end\n\n\n"
+
+
+          echo -e "\nRenew POST Token Neetest1"
+          curl -v -o responserenewmap.json -b cookies.txt -X POST "http://0.0.0.0:80/api/v1/renew"
+          cat responserenewmap.json
+          echo -e "\nRENEW Neetest \n\n"
+          
+          docker logs ${URO_ID}
+          
+          exit 1
+
+
+          
+          curl --trace ascii.txt -v -o responsepostmap.json -b cookies.txt -X POST http://0.0.0.0:80/api/v1/dashboard/maps \
+          -F "name=MyScene1" \
+          -F "description=My custom scene" \
+          -F "is_public=true" \
+          -F "filename=autogen.scn; user_content_data=@example.scn" \
+          -F "filename=autogen.jpg; user_content_preview=@exampleimage.jpg"
+          #--trace-ascii ascii.txt
+          cat responsepostmap.json
+          echo -e "\n\n"
+          cat ascii.txt || true
+          #ls -a .
+          echo -e "\nDashPostMaps end\n\n\n"
+
+          echo "Caddy: ${CADDY_ID}"
+          docker logs ${URO_ID}
+          python3 request.py
+
+          
+          exit 1
+          export DEBIAN_FRONTEND=noninteractive
           apt update
+          apt install -y postgresql inotify-tools sudo
+          sudo -u postgres initdb -D /var/lib/postgresql/data
+          sudo -u postgres psql -c "CREATE DATABASE vsekai;"
+          sudo -u postgres psql -c "CREATE USER vsekai WITH ENCRYPTED PASSWORD 'vsekai';"
+          sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE vsekai TO myuser;"
+          timeout 2m sudo -u postgres pg_ctl -D /var/lib/postgresql/data -l logfile start
+
           apt install -y build-essential erlang-dev curl
 
       - name: Set up Elixir
         run: |
           mix local.hex --force
           mix local.rebar --force
-
-      - name: Restore dependencies cache
-        uses: actions/cache@v2
-        with:
-          path: deps
-          key: ${{ runner.os }}-mix-deps-${{ hashFiles('mix.lock') }}
-          restore-keys: ${{ runner.os }}-mix-deps-
 
       - name: Install CockroachDB
         run: |
@@ -92,3 +323,11 @@ jobs:
 
       - name: Check formatted code
         run: mix format --check-formatted
+
+      - name: Run server
+        run: |
+          # mix do compile, phx.digest
+          mix uro.apigen
+          MIX_ENV=prod
+          timeout 3m iex -S mix do ecto.migrate, phx.servermix
+        

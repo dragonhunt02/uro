@@ -13,11 +13,19 @@ defmodule Uro.UserContent.Avatar do
 
   @doc false
   def changeset(avatar, attrs) do
+    IO.puts "Debug changeset"
+    IO.inspect avatar
+    IO.inspect attrs
+    IO.puts "End debug"
     user_content_changeset(avatar, attrs)
   end
 
   @doc false
   def upload_changeset(avatar, attrs) do
+    IO.puts "Debug upload changeset"
+    IO.inspect avatar
+    IO.inspect attrs
+    IO.puts "End debug"
     user_content_upload_changeset(avatar, attrs)
   end
 end

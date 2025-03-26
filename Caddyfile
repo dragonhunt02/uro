@@ -1,5 +1,40 @@
-vsekai.local {
+{
+    debug
+    auto_https disable_redirects
+}
+
+http://vsekai.local {
 	handle_path /api/v1/* {
+		reverse_proxy uro:4000
+	}
+
+	handle /uploads/* {
+		reverse_proxy uro:4000
+	}
+
+	handle_path /* {
+		reverse_proxy nextjs:3000
+	}
+}
+http://0.0.0.0 {
+	handle_path /api/v1/* {
+		reverse_proxy uro:4000
+	}
+
+	handle /uploads/* {
+		reverse_proxy uro:4000
+	}
+
+	handle_path /* {
+		reverse_proxy nextjs:3000
+	}
+}
+https://vsekai.local {
+	handle_path /api/v1/* {
+		reverse_proxy uro:4000
+	}
+
+	handle /uploads/* {
 		reverse_proxy uro:4000
 	}
 

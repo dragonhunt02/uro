@@ -40,7 +40,7 @@ scene1 = UserContent.create_map(%{
       is_public: true
 })
 
-scene2 = UserContent.create_map(%{
+git merge --squash origin/scene2 = UserContent.create_map(%{
       name: "TestScene2",
       description: "Second test scene",
       user_content_data: process_file.("priv/repo/test_content/test_scene2.scn", "application/octet-stream"),

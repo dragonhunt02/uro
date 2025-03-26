@@ -1,19 +1,15 @@
-defmodule Uro.Uploaders.UserContentPreview do
+defmodule Uro.Uploaders.SharedContentData do
   use Waffle.Definition
   use Waffle.Ecto.Definition
   alias Uro.Helpers.Validation
 
-  @versions [:original, :thumb]
-  @extension_whitelist ~w(.jpg .jpeg .gif .png)
-
-  # Override the bucket on a per definition basis:
-  # def bucket do
-  #   :custom_bucket_name
-  # end
+  @versions [:original]
+  #TODO: Define allowed formats for upload
+  @extension_whitelist ~w(.zip .scn .glb .vrm)
 
   # Whitelist file extensions:
   def validate({file, _}) do
-    IO.puts("Debug validate user content")
+    IO.puts("Debug validate user content data")
     IO.inspect(file)
     IO.puts("End debug")
     file_extension = file.file_name |> Path.extname() |> String.downcase()
@@ -23,15 +19,11 @@ defmodule Uro.Uploaders.UserContentPreview do
 
   # Override the persisted filenames:
   def filename(version, {_file, scope}) do
-    "#{scope.id}_preview_#{version}"
+    "#{scope.id}_#{version}"
   end
 
   # Override the storage directory:
   def storage_dir(_version, {_file, _scope}) do
     "uploads/"
-  end
-
-  def default_url(version, _scope) do
-    "/images/user_content/default_#{version}.png"
   end
 end

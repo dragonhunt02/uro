@@ -7,4 +7,7 @@ import Config
 config :uro, Uro.Mailer, adapter: Swoosh.Adapters.Local
 
 # Do not print debug messages in production.
+
+config :uro, Uro.Mailer, adapter: Swoosh.Adapters.Local
+
 config :logger, level: :info

@@ -14,6 +14,48 @@ defmodule Uro.Router do
     json_error(conn, code: :internal_server_error)
   end
 
+  defmodule ChoosePlug do
+    import Plug.Conn
+    require Logger
+
+    def init(default), do: default
+
+    def call(conn, opts) do
+      if has_authorization_header?(conn) do
+        # Game client
+        token = get_req_header(conn, "authorization") 
+        case token do
+          [] ->
+            conn
+
+          [auth_header] ->
+            conn
+            |> assign(:signed_access_token, token)
+        end
+        Uro.Plug.RequireUser.call(conn, Uro.Plug.RequireUser.init(opts))
+      else
+        #assign(conn, :error_handler, Uro.FallbackController)
+        IO.puts("inspect requireuser")
+        IO.inspect(conn, limit: :infinity)
+        IO.inspect(opts, limit: :infinity)
+        IO.inspect(Keyword.merge(opts, error_handler: Uro.FallbackController), limit: :infinity)
+        opts = Keyword.merge(opts, error_handler: Uro.FallbackController)
+        Logger.info("Before Pow.Plug.RequireAuthenticated.call/2: #{inspect(conn)}")
+        conn = Pow.Plug.RequireAuthenticated.call(conn, Pow.Plug.RequireAuthenticated.init(opts))
+        Logger.info("After Pow.Plug.RequireAuthenticated.call/2: #{inspect(conn)}")
+        conn
+        #Pow.Plug.RequireAuthenticated.call(conn, Keyword.merge(opts, error_handler: Uro.FallbackController))
+      end
+    end
+
+    defp has_authorization_header?(conn) do
+      case get_req_header(conn, "authorization") do
+        [] -> false
+        [_ | _] -> true
+      end
+    end
+  end
+
   pipeline :api do
     plug(:accepts, ["json"])
     plug(:fetch_session)
@@ -72,21 +114,6 @@ defmodule Uro.Router do
   get("/openapi", OpenApiSpex.Plug.RenderSpec, [])
   get("/docs", Uro.OpenAPI.Viewer, [])
 
-  #### Used by game client only ####
-  # TODO: merge into other routes
-
-  # User signup using apiKey client secret
-  scope "/registration" do
-    post "/", Uro.UserController, :createClient
-  end
-
-  scope "/profile" do
-    pipe_through([:authenticated_user])
-    get("/", Uro.UserController, :showCurrent)
-  end
-
-  ##################################
-
   scope "/session" do
     # TODO: used by game client only, move to '/login' route
     post("/", Uro.AuthenticationController, :loginClient)
@@ -115,12 +142,6 @@ defmodule Uro.Router do
 
   resources("/shards", Uro.ShardController, only: [:index, :create, :update, :delete])
 
-  scope "/admin" do
-    pipe_through([:authenticated_admin])
-
-    get("/", Uro.AdminController, :status)
-  end
-
   scope "/users" do
     post "/", Uro.UserController, :create
 
@@ -147,37 +168,5 @@ defmodule Uro.Router do
         )
       end
     end
-  end
-
-  scope "/dashboard" do
-    pipe_through([:authenticated_user])
-
-    get("/", Uro.AuthenticationController, :get_current_session)
-    delete("/", Uro.AuthenticationController, :logout)
-
-    scope "/avatars" do
-      pipe_through([:dashboard_avatars])
-
-      get "/", Uro.AvatarController, :indexUploads
-      get "/:id", Uro.AvatarController, :showUpload
-      post "/", Uro.AvatarController, :create
-      put "/:id", Uro.AvatarController, :update
-      delete "/:id", Uro.AvatarController, :delete
-    end
-
-    scope "/maps" do
-      pipe_through([:dashboard_maps])
-
-      get "/", Uro.MapController, :indexUploads
-      get "/:id", Uro.MapController, :showUpload
-      post "/", Uro.MapController, :create
-      put "/:id", Uro.MapController, :update
-      delete "/:id", Uro.MapController, :delete
-    end
-
-    # scope "/props" do
-    #  pipe_through([:dashboard_props])
-    #  get "/", Uro.PropController, :index
-    # end
   end
 end

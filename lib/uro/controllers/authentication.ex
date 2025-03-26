@@ -9,7 +9,9 @@ defmodule Uro.AuthenticationController do
   alias Uro.Accounts
   alias Uro.Accounts.User
   alias Uro.Accounts.UserPrivilegeRuleset
+  alias Uro.Accounts.UserPrivilegeRuleset
   alias Uro.Endpoint
+  alias Uro.Helpers
   alias Uro.Helpers
   alias Uro.Session
 
@@ -446,3 +448,5 @@ defmodule Uro.AuthenticationController do
     end
   end
 end
+
+
