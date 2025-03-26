@@ -4,6 +4,8 @@ defmodule Uro.AvatarController do
   alias OpenApiSpex.Schema
   alias Uro.UserContent
 
+  action_fallback Uro.FallbackController
+
   tags(["avatars"])
 
   operation(:index,
@@ -170,17 +172,8 @@ defmodule Uro.AvatarController do
           }
         })
 
-      {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
-        conn
-        |> put_status(500)
-        |> (fn conn ->
-              if Mix.env() == "dev" do
-                json(
-                  conn,
-                  %{changes: changes, errors: errors}
-                )
-              end
-            end).()
+      {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
+        {:error, changeset}
     end
   end
 
@@ -215,17 +208,8 @@ defmodule Uro.AvatarController do
           }
         })
 
-      {:error, %Ecto.Changeset{changes: changes, errors: errors} = _changeset} ->
-        conn
-        |> put_status(500)
-        |> (fn conn ->
-              if Mix.env() == "dev" do
-                json(
-                  conn,
-                  %{changes: changes, errors: errors}
-                )
-              end
-            end).()
+      {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
+        {:error, changeset}
     end
   end
 
@@ -247,24 +231,19 @@ defmodule Uro.AvatarController do
     case UserContent.get_avatar_uploaded_by_user!(id, user) do
       %Uro.UserContent.Avatar{} = avatar ->
         case UserContent.delete_avatar(avatar) do
-          {:ok, _avatar} ->
-            put_status(
-              conn,
-              200
-            )
+           {:ok, _avatar} ->
+            conn
+            |> put_status(200)
+            |> json(%{ data: %{} })
 
-          {:error, %Ecto.Changeset{}} ->
-            put_status(
-              conn,
-              500
-            )
+          {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
+            {:error, changeset}
         end
 
-      _ ->
-        put_status(
-          conn,
-          200
-        )
+       _ ->
+        conn
+        |> put_status(200)
+        |> json(%{ data: %{} })
     end
   end
 end
