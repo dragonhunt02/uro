@@ -41,7 +41,7 @@ defmodule Uro.SharedContent.SharedContent do
                 description: "An array of tags"
               }
         },
-        required: [:id, :name, :description, :uploader_id, :shared_content_data]
+        required: [:id, :name, :description, :uploader_id, :is_public, :shared_content_data, :checksum, :file_size, :version, :tags]
       }
 
       def json_schema(), do: @json_schema
@@ -49,8 +49,8 @@ defmodule Uro.SharedContent.SharedContent do
       @spec shared_content_changeset(Ecto.Schema.t() | Changeset.t(), map()) :: Changeset.t()
       def shared_content_changeset(changeset, attrs) do
         changeset
-        |> cast(attrs, [:name, :description, :file_size,
-          :checksum, :uploader_id, :is_public,
+        |> cast(attrs, [:name, :description, :uploader_id,
+          :is_public, :checksum, :file_size,
           :version, :tags])
         |> foreign_key_constraint(:uploader_id)
       end
