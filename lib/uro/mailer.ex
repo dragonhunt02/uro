@@ -10,11 +10,11 @@ defmodule Uro.Mailer do
     if Application.get_env(:uro, Uro.Mailer)[:adapter] == Swoosh.Adapters.Sendgrid do
       case System.get_env("SENDGRID_API_KEY") do
         nil ->
-          Logger.warn("SENDGRID_API_KEY not found. Falling back to mail Logger")
+          Logger.warning("SENDGRID_API_KEY not found. Falling back to mail Logger")
           Swoosh.Adapters.Logger
 
         "" ->
-          Logger.warn("SENDGRID_API_KEY is empty. Falling back to mail Logger")
+          Logger.warning("SENDGRID_API_KEY is empty. Falling back to mail Logger")
           Swoosh.Adapters.Logger
 
         _ ->
@@ -45,7 +45,7 @@ defmodule Uro.Mailer do
     IO.inspect(adapter)
 
     if adapter == Swoosh.Adapters.Logger do
-      Logger.warn("Emails are not sent when using Swoosh.Adapters.Logger.")
+      Logger.warning("Emails are not sent when using Swoosh.Adapters.Logger.")
     else
       email
       |> to({display_name, email_address})
