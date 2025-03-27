@@ -10,14 +10,15 @@ defmodule Uro.SharedContent.SharedContent do
 
       @derive {Jason.Encoder,
                only: [
-                 :description,
                  :name,
-                 :shared_content_data,
+                 :description,
                  :uploader_id,
                  :is_public,
+                 :shared_content_data,
                  :checksum,
                  :file_size,
-                 :version
+                 :version,
+                 :tags
                ]}
       import unquote(__MODULE__), only: [shared_content_fields: 0]
 
@@ -29,10 +30,16 @@ defmodule Uro.SharedContent.SharedContent do
           name: %OpenApiSpex.Schema{type: :string, description: "File name"},
           description: %OpenApiSpex.Schema{type: :string, description: "File description"},
           uploader_id: %OpenApiSpex.Schema{type: :string, format: :uuid, description: "Uploader ID"},
-          shared_content_data: %OpenApiSpex.Schema{type: :string, description: "Shared content URL"},
+          is_public: %OpenApiSpex.Schema{type: :boolean, description: "File is public"},
+          shared_content_data: %OpenApiSpex.Schema{type: :string, description: "Shared content data"},
           checksum: %OpenApiSpex.Schema{type: :string, nullable: true, description: "File SHA256 checksum"},
           file_size: %OpenApiSpex.Schema{type: :integer, description: "File size in bytes"},
-          version: %OpenApiSpex.Schema{type: :string, description: "File version"}
+          version: %OpenApiSpex.Schema{type: :string, description: "File version"},
+          tags: %OpenApiSpex.Schema{
+                type: :array,
+                items: %OpenApiSpex.Schema{type: :string},
+                description: "An array of tags"
+              }
         },
         required: [:id, :name, :description, :uploader_id, :shared_content_data]
       }
