@@ -7,7 +7,7 @@ import { Section, SectionTitle } from '~/app/(static)/section';
 import { Footer } from '~/app/footer';
 import { api } from '~/api';
 import { useListSharedFiles } from '~/hooks/downloads';
-import { DownloadsTable, Data } from '~/components/downloads-table';
+import { DownloadsTable, SharedFile } from '~/components/downloads-table';
 
 // Define the type for the table data
 
