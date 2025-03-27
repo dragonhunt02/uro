@@ -60,4 +60,26 @@ defmodule Uro.Helpers.SharedContentHelper do
       "uploader_id" => conn.assigns[:current_user].id
     }
   end
+
+  @doc false
+  defp has_upload_shared_files_field?(%{can_upload_shared_files: true}) do
+    true
+  end
+
+  @doc false
+  defp has_upload_shared_files_field?(_) do
+    false
+  end
+
+  @doc false
+  def has_shared_file_upload_permission?(user) do
+    user
+    |> Uro.Helpers.Auth.get_user_privilege_ruleset()
+    |> has_upload_shared_files_field?()
+  end
+
+  @doc false
+  def session_has_shared_file_upload_permission?(conn) do
+    has_shared_file_upload_permission?(conn.assigns[:current_user])
+  end
 end
