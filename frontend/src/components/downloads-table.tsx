@@ -10,7 +10,7 @@ export interface Data {
 }
 
 // Define the props for the table component using ComponentProps
-export const TableComponent: React.FC<ComponentProps<'table'> & { data: Data[] }> = ({ data, ...props }) => {
+export const DownloadsTable: React.FC<ComponentProps<'table'> & { data: Data[] }> = ({ data, ...props }) => {
   return (
     <table {...props} className="min-w-full divide-y divide-gray-200">
       <thead className="bg-gray-50">
