@@ -7,6 +7,7 @@ export interface SharedFile {
   name: string;
   // path: string | null;
   checksum: string; // | null | undefined;
+  version: string;
 }
 
 // Define the props for the table component using ComponentProps
