@@ -33,6 +33,10 @@ defmodule Uro.Router do
     plug(Uro.Plug.RequireAdmin)
   end
 
+  pipeline :authenticated_shared_file do
+    plug(Uro.Plug.RequireSharedFileUploadPermission)
+  end
+
   pipeline :authenticated_user do
     plug(Uro.Plug.ChooseAuth)
   end
@@ -126,15 +130,14 @@ defmodule Uro.Router do
       get "/:tag", Uro.StorageController, :indexByTag
     end
     get "/:id", Uro.StorageController, :show
-    # lists all server ispublic files, add auth require
-    get "/", Uro.StorageController, :index
 
+    ################## Auth ##################
+    pipe_through([:authenticated_shared_file])
+
+    get "/", Uro.StorageController, :index
+    post "/", Uro.StorageController, :create
     put "/:id", Uro.StorageController, :update
     delete "/:id", Uro.StorageController, :delete
-
-    scope "/upload" do
-      post "/", Uro.StorageController, :create
-    end
   end
 
   scope "/users" do
