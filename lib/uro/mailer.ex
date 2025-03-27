@@ -6,22 +6,24 @@ defmodule Uro.Mailer do
 
   alias Uro.Accounts.User
 
-
   defp get_adapter() do
-    case System.get_env("SENDGRID_API_KEY") do
-      nil ->
-        Logger.warn("SENDGRID_API_KEY not found. Falling back to mail Logger")
-        Swoosh.Adapters.Logger
+    if Application.get_env(:uro, Uro.Mailer)[:adapter] == Swoosh.Adapters.Sendgrid do
+      case System.get_env("SENDGRID_API_KEY") do
+        nil ->
+          Logger.warn("SENDGRID_API_KEY not found. Falling back to mail Logger")
+          Swoosh.Adapters.Logger
 
-      "" ->
-        Logger.warn("SENDGRID_API_KEY is empty. Falling back to mail Logger")
-        Swoosh.Adapters.Logger
+        "" ->
+          Logger.warn("SENDGRID_API_KEY is empty. Falling back to mail Logger")
+          Swoosh.Adapters.Logger
 
-      _ ->
-        Swoosh.Adapters.Sendgrid
+        _ ->
+          Application.get_env(:uro, Uro.Mailer)[:adapter]
+      end
+    else
+      Application.get_env(:uro, Uro.Mailer)[:adapter]
     end
   end
-
 
   def create_email(subject: subject, text: text, html: html) do
     %Swoosh.Email{}
