@@ -2,7 +2,6 @@ defmodule Uro.StorageController do
   use Uro, :controller
 
   alias OpenApiSpex.Schema
-  alias Uro.UserContent
   alias Uro.SharedContent
 
   action_fallback Uro.FallbackController
@@ -195,7 +194,7 @@ defmodule Uro.StorageController do
           data: %{
             id: to_string(sharedFile.id),
             files:
-              Uro.Helpers.SharedContentHelper.get_api_user_content(
+              Uro.Helpers.SharedContentHelper.get_api_shared_content(
                 sharedFile,
                 %{merge_uploader_id: true}
               )
