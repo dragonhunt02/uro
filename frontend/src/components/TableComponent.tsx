@@ -6,7 +6,7 @@ export interface Data {
   id: string;
   name: string;
   // path: string | null;
-  checksum?: string | null | undefined;
+  checksum: string; // | null | undefined;
 }
 
 // Define the props for the table component using ComponentProps
