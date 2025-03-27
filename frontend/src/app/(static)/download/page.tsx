@@ -7,7 +7,7 @@ import { Section, SectionTitle } from '~/app/(static)/section';
 import { Footer } from '~/app/footer';
 import { api } from '~/api';
 import { useListSharedFiles } from '~/hooks/downloads';
-import { TableComponent, Data } from '~/components/TableComponent';
+import { DownloadsTable, Data } from '~/components/downloads-table';
 
 // Define the type for the table data
 
@@ -67,7 +67,7 @@ export default function AboutPage() {
         </Section>
         <Section>
           <SectionTitle>Downloads</SectionTitle>
-          <TableComponent data={data1} />
+          <DownloadsTable data={data1} />
         </Section>
       </div>
       <Footer />
