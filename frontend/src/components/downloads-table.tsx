@@ -2,7 +2,7 @@
 import type { ComponentProps, FC } from "react";
 
 // Define the type for the table data
-export interface Data {
+export interface SharedFile {
   id: string;
   name: string;
   // path: string | null;
@@ -10,7 +10,7 @@ export interface Data {
 }
 
 // Define the props for the table component using ComponentProps
-export const DownloadsTable: React.FC<ComponentProps<'table'> & { data: Data[] }> = ({ data, ...props }) => {
+export const DownloadsTable: React.FC<ComponentProps<'table'> & { data: SharedFile[] }> = ({ data, ...props }) => {
   return (
     <table {...props} className="min-w-full divide-y divide-gray-200">
       <thead className="bg-gray-50">
