@@ -55,7 +55,7 @@ defmodule Uro.StorageController do
     parameters: [
     %{
       "name" => "tag",
-      "in" => "path",
+      "in" => "query",
       "required" => true,
       "description" => "Tag used to filter shared files",
       "schema" => %{
