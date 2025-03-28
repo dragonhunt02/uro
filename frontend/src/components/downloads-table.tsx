@@ -17,13 +17,13 @@ const groupByVersion = (data: SharedFile[]): Record<string, SharedFile[]> => {
   }, {} as Record<string, SharedFile[]>);
 };
 
-// Define the table component
+// Define the table component with descending sort for versions
 export const DownloadsTable: React.FC<ComponentProps<"div"> & { data: SharedFile[] }> = ({ data, ...props }) => {
   const groupedData = groupByVersion(data);
 
-  // Sort the grouped versions alphanumerically (natural sort)
+  // Sort the grouped versions in descending alphanumerical order
   const sortedEntries = Object.entries(groupedData).sort((a, b) =>
-    a[0].localeCompare(b[0], undefined, { numeric: true, sensitivity: 'base' })
+    b[0].localeCompare(a[0], undefined, { numeric: true, sensitivity: "base" })
   );
 
   return (
