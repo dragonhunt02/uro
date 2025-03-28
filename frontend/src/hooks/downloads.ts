@@ -16,14 +16,14 @@ export const useListSharedFiles = () => {
 
   const { data: sharedFiles } = useQuery({
     queryFn: async () => {
-      const response = await listSharedFiles();
+      const response = await listSharedFilesByTag("downloads");
       if (!response) {
         //throw new Error("Network response was not ok");
         return null;
       }
       return response; //.json();
     },
-    queryKey: ["shared-files"],
+    queryKey: ["shared-files-by-downloads", "downloads"],
     refetchOnWindowFocus: "always"
   });
 
