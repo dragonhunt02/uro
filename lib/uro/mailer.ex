@@ -46,7 +46,7 @@ defmodule Uro.Mailer do
 
     if adapter == Swoosh.Adapters.Logger do
       Logger.warning("Emails are not sent when using Swoosh.Adapters.Logger.")
-      {:ok}
+      {:ok, %{}}
     else
       email
       |> to({display_name, email_address})
