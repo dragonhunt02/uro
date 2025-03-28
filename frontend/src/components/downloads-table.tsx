@@ -17,7 +17,7 @@ const groupByVersion = (data: SharedFile[]): Record<string, SharedFile[]> => {
   }, {} as Record<string, SharedFile[]>);
 };
 
-// Define the table component with descending sort for versions
+// Define the table component with descending sort for versions and separators for cells
 export const DownloadsTable: React.FC<ComponentProps<"div"> & { data: SharedFile[] }> = ({ data, ...props }) => {
   const groupedData = groupByVersion(data);
 
@@ -35,17 +35,17 @@ export const DownloadsTable: React.FC<ComponentProps<"div"> & { data: SharedFile
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Checksum</th>
+                <th className="px-4 py-2 border-r border-gray-200">ID</th>
+                <th className="px-4 py-2 border-r border-gray-200">Name</th>
+                <th className="px-4 py-2">Checksum</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {files.map((file) => (
                 <tr key={file.id}>
-                  <td>{file.id}</td>
-                  <td>{file.name}</td>
-                  <td>{file.checksum}</td>
+                  <td className="px-4 py-2 border-r border-gray-200">{file.id}</td>
+                  <td className="px-4 py-2 border-r border-gray-200">{file.name}</td>
+                  <td className="px-4 py-2">{file.checksum}</td>
                 </tr>
               ))}
             </tbody>
