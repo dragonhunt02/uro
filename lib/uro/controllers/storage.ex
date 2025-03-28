@@ -52,6 +52,17 @@ defmodule Uro.StorageController do
   operation(:indexByTag,
     operation_id: "listSharedFilesByTag",
     summary: "List all public storage files by tag",
+    parameters: [
+    %{
+      "name" => "tag",
+      "in" => "path",
+      "required" => true,
+      "description" => "Tag used to filter shared files",
+      "schema" => %{
+        "type" => "string"
+      }
+    }
+    ],
     responses: [
     ok: {
       "A successful response returning a list of storage files",
