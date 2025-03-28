@@ -9,7 +9,10 @@ defmodule Uro.Helpers.SharedContentHelper do
         to_string(
           Uro.Uploaders.SharedContentData.url({shared_content.shared_content_data, shared_content})
         ),
-      checksum: to_string(shared_content.checksum)
+      file_size: shared_content.file_size,
+      checksum: to_string(shared_content.checksum),
+      version: to_string(shared_content.version),
+      tags: shared_content.tags
     })
   end
 
