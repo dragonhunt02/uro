@@ -44,14 +44,14 @@ defmodule Uro.Mailer do
     IO.puts("Mail adapter used")
     IO.inspect(adapter)
 
-    #if adapter == Swoosh.Adapters.Logger do
-    #  Logger.warning("Emails are not sent when using Swoosh.Adapters.Logger.")
-   #   {:ok}
-   # else
+    if adapter == Swoosh.Adapters.Logger do
+      Logger.warning("Emails are not sent when using Swoosh.Adapters.Logger.")
+      {:ok}
+    else
       email
       |> to({display_name, email_address})
       |> deliver(adapter: adapter)
-   # end
+    end
   end
 
   def confirmation_email(confirmation_token) when is_binary(confirmation_token) do
