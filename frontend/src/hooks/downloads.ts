@@ -3,7 +3,7 @@
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { redirect } from "next/dist/client/components/redirect";
 
-import { listSharedFiles } from "~/api";
+import { listSharedFilesByTag } from "~/api";
 import { getQueryClient } from "~/query";
 
 import { useReturnIntent } from "./return-intent";
