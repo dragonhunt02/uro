@@ -6,7 +6,7 @@ import { urls } from '~/environment';
 import { Section, SectionTitle } from '~/app/(static)/section';
 import { Footer } from '~/app/footer';
 import { api } from '~/api';
-import { useListSharedFiles } from '~/hooks/downloads';
+import { useListDownloads } from '~/hooks/downloads';
 import { DownloadsTable, SharedFile } from '~/components/downloads-table';
 
 // Define the type for the table data
@@ -22,7 +22,7 @@ export default function AboutPage() {
 // export const AboutPage: React.FC = () => {
   // const [data, setData] = useState<Data[]>([]);
   {
-  const sharedFiles = useListSharedFiles(); // as any;
+  const sharedFiles = useListDownloads(); // as any;
   const data1 = sharedFiles?.data?.data?.files ?? [];
   console.log("Type")
   console.log(sharedFiles)
@@ -44,7 +44,7 @@ export default function AboutPage() {
     <main className="mx-auto flex size-full max-w-screen-lg grow flex-col pt-8 lg:pt-16">
       <div className="mx-auto flex w-full max-w-screen-md flex-col gap-4 px-4 text-lg">
         <Section>
-          <SectionTitle>Download</SectionTitle>
+          <SectionTitle>Downloads</SectionTitle>
           <p>
             V-Sekai is currently in open testing. Please check back here
             later for more information.
