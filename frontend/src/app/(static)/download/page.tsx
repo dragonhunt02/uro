@@ -46,12 +46,9 @@ export default function AboutPage() {
         <Section>
           <SectionTitle>Download</SectionTitle>
           <p>
-            V-Sekai is currently in open testing. Please check back here
+            <b>V-Sekai</b> is currently in open testing. Please check back here
             later for more information.
           </p>
-        </Section>        
-        <Section>
-          <SectionTitle>Downloads</SectionTitle>
           <DownloadsTable data={data1} />
         </Section>
         <Section>
