@@ -11,7 +11,6 @@ export interface SharedFile {
   version: string;
 }
 
-// Group data by version
 const groupByVersion = (data: SharedFile[]): Record<string, SharedFile[]> => {
   return data.reduce((acc, item) => {
     (acc[item.version] = acc[item.version] || []).push(item);
@@ -34,11 +33,10 @@ function bytesToMegabytes(bytes: number): number {
   return Math.round(megabytes);
 }
 
-// Define the table component with descending sort for versions and separators for cells
 export const DownloadsTable: React.FC<ComponentProps<"div"> & { data: SharedFile[] }> = ({ data, ...props }) => {
   const groupedData = groupByVersion(data);
 
-  // Sort the grouped versions in descending alphanumerical order
+  // Sort grouped versions in descending order
   const sortedEntries = Object.entries(groupedData).sort((a, b) =>
     b[0].localeCompare(a[0], undefined, { numeric: true, sensitivity: "base" })
   );
