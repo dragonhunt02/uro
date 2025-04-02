@@ -5,6 +5,7 @@ import type { ComponentProps } from "react";
 export interface SharedFile {
   id: string;
   name: string;
+  tags: string[];
   checksum: string;
   version: string;
 }
@@ -16,6 +17,16 @@ const groupByVersion = (data: SharedFile[]): Record<string, SharedFile[]> => {
     return acc;
   }, {} as Record<string, SharedFile[]>);
 };
+
+function getPlatform(tags: string[]): string {
+  const platforms = ["Windows", "Linux", "Android","QuestAndroid","Web","macOS","iOS"];
+  for (const platform of platforms) {
+    if (tags.includes(platform)) {
+      return platform;
+    }
+  }
+  return "";
+}
 
 // Define the table component with descending sort for versions and separators for cells
 export const DownloadsTable: React.FC<ComponentProps<"div"> & { data: SharedFile[] }> = ({ data, ...props }) => {
@@ -43,8 +54,8 @@ export const DownloadsTable: React.FC<ComponentProps<"div"> & { data: SharedFile
             <tbody className="bg-white divide-y divide-gray-200">
               {files.map((file) => (
                 <tr key={file.id}>
-                  <td className="px-4 py-2 border-r border-gray-200">{file.id}</td>
                   <td className="px-4 py-2 border-r border-gray-200">{file.name}</td>
+                  <td className="px-4 py-2 border-r border-gray-200">{getPlatform(file.tags)}</td>
                   <td className="px-4 py-2">{file.checksum}</td>
                 </tr>
               ))}
