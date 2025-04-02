@@ -1,7 +1,6 @@
 import React from "react";
 import type { ComponentProps } from "react";
 
-// Define the type for the table data
 export interface SharedFile {
   id: string;
   name: string;
@@ -63,7 +62,7 @@ export const DownloadsTable: React.FC<ComponentProps<"div"> & { data: SharedFile
               {files.map((file) => (
                 <tr key={file.id}>
                   <td className="px-4 py-2 border-r border-gray-200">
-                    <a href={file.shared_content_data} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{file.name}</a>
+                    <a href={file.shared_content_data} target="_blank" rel="noopener noreferrer" className="underline text-blue-600 hover:underline">{file.name}</a>
                   </td>
                   <td className="px-4 py-2 border-r border-gray-200">{getPlatform(file.tags)}</td>
                   <td className="px-4 py-2 border-r border-gray-200">{bytesToMegabytes(file.file_size)}</td>
