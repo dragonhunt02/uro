@@ -29,6 +29,11 @@ function getPlatform(tags: string[]): string {
   return "";
 }
 
+function bytesToMegabytes(bytes: number): number {
+  const megabytes = bytes / (1024 * 1024);
+  return Math.round(megabytes);
+}
+
 // Define the table component with descending sort for versions and separators for cells
 export const DownloadsTable: React.FC<ComponentProps<"div"> & { data: SharedFile[] }> = ({ data, ...props }) => {
   const groupedData = groupByVersion(data);
@@ -49,7 +54,7 @@ export const DownloadsTable: React.FC<ComponentProps<"div"> & { data: SharedFile
               <tr>
                 <th className="px-4 py-2 border-r border-gray-200">Name</th>
                 <th className="px-4 py-2 border-r border-gray-200">Platform</th>
-                <th className="px-4 py-2 border-r border-gray-200">Size</th>
+                <th className="px-4 py-2 border-r border-gray-200">Size (MB)</th>
                 <th className="px-4 py-2">Checksum</th>
               </tr>
             </thead>
@@ -57,8 +62,8 @@ export const DownloadsTable: React.FC<ComponentProps<"div"> & { data: SharedFile
               {files.map((file) => (
                 <tr key={file.id}>
                   <td className="px-4 py-2 border-r border-gray-200">{file.name}</td>
-                  <td className="px-4 py-2 border-r border-gray-200">{file.file_size}</td>
                   <td className="px-4 py-2 border-r border-gray-200">{getPlatform(file.tags)}</td>
+                  <td className="px-4 py-2 border-r border-gray-200">{bytesToMegabytes(file.file_size)}</td>
                   <td className="px-4 py-2">{file.checksum}</td>
                 </tr>
               ))}
