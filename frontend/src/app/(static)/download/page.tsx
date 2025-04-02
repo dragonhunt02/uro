@@ -44,7 +44,7 @@ export default function AboutPage() {
     <main className="mx-auto flex size-full max-w-screen-lg grow flex-col pt-8 lg:pt-16">
       <div className="mx-auto flex w-full max-w-screen-md flex-col gap-4 px-4 text-lg">
         <Section>
-          <SectionTitle>Downloads</SectionTitle>
+          <SectionTitle>Download</SectionTitle>
           <p>
             V-Sekai is currently in open testing. Please check back here
             later for more information.
