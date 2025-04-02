@@ -53,15 +53,7 @@ defmodule Uro.StorageController do
     operation_id: "listSharedFilesByTag",
     summary: "List all public storage files by tag",
     parameters: [
-    %{
-      "name" => "tag",
-      "in" => "path",
-      "required" => true,
-      "description" => "Tag used to filter shared files",
-      "schema" => %{
-        "type" => "string"
-      }
-    }
+        OpenApiSpex.Operation.parameter(:tag, :path, :string, "Tag group")
     ],
     responses: [
     ok: {
