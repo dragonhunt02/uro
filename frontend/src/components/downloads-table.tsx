@@ -46,8 +46,8 @@ export const DownloadsTable: React.FC<ComponentProps<"div"> & { data: SharedFile
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-2 border-r border-gray-200">ID</th>
                 <th className="px-4 py-2 border-r border-gray-200">Name</th>
+                <th className="px-4 py-2 border-r border-gray-200">Platform</th>
                 <th className="px-4 py-2">Checksum</th>
               </tr>
             </thead>
