@@ -49,6 +49,10 @@ export default function AboutPage() {
             V-Sekai is currently in open testing. Please check back here
             later for more information.
           </p>
+        </Section>        
+        <Section>
+          <SectionTitle>Downloads</SectionTitle>
+          <DownloadsTable data={data1} />
         </Section>
         <Section>
           <SectionTitle>Sign up to receive updates</SectionTitle>
@@ -64,10 +68,6 @@ export default function AboutPage() {
             <InlineLink href={urls.twitter}>Twitter</InlineLink> for updates on
             the project.
           </p>
-        </Section>
-        <Section>
-          <SectionTitle>Downloads</SectionTitle>
-          <DownloadsTable data={data1} />
         </Section>
       </div>
       <Footer />
