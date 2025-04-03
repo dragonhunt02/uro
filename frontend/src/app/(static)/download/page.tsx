@@ -23,10 +23,10 @@ export default function AboutPage() {
   // const [data, setData] = useState<Data[]>([]);
   {
   const sharedFiles = useListDownloads(); // as any;
-  const data1 = sharedFiles?.data?.data?.files ?? [];
+  const file_list = sharedFiles?.data?.data?.files ?? [];
   console.log("Type")
   console.log(sharedFiles)
-   console.log(data1)
+   console.log(file_list)
   //const data: Data[] = sharedFiles.data ?? [];
   //const data: Data[] = sharedFiles ? (sharedFiles as Data[]) : [];
 
@@ -49,7 +49,7 @@ export default function AboutPage() {
             <b>V-Sekai</b> is currently in open testing. Please check back here
             later for more information.
           </p>
-          <DownloadsTable data={data1} />
+          <DownloadsTable data={file_list} />
         </Section>
         <Section>
           <SectionTitle>Sign up to receive updates</SectionTitle>
