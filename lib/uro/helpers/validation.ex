@@ -32,9 +32,7 @@ def check_magic_custom(%{file_name: file_name, path: path}) do
   file_extension = file_name |> Path.extname() |> String.downcase()
   magic_number = Map.get(@magic_numbers, file_extension)
 
-  if magic_number == nil do
-    false
-  else
+  if magic_number != nil do
       expected_length = byte_size(magic_number)
       case :file.open(path, [:read, :binary]) do
         {:ok, file_handle} ->
@@ -48,6 +46,8 @@ def check_magic_custom(%{file_name: file_name, path: path}) do
           Logger.error("Error opening file: #{reason}")
           false
       end
+    else # Skip check if ext not in custom magic numbers
+      true
     end
   end
 
