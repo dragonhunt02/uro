@@ -19,11 +19,14 @@ def check_magic_exmarcel(%{file_name: file_name, path: path}) do
   ext_mime = ExMarcel.MimeType.for(nil, extension: file_extension)
   IO.puts(magic_mime)
   IO.puts(ext_mime)
-  if magic_mime == "application/octet-stream" do
+  if magic_mime.type == ext_mime.type do
+    true
+  elif magic_mime == "application/octet-stream" do # exmarcel fallback value when not in magic list
     Logger.warning("File magic number not recognized: #{file_extension} in #{file_name}. Skipping magic number validation...")
     true
   else
-    magic_mime.type == ext_mime.type
+    IO.puts("Wrong file")
+    false
   end
 end
 
