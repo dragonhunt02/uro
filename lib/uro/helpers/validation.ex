@@ -24,6 +24,7 @@ def check_magic_exmarcel(%{file_name: file_name, path: path}) do
   else
     Logger.warning("File magic number not recognized: #{file_extension} in #{file_name}. Skipping magic number validation...")
     true
+  end
 end
 
 @spec check_magic_custom(%{file_name: String.t(), path: String.t()}) :: boolean
