@@ -53,7 +53,7 @@ def check_magic_custom(%{file_name: file_name, path: path}) do
 
 @spec check_magic_number(%{file_name: String.t(), path: String.t()}) :: boolean
 def check_magic_number(%{file_name: file_name, path: path} = file) do
-  check_magic_custom(file) or check_magic_exmarcel(file)
+  check_magic_custom(file) and check_magic_exmarcel(file)
 end
 
   #defp generate_checksum1(file_path) do
