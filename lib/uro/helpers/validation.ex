@@ -6,23 +6,33 @@ defmodule Uro.Helpers.Validation do
 require Logger
 
   @magic_numbers %{
-    ".jpg" => <<0xFF, 0xD8, 0xFF>>,
-    ".jpeg" => <<0xFF, 0xD8, 0xFF>>,
-    ".gif" => <<0x47, 0x49, 0x46>>,
-    ".png" => <<0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A>>,
     ".glb" => <<0x67, 0x6C, 0x54, 0x46>>,
     ".vrm" => <<0x67, 0x6C, 0x54, 0x46>>,
     ".scn" => <<0x52, 0x53, 0x43, 0x43>>
     }
 
-@spec check_magic_number(%{file_name: String.t(), path: String.t()}) :: boolean
-def check_magic_number(%{file_name: file_name, path: path}) do
+# Ensure mime matches extension
+@spec check_magic_exmarcel(%{file_name: String.t(), path: String.t()}) :: boolean
+def check_magic_exmarcel(%{file_name: file_name, path: path}) do
+  file_extension = file_name |> Path.extname() |> String.downcase()
+  magic_mime = ExMarcel.MimeType.for_data({:path, path})
+  ext_mime = ExMarcel.MimeType.for(nil, extension: file_extension)
+  IO.puts(magic_mime)
+  IO.puts(ext_mime)
+  if magic_mime do
+    magic_mime.type == ext_mime.type
+  else
+    Logger.warning("File magic number not recognized: #{file_extension} in #{file_name}. Skipping magic number validation...")
+    true
+end
+
+@spec check_magic_custom(%{file_name: String.t(), path: String.t()}) :: boolean
+def check_magic_custom(%{file_name: file_name, path: path}) do
   file_extension = file_name |> Path.extname() |> String.downcase()
   magic_number = Map.get(@magic_numbers, file_extension)
 
   if magic_number == nil do
-    Logger.warning("File extension not recognized: #{file_extension} in #{file_name}. Skipping magic number check...")
-    true
+    false
   else
       expected_length = byte_size(magic_number)
       case :file.open(path, [:read, :binary]) do
@@ -39,6 +49,11 @@ def check_magic_number(%{file_name: file_name, path: path}) do
       end
     end
   end
+
+@spec check_magic_number(%{file_name: String.t(), path: String.t()}) :: boolean
+def check_magic_number(%{file_name: file_name, path: path} = file) do
+  check_magic_custom(file) or check_magic_exmarcel(file)
+end
 
   #defp generate_checksum1(file_path) do
   #  :crypto.hash(:sha256, File.read!(file_path))
