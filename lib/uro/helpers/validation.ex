@@ -15,7 +15,7 @@ require Logger
 @spec check_magic_exmarcel(%{file_name: String.t(), path: String.t()}) :: boolean
 def check_magic_exmarcel(%{file_name: file_name, path: path}) do
   file_extension = file_name |> Path.extname() |> String.downcase()
-  file_handle = File.open(path)
+  {:ok, file_handle} = File.open(path)
   magic_mime = ExMarcel.Magic.by_magic(file_handle)
   File.close(file_handle)
   ext_mime = ExMarcel.MimeType.for(nil, extension: file_extension)
