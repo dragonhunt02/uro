@@ -15,15 +15,15 @@ require Logger
 @spec check_magic_exmarcel(%{file_name: String.t(), path: String.t()}) :: boolean
 def check_magic_exmarcel(%{file_name: file_name, path: path}) do
   file_extension = file_name |> Path.extname() |> String.downcase()
-  magic_mime = ExMarcel.MimeType.for_data({:path, path})
+  magic_mime = ExMarcel.MimeType.for({:path, path})
   ext_mime = ExMarcel.MimeType.for(nil, extension: file_extension)
   IO.puts(magic_mime)
   IO.puts(ext_mime)
-  if magic_mime do
-    magic_mime.type == ext_mime.type
-  else
+  if magic_mime == "application/octet-stream" do
     Logger.warning("File magic number not recognized: #{file_extension} in #{file_name}. Skipping magic number validation...")
     true
+  else
+    magic_mime.type == ext_mime.type
   end
 end
 
