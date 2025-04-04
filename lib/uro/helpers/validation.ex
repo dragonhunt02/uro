@@ -28,7 +28,7 @@ def check_magic_exmarcel(%{file_name: file_name, path: path}) do
     magic_mime = magic_mime.type |> String.downcase()
     ext_mime = ext_mime.type |> String.downcase()
     cond do
-      magic_mime.type == ext_mime.type ->
+      magic_mime == ext_mime ->
         IO.puts("Good file")
         true
       #nil ->
