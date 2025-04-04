@@ -27,7 +27,7 @@ def check_magic_exmarcel(%{file_name: file_name, path: path}) do
     IO.puts("ext_mime")
     IO.puts(ext_mime.type)
   end
-  unless (magic_mime && ext_mime) do # warning if one return value is falsy
+  if !(magic_mime && ext_mime) do # warning if one return value is falsy
       Logger.warning("File magic number or extension not recognized: #{file_extension} in #{file_name}. Skipping magic number validation...")
       true
   else
