@@ -64,8 +64,8 @@ def check_magic_custom(%{file_name: file_name, path: path}) do
     end
   end
 
-@spec check_magic_number(%{_file_name: String.t(), _path: String.t()}) :: boolean
-def check_magic_number(%{_file_name: file_name, _path: path} = file) do
+@spec check_magic_number(%{file_name: String.t(), path: String.t()}) :: boolean
+def check_magic_number(%{file_name: _file_name, path: _path} = file) do
   check_magic_custom(file) and check_magic_exmarcel(file)
 end
 
