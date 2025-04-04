@@ -19,14 +19,14 @@ def check_magic_exmarcel(%{file_name: file_name, path: path}) do
   magic_mime = ExMarcel.Magic.by_magic(file_handle)
   File.close(file_handle)
   ext_mime = ExMarcel.Magic.by_extension(file_extension)
-  IO.puts(magic_mime)
-  IO.puts(ext_mime)
   if not (magic_mime and ext_mime) do # exmarcel fallback value when not in magic list
       Logger.warning("File magic number or extension not recognized: #{file_extension} in #{file_name}. Skipping magic number validation...")
       true
   else
     magic_mime = magic_mime.type |> String.downcase()
     ext_mime = ext_mime.type |> String.downcase()
+    IO.puts(magic_mime)
+    IO.puts(ext_mime)
     cond do
       magic_mime == ext_mime ->
         IO.puts("Good file")
