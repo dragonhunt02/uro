@@ -74,6 +74,7 @@ def check_magic_custom(%{file_name: file_name, path: path}) do
 
 @spec check_magic_number(%{file_name: String.t(), path: String.t()}) :: boolean
 def check_magic_number(%{file_name: _file_name, path: _path} = file) do
+  ExMarcel.Magic.add("application/vnd.godot.scn", {extensions: ".scn", magic: [[0, "\x52\x53\x43\x43"]], parents: []})
   check_magic_custom(file) and check_magic_exmarcel(file)
 end
 
