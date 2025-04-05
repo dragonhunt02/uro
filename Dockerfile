@@ -32,6 +32,7 @@ COPY priv ./priv
 COPY lib ./lib
 
 RUN mix do compile, phx.digest
+RUN mix patch.exmarcel
 RUN mix uro.apigen
 
 EXPOSE ${PORT}
