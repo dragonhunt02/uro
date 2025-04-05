@@ -22,6 +22,8 @@ defmodule Uro.Application do
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Uro.Supervisor]
     Supervisor.start_link(children, opts)
+
+    Uro.Helpers.Validation.init_extra_extensions() # ExMarcel
   end
 
   # Tell Phoenix to update the endpoint configuration
