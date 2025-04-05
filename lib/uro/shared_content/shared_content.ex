@@ -15,6 +15,7 @@ defmodule Uro.SharedContent.SharedContent do
                  :uploader_id,
                  :is_public,
                  :shared_content_data,
+                 :mime_type,
                  :checksum,
                  :file_size,
                  :version,
@@ -32,6 +33,7 @@ defmodule Uro.SharedContent.SharedContent do
           uploader_id: %OpenApiSpex.Schema{type: :string, format: :uuid, description: "Uploader ID"},
           is_public: %OpenApiSpex.Schema{type: :boolean, description: "File is public"},
           shared_content_data: %OpenApiSpex.Schema{type: :string, description: "Shared content data"},
+          mime_type: %OpenApiSpex.Schema{type: :string, description: "File MIME type"},
           checksum: %OpenApiSpex.Schema{type: :string, description: "File SHA256 checksum"},
           file_size: %OpenApiSpex.Schema{type: :integer, description: "File size in bytes"},
           version: %OpenApiSpex.Schema{type: :string, description: "File version"},
@@ -66,8 +68,10 @@ defmodule Uro.SharedContent.SharedContent do
         case Map.get(attrs, "shared_content_data") do
           %Plug.Upload{path: path} ->
             file_info = File.stat!(path)
+            mime = ExMarcel.MimeType.for({:path, path}, ["name": Path.basename(path)])
 
             changeset
+            |> put_change(:mime_type, mime)
             |> put_change(:file_size, file_info.size)
             |> put_change(:checksum, Helpers.Validation.generate_file_sha256(path))
           _ ->
@@ -83,6 +87,7 @@ defmodule Uro.SharedContent.SharedContent do
       field :name, :string
       field :description, :string
       field :is_public, :boolean
+      field :mime_type, :string
       field :checksum, :string
       field :file_size, :integer
       field :version, :string
