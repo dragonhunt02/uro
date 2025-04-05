@@ -11,6 +11,11 @@ require Logger
     ".scn" => <<0x52, 0x53, 0x43, 0x43>>
     }
 
+def init_extra_extensions() do
+  ExMarcel.Magic.add("application/vnd.godot.scn", [extensions: ["scn"], magic: [[0, "\x52\x53\x43\x43"]], parents: []])
+  ExMarcel.Magic.add("model/gltf-binary", [extensions: ["glb", "vrm"], magic: [[0, "\x67\x6C\x54\x46"]], parents: []])
+end
+
 # Ensure mime matches extension
 @spec check_magic_exmarcel(%{file_name: String.t(), path: String.t()}) :: boolean
 def check_magic_exmarcel(%{file_name: file_name, path: path}) do
@@ -74,8 +79,8 @@ def check_magic_custom(%{file_name: file_name, path: path}) do
 
 @spec check_magic_number(%{file_name: String.t(), path: String.t()}) :: boolean
 def check_magic_number(%{file_name: _file_name, path: _path} = file) do
-  ExMarcel.Magic.add("application/vnd.godot.scn", [extensions: ["scn"], magic: [[0, "\x52\x53\x43\x43"]], parents: []])
-  ExMarcel.Magic.add("model/gltf-binary", [extensions: ["glb", "vrm"], magic: [[0, "\x67\x6C\x54\x46"]], parents: []])
+  #ExMarcel.Magic.add("application/vnd.godot.scn", [extensions: ["scn"], magic: [[0, "\x52\x53\x43\x43"]], parents: []])
+  #ExMarcel.Magic.add("model/gltf-binary", [extensions: ["glb", "vrm"], magic: [[0, "\x67\x6C\x54\x46"]], parents: []])
   # check_magic_custom(file) and check_magic_exmarcel(file)
   check_magic_exmarcel(file)
 end
