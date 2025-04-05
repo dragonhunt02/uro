@@ -63,15 +63,12 @@ jobs:
             git log -n 5
             #git reset --soft HEAD~2
 
-            rm -r .github/workflows/test.yml
-            rm -r frontend/src/components/downloads-table2.tsx
-            rm -r frontend/src/components/downloads-table3.tsx
-            rm -r priv/repo/patch_exmarcel.exs
-            rm -r priv/repo/test_content/
+            # rm -r .github/workflows/test.yml
+            # rm -r priv/repo/test_content/
             
-            #mix local.hex --force
-            #mix deps.get
-            #mix format
+            mix local.hex --force
+            mix deps.get
+            mix format
 
             git config --global user.email "jackhunt43@libero.it"
             git config --global user.name "dragonhunt02"
