@@ -15,16 +15,14 @@ defmodule Uro.Application do
           Uro.VSekai.ShardJanitor,
           {Redix, {Application.get_env(:uro, Redix)[:url], [name: :redix]}},
           {Phoenix.PubSub, [name: Uro.PubSub, adapter: Phoenix.PubSub.PG2]},
-          ExMarcel.TableWrapper
+          ExMarcel.TableWrapper,
+          {Task, fn -> Uro.Helpers.Validation.init_extra_extensions() end} # ExMarcel
         ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Uro.Supervisor]
     Supervisor.start_link(children, opts)
-
-    # ExMarcel
-    Uro.Helpers.Validation.init_extra_extensions()
   end
 
   # Tell Phoenix to update the endpoint configuration
