@@ -76,6 +76,5 @@ jobs:
             git commit -a -m 'Implement generic server storage and misc fixes'
             git log -n 5
             git status
-            git push 
-            #-f
+            git push -f
             exit 1
