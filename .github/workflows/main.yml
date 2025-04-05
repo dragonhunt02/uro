@@ -61,7 +61,7 @@ jobs:
             
 
             git log -n 5
-            git reset --soft HEAD~155
+            git reset --soft HEAD~6
 
             # rm -r .github/workflows/test.yml
             # rm -r priv/repo/test_content/
@@ -73,7 +73,7 @@ jobs:
             git config --global user.email "jackhunt43@libero.it"
             git config --global user.name "dragonhunt02"
             git add -A
-            git commit -a -m 'Implement generic server storage and misc fixes'
+            git commit -a -m 'Implement props, server storage, downloads page and misc fixes'
             git log -n 5
             git status
             git push -f
