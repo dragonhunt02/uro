@@ -7,6 +7,7 @@ defmodule Uro.Repo.Migrations.CreateSharedFiles do
       add :name, :string
       add :description, :string
       add :shared_content_data, :string
+      add :mime_type, :string
       add :file_size, :integer
       add :checksum, :string
       add :uploader_id, references(:users, type: :uuid)
