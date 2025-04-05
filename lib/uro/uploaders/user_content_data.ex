@@ -8,9 +8,6 @@ defmodule Uro.Uploaders.UserContentData do
 
   # Whitelist file extensions:
   def validate({file, _}) do
-    IO.puts("Debug validate user content data")
-    IO.inspect(file)
-    IO.puts("End debug")
     file_extension = file.file_name |> Path.extname() |> String.downcase()
 
     with true <- Enum.member?(@extension_whitelist, file_extension),
