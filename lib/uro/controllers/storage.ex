@@ -12,27 +12,27 @@ defmodule Uro.StorageController do
     operation_id: "listSharedFiles",
     summary: "List all public storage files",
     responses: [
-    ok: {
-      "A successful response returning a list of storage files",
-      "application/json",
-      %Schema{
-        type: :object,
-        properties: %{
-          data: %Schema{
-            type: :object,
-            properties: %{
-              files: %Schema{
-                type: :array,
-                items: SharedContent.SharedFile.json_schema(),
-                description: "List of files"
+      ok: {
+        "A successful response returning a list of storage files",
+        "application/json",
+        %Schema{
+          type: :object,
+          properties: %{
+            data: %Schema{
+              type: :object,
+              properties: %{
+                files: %Schema{
+                  type: :array,
+                  items: SharedContent.SharedFile.json_schema(),
+                  description: "List of files"
+                }
               }
             }
           }
         }
       }
-    }
-  ]
-)
+    ]
+  )
 
   def index(conn, _params) do
     file_list = SharedContent.list_public_shared_files()
@@ -53,30 +53,30 @@ defmodule Uro.StorageController do
     operation_id: "listSharedFilesByTag",
     summary: "List all public storage files by tag",
     parameters: [
-        OpenApiSpex.Operation.parameter(:tag, :path, :string, "Tag group")
+      OpenApiSpex.Operation.parameter(:tag, :path, :string, "Tag group")
     ],
     responses: [
-    ok: {
-      "A successful response returning a list of storage files",
-      "application/json",
-      %Schema{
-        type: :object,
-        properties: %{
-          data: %Schema{
-            type: :object,
-            properties: %{
-              files: %Schema{
-                type: :array,
-                items: SharedContent.SharedFile.json_schema(),
-                description: "List of files"
+      ok: {
+        "A successful response returning a list of storage files",
+        "application/json",
+        %Schema{
+          type: :object,
+          properties: %{
+            data: %Schema{
+              type: :object,
+              properties: %{
+                files: %Schema{
+                  type: :array,
+                  items: SharedContent.SharedFile.json_schema(),
+                  description: "List of files"
+                }
               }
             }
           }
         }
       }
-    }
-  ]
-)
+    ]
+  )
 
   def indexByTag(conn, %{"tag" => tag}) do
     file_list = SharedContent.list_public_shared_files_by_tag(tag)
@@ -85,7 +85,7 @@ defmodule Uro.StorageController do
     |> put_status(200)
     |> json(%{
       data: %{
-        files: 
+        files:
           Uro.Helpers.SharedContentHelper.get_api_shared_content_list(file_list, %{
             merge_uploader_id: true
           })
@@ -97,21 +97,21 @@ defmodule Uro.StorageController do
     operation_id: "getSharedFile",
     summary: "Get File",
     responses: [
-    ok: {
-      "A successful response returning a single public file",
-      "application/json",
-      %Schema{
-        type: :object,
-        properties: %{
-          data: %Schema{
-            type: :object,
-            properties: %{
-              files: SharedContent.SharedFile.json_schema()
+      ok: {
+        "A successful response returning a single public file",
+        "application/json",
+        %Schema{
+          type: :object,
+          properties: %{
+            data: %Schema{
+              type: :object,
+              properties: %{
+                files: SharedContent.SharedFile.json_schema()
+              }
             }
           }
         }
       }
-    }
     ]
   )
 
@@ -154,7 +154,12 @@ defmodule Uro.StorageController do
 
   def create(conn, %{"storage" => storage_params}) do
     case SharedContent.create_shared_file(
-      Uro.Helpers.SharedContentHelper.get_correct_shared_content_params(conn, storage_params, "shared_content_data")) do
+           Uro.Helpers.SharedContentHelper.get_correct_shared_content_params(
+             conn,
+             storage_params,
+             "shared_content_data"
+           )
+         ) do
       {:ok, stored_file} ->
         conn
         |> put_status(200)
@@ -228,14 +233,17 @@ defmodule Uro.StorageController do
           {:ok, _sharedFile} ->
             conn
             |> put_status(200)
-            |> json(%{ data: %{} })
+            |> json(%{data: %{}})
 
           {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
             {:error, changeset}
         end
+
       _ ->
-        conn
-        |> put_status(200)
+        put_status(
+          conn,
+          200
+        )
     end
   end
 end

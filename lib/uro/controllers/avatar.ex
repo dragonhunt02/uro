@@ -231,19 +231,19 @@ defmodule Uro.AvatarController do
     case UserContent.get_avatar_uploaded_by_user!(id, user) do
       %Uro.UserContent.Avatar{} = avatar ->
         case UserContent.delete_avatar(avatar) do
-           {:ok, _avatar} ->
+          {:ok, _avatar} ->
             conn
             |> put_status(200)
-            |> json(%{ data: %{} })
+            |> json(%{data: %{}})
 
           {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
             {:error, changeset}
         end
 
-       _ ->
+      _ ->
         conn
         |> put_status(200)
-        |> json(%{ data: %{} })
+        |> json(%{data: %{}})
     end
   end
 end

@@ -59,7 +59,8 @@ defmodule Uro.PropController do
           Uro.Helpers.UserContentHelper.get_api_user_content_list(props, %{
             merge_uploader_id: true
           })
-      }})
+      }
+    })
   end
 
   operation(:show,
@@ -150,7 +151,13 @@ defmodule Uro.PropController do
 
   def create(conn, %{"prop" => prop_params}) do
     case UserContent.create_prop(
-      Uro.Helpers.UserContentHelper.get_correct_user_content_params(conn, prop_params, "user_content_data", "user_content_preview")) do
+           Uro.Helpers.UserContentHelper.get_correct_user_content_params(
+             conn,
+             prop_params,
+             "user_content_data",
+             "user_content_preview"
+           )
+         ) do
       {:ok, prop} ->
         conn
         |> put_status(200)
@@ -227,15 +234,16 @@ defmodule Uro.PropController do
           {:ok, _prop} ->
             conn
             |> put_status(200)
-            |> json(%{ data: %{} })
+            |> json(%{data: %{}})
 
           {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
             {:error, changeset}
         end
+
       _ ->
         conn
         |> put_status(200)
-        |> json(%{ data: %{} })
+        |> json(%{data: %{}})
     end
   end
 end

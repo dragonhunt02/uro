@@ -187,5 +187,4 @@ defmodule Uro.SharedContent do
   def change_shared_file(%SharedFile{} = shared_file) do
     SharedFile.changeset(shared_file, %{})
   end
-
 end

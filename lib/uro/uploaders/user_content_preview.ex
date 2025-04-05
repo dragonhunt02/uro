@@ -17,8 +17,11 @@ defmodule Uro.Uploaders.UserContentPreview do
     IO.inspect(file)
     IO.puts("End debug")
     file_extension = file.file_name |> Path.extname() |> String.downcase()
+
     with true <- Enum.member?(@extension_whitelist, file_extension),
-         true <- Validation.check_magic_number(file), do: true, else: (_ -> false)
+         true <- Validation.check_magic_number(file),
+         do: true,
+         else: (_ -> false)
   end
 
   # Override the persisted filenames:

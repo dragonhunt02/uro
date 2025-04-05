@@ -234,16 +234,16 @@ defmodule Uro.MapController do
           {:ok, _map} ->
             conn
             |> put_status(200)
-            |> json(%{ data: %{} })
+            |> json(%{data: %{}})
 
           {:error, %Ecto.Changeset{changes: _changes, errors: _errors} = changeset} ->
             {:error, changeset}
         end
 
-       _ ->
+      _ ->
         conn
         |> put_status(200)
-        |> json(%{ data: %{} })
+        |> json(%{data: %{}})
     end
   end
 end

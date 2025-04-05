@@ -16,7 +16,9 @@ defmodule Uro.Application do
           {Redix, {Application.get_env(:uro, Redix)[:url], [name: :redix]}},
           {Phoenix.PubSub, [name: Uro.PubSub, adapter: Phoenix.PubSub.PG2]},
           ExMarcel.TableWrapper,
-          {Task, fn -> Uro.Helpers.Validation.init_extra_extensions() end} # ExMarcel
+
+          # ExMarcel
+          {Task, fn -> Uro.Helpers.Validation.init_extra_extensions() end}
         ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

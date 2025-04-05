@@ -7,7 +7,9 @@ defmodule Uro.Helpers.SharedContentHelper do
       description: to_string(shared_content.description),
       shared_content_data:
         to_string(
-          Uro.Uploaders.SharedContentData.url({shared_content.shared_content_data, shared_content})
+          Uro.Uploaders.SharedContentData.url(
+            {shared_content.shared_content_data, shared_content}
+          )
         ),
       mime_type: to_string(shared_content.mime_type),
       file_size: shared_content.file_size,
@@ -63,7 +65,7 @@ defmodule Uro.Helpers.SharedContentHelper do
       "is_public" => Map.get(shared_content_params, "is_public", false),
       "uploader_id" => conn.assigns[:current_user].id,
       "version" => Map.get(shared_content_params, "version", ""),
-      "tags" => Map.get(shared_content_params, "tags", []),
+      "tags" => Map.get(shared_content_params, "tags", [])
     }
   end
 

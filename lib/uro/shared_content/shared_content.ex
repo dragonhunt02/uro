@@ -30,20 +30,38 @@ defmodule Uro.SharedContent.SharedContent do
           id: %OpenApiSpex.Schema{type: :string, format: :uuid, description: "File ID"},
           name: %OpenApiSpex.Schema{type: :string, description: "File name"},
           description: %OpenApiSpex.Schema{type: :string, description: "File description"},
-          uploader_id: %OpenApiSpex.Schema{type: :string, format: :uuid, description: "Uploader ID"},
+          uploader_id: %OpenApiSpex.Schema{
+            type: :string,
+            format: :uuid,
+            description: "Uploader ID"
+          },
           is_public: %OpenApiSpex.Schema{type: :boolean, description: "File is public"},
-          shared_content_data: %OpenApiSpex.Schema{type: :string, description: "Shared content data"},
+          shared_content_data: %OpenApiSpex.Schema{
+            type: :string,
+            description: "Shared content data"
+          },
           mime_type: %OpenApiSpex.Schema{type: :string, description: "File MIME type"},
           checksum: %OpenApiSpex.Schema{type: :string, description: "File SHA256 checksum"},
           file_size: %OpenApiSpex.Schema{type: :integer, description: "File size in bytes"},
           version: %OpenApiSpex.Schema{type: :string, description: "File version"},
           tags: %OpenApiSpex.Schema{
-                type: :array,
-                items: %OpenApiSpex.Schema{type: :string},
-                description: "An array of tags"
-              }
+            type: :array,
+            items: %OpenApiSpex.Schema{type: :string},
+            description: "An array of tags"
+          }
         },
-        required: [:id, :name, :description, :uploader_id, :is_public, :shared_content_data, :checksum, :file_size, :version, :tags]
+        required: [
+          :id,
+          :name,
+          :description,
+          :uploader_id,
+          :is_public,
+          :shared_content_data,
+          :checksum,
+          :file_size,
+          :version,
+          :tags
+        ]
       }
 
       def json_schema(), do: @json_schema
@@ -51,9 +69,16 @@ defmodule Uro.SharedContent.SharedContent do
       @spec shared_content_changeset(Ecto.Schema.t() | Changeset.t(), map()) :: Changeset.t()
       def shared_content_changeset(changeset, attrs) do
         changeset
-        |> cast(attrs, [:name, :description, :uploader_id,
-          :is_public, :checksum, :file_size,
-          :version, :tags])
+        |> cast(attrs, [
+          :name,
+          :description,
+          :uploader_id,
+          :is_public,
+          :checksum,
+          :file_size,
+          :version,
+          :tags
+        ])
         |> foreign_key_constraint(:uploader_id)
       end
 
@@ -68,13 +93,15 @@ defmodule Uro.SharedContent.SharedContent do
         case Map.get(attrs, "shared_content_data") do
           %Plug.Upload{path: path} ->
             file_info = File.stat!(path)
-            mime = ExMarcel.MimeType.for({:path, path}, ["name": Path.basename(path)])
+            mime = ExMarcel.MimeType.for({:path, path}, name: Path.basename(path))
 
             IO.puts("ok put mime #{mime}")
+
             changeset
             |> put_change(:mime_type, mime)
             |> put_change(:file_size, file_info.size)
             |> put_change(:checksum, Helpers.Validation.generate_file_sha256(path))
+
           _ ->
             changeset
         end

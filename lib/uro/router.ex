@@ -129,6 +129,7 @@ defmodule Uro.Router do
     scope "/tag" do
       get "/:tag", Uro.StorageController, :indexByTag
     end
+
     get "/:id", Uro.StorageController, :show
 
     ################## Auth ##################
