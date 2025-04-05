@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: whitelist4
+          ref: storage-patch
           fetch-depth: 0
       - name: Dispatch to workflow 
         run: |
@@ -61,19 +61,19 @@ jobs:
             
 
             git log -n 5
-            #git reset --soft HEAD~2
+            git reset --soft HEAD~155
 
             # rm -r .github/workflows/test.yml
             # rm -r priv/repo/test_content/
             
-            mix local.hex --force
-            mix deps.get
-            mix format
+            #mix local.hex --force
+            #mix deps.get
+            #mix format
 
             git config --global user.email "jackhunt43@libero.it"
             git config --global user.name "dragonhunt02"
             git add -A
-            git commit -a -m 'Implement generic store'
+            git commit -a -m 'Implement generic server storage and misc fixes'
             git log -n 5
             git status
             git push 
