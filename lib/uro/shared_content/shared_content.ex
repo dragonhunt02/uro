@@ -70,6 +70,7 @@ defmodule Uro.SharedContent.SharedContent do
             file_info = File.stat!(path)
             mime = ExMarcel.MimeType.for({:path, path}, ["name": Path.basename(path)])
 
+            IO.puts("ok put mime #{mime}")
             changeset
             |> put_change(:mime_type, mime)
             |> put_change(:file_size, file_info.size)
