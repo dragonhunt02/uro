@@ -93,7 +93,13 @@ defmodule Uro.MixProject do
       "uro.apigen": [
         "openapi.spec.json --spec Uro.OpenAPI.Specification --pretty --vendor-extensions=false ./frontend/src/__generated/openapi.json"
       ],
-      "patch.exmarcel": fn -> Code.eval_file("priv/repo/patch_exmarcel.exs") end,
+      "patch.exmarcel": fn _args ->
+        path = "deps/ex_marcel/lib/magic.ex"
+        content = File.read!(path)
+        patched_content = String.replace(content, "ext |> String.slice(1..-1)", "ext |> String.slice(1..-1//1)")
+        File.write!(path, patched_content)
+        IO.puts("Module 'ex-marcel' patched successfully!")
+      end,
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
