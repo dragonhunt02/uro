@@ -16,45 +16,9 @@ def init_extra_extensions() do
   ExMarcel.Magic.add("model/gltf-binary", [extensions: ["glb", "vrm"], magic: [[0, "\x67\x6C\x54\x46"]], parents: []])
 end
 
-# Ensure mime matches extension
-@spec check_magic_exmarcel(%{file_name: String.t(), path: String.t()}) :: boolean
-def check_magic_exmarcel(%{file_name: file_name, path: path}) do
-  file_extension = file_name |> Path.extname() |> String.downcase()
-  {:ok, file_handle} = File.open(path)
-  magic_mime = ExMarcel.Magic.by_magic(file_handle)
-  File.close(file_handle)
-  ext_mime = ExMarcel.Magic.by_extension(file_extension)
-  if magic_mime do
-    IO.puts("magic_mime")
-    IO.puts(magic_mime.type)
-  end
-  if ext_mime do
-    IO.puts("ext_mime")
-    IO.puts(ext_mime.type)
-  end
-  if !(magic_mime && ext_mime) do # warning if one return value is falsy
-      Logger.warning("File magic number or extension not recognized: #{file_extension} in #{file_name}. Skipping magic number validation...")
-      true
-  else
-    magic_mime = magic_mime.type |> String.downcase()
-    ext_mime = ext_mime.type |> String.downcase()
-    cond do
-      magic_mime == ext_mime ->
-        IO.puts("Good file")
-        true
-      #nil ->
-      #magic_mime == "application/octet-stream" -> # exmarcel fallback value when not in magic list
-        #Logger.warning("File magic number not recognized: #{file_extension} in #{file_name}. Skipping magic number validation...")
-       # true
-      true ->
-        IO.puts("Wrong file")
-        false
-    end
-  end
-end
-
-@spec check_magic_custom(%{file_name: String.t(), path: String.t()}) :: boolean
-def check_magic_custom(%{file_name: file_name, path: path}) do
+# Weak check, ensures magic matches extension mime for some file types.
+@spec check_magic_number(%{file_name: String.t(), path: String.t()}) :: boolean
+def check_magic_number(%{file_name: file_name, path: path}) do
   file_extension = file_name |> Path.extname() |> String.downcase()
   magic_number = Map.get(@magic_numbers, file_extension)
 
@@ -76,19 +40,6 @@ def check_magic_custom(%{file_name: file_name, path: path}) do
       true
     end
   end
-
-@spec check_magic_number(%{file_name: String.t(), path: String.t()}) :: boolean
-def check_magic_number(%{file_name: _file_name, path: _path} = file) do
-  #ExMarcel.Magic.add("application/vnd.godot.scn", [extensions: ["scn"], magic: [[0, "\x52\x53\x43\x43"]], parents: []])
-  #ExMarcel.Magic.add("model/gltf-binary", [extensions: ["glb", "vrm"], magic: [[0, "\x67\x6C\x54\x46"]], parents: []])
-  # check_magic_custom(file) and check_magic_exmarcel(file)
-  check_magic_exmarcel(file)
-end
-
-  #defp generate_checksum1(file_path) do
-  #  :crypto.hash(:sha256, File.read!(file_path))
-  #  |> Base.encode16(case: :lower)
-  #end
 
   def generate_file_sha256(file_path) do
     file_stream = File.stream!(file_path, [], 4096) # 4KB chunks
