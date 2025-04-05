@@ -93,6 +93,7 @@ defmodule Uro.MixProject do
       "uro.apigen": [
         "openapi.spec.json --spec Uro.OpenAPI.Specification --pretty --vendor-extensions=false ./frontend/src/__generated/openapi.json"
       ],
+      "patch.exmarcel": fn -> Code.eval_file("priv/repo/patch_exmarcel.exs") end,
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
