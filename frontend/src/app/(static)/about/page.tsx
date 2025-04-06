@@ -8,7 +8,7 @@ import { urls } from "~/environment";
 import { Section, SectionTitle } from "~/app/(static)/section";
 import { Footer } from "~/app/footer";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 const [env, setEnv] = useState({})
 
 useEffect(() => {
