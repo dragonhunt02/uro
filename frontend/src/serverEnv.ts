@@ -13,6 +13,7 @@ export async function prefetchEnvVariables() {
 export function getEnvVariables(): { apiOrigin: string } {
   if (typeof window === 'undefined') {
     throw new Error('localStorage is not available in the server environment.');
+    return { apiOrigin: "string" };
   }
  /*
   const cachedData = localStorage.getItem('envCache');
