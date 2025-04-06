@@ -8,6 +8,16 @@ import { urls } from "~/environment";
 import { Section, SectionTitle } from "~/app/(static)/section";
 import { Footer } from "~/app/footer";
 
+import { useEffect } from 'react';
+const [env, setEnv] = useState({})
+
+useEffect(() => {
+  fetch('/api/env')
+    .then((res) => res.json())
+    .then((data) => setEnv(data))
+}, [])
+console.log(env)
+
 export default function AboutPage() {
 	return (
 		<main className="mx-auto flex w-full max-w-screen-lg flex-col pt-8 lg:pt-16">
