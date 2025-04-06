@@ -36,14 +36,6 @@ export default async function RootLayout({
 	if (session)
 		queryClient.setQueryData(["users", session.user.username], session.user);
 
-        useEffect(() => {
-		// Call prefetchEnvVariables only on the client side
-		prefetchEnvVariables().catch(error => {
-			console.error('Failed to prefetch environment variables:', error);
-		});
-	}, []);
-
-						// <ClientPrefetch />
 	
 	return (
 		<html lang="en">
@@ -52,6 +44,7 @@ export default async function RootLayout({
 					<Body>
 						<ReactQueryDevtools />
 						<LoadingIndicator />
+						<ClientPrefetch />
 						{children}
 					</Body>
 				</HydrationBoundary>
