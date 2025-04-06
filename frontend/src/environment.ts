@@ -31,16 +31,16 @@ function initializeEnvironment() {
 // Initialize environment variables on module load
 initializeEnvironment();
 
-export const origin = cachedEnv?.origin ?? '';
-export const apiOrigin = cachedEnv?.apiOrigin ?? '';
-export const turnstileSiteKey = cachedEnv?.turnstileSiteKey ?? '';
+export const origin = '';
+export const apiOrigin = '';
+export const turnstileSiteKey = '';
 //export const urls = cachedEnv?.urls || {};
 
 /**
  * A set of first-party origins, these are given special treatment in the
  * application, such as in OAuth2 redirection & opening links in a new tab.
  */
-export const firstPartyOrigins = new Set([cachedEnv?.origin ?? '']);
+export const firstPartyOrigins = new Set(['']);
 
 //function environment<T>(value: unknown, name: string): T {
 //	if (!value) throw new Error(`Missing environment variable: ${name}.`);
