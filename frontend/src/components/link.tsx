@@ -17,11 +17,12 @@ export const Link = forwardRef<
 >(({ href: _href, children, className, ...props }, reference) => {
 	const { href, external } = useMemo(() => {
 		const api_origin = await origin();
+		const firstparty_origins = await firstPartyOrigins();
 		const url = new URL(_href.toString(), api_origin);
 		const href =
 			url.origin === api_origin ? url.href.replace(api_origin, "") : url.href;
 
-		const external = !firstPartyOrigins.has(url.origin);
+		const external = !firstparty_origins.has(url.origin);
 
 		return { external, href };
 	}, [_href]);
