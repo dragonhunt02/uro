@@ -6,6 +6,7 @@ export async function prefetchEnvVariables() {
 
   const response = await fetch('/api/env');
   const data = await response.json();
+  console.log(data);
   localStorage.setItem('envCache', JSON.stringify(data));
 }
 
