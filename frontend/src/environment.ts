@@ -1,4 +1,12 @@
-let cachedEnv: Record<string, any> | null = null;
+interface Env {
+  origin?: string;
+  apiOrigin?: string;
+  turnstileSiteKey?: string;
+}
+
+let cachedEnv: Env | null = null;
+
+//let cachedEnv: Record<string, any> | null = null;
 
 function initializeEnvironment() {
   if (!cachedEnv) {
