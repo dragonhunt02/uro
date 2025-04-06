@@ -42,4 +42,5 @@ export function getEnvVariables(): ServerEnv {
   }, []);
 
   console.log(env);
+return env;
 }
