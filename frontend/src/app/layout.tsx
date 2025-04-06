@@ -6,6 +6,7 @@ import { dehydrateAll, getQueryClient } from "~/query";
 import { getOptionalSession } from "~/data/session";
 import { prefetchEnvVariables } from "~/serverEnv";
 import { ClientPrefetch } from '~/components/ClientPrefetch';
+import { useEffect } from 'react';
 
 import { Body, QueryProvider } from "./body";
 import { LoadingIndicator } from "./loading-indicator";
