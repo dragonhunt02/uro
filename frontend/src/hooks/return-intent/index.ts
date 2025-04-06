@@ -6,6 +6,7 @@ import { firstPartyOrigins, origin } from "~/environment";
 import { useLocation } from "../location";
 
 const api_origin = await origin();
+const firstparty_origins = await firstPartyOrigins();
 
 function minimizeHref(href: URL | string) {
 	const url = new URL(href.toString(), api_origin);
@@ -20,7 +21,7 @@ export function useReturnIntent() {
 
 	return useMemo(() => {
 		let returnIntent = _returnIntent ? new URL(_returnIntent, api_origin) : null;
-		if (returnIntent && !firstPartyOrigins.has(returnIntent.origin))
+		if (returnIntent && !firstparty_origins.has(returnIntent.origin))
 			returnIntent = null;
 
 		return {
