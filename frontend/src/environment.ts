@@ -35,10 +35,10 @@ export const turnstileSiteKey = async (): Promise<string> => {
   return env.turnstileSiteKey;
 };
 
-export const urls = async (): Promise<Record<string, string>> => {
-  const env = await fetchEnvironment();
-  return env.urls;
-};
+// export const urls = async (): Promise<Record<string, string>> => {
+//  const env = await fetchEnvironment();
+//  return env.urls;
+//};
 
 /**
  * A set of first-party origins, these are given special treatment in the
