@@ -4,7 +4,7 @@ import { HydrationBoundary } from "@tanstack/react-query";
 import { getTheme } from "~/hooks/theme/server";
 import { dehydrateAll, getQueryClient } from "~/query";
 import { getOptionalSession } from "~/data/session";
-import { prefetchEnvVariables } from "~/serverEnv;
+import { prefetchEnvVariables } from "~/serverEnv";
 
 import { Body, QueryProvider } from "./body";
 import { LoadingIndicator } from "./loading-indicator";
