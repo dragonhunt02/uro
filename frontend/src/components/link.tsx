@@ -16,9 +16,10 @@ export const Link = forwardRef<
 	ComponentProps<typeof LinkPrimitive>
 >(({ href: _href, children, className, ...props }, reference) => {
 	const { href, external } = useMemo(() => {
-		const url = new URL(_href.toString(), origin);
+		const api_origin = await origin();
+		const url = new URL(_href.toString(), api_origin);
 		const href =
-			url.origin === origin ? url.href.replace(origin, "") : url.href;
+			url.origin === api_origin ? url.href.replace(api_origin, "") : url.href;
 
 		const external = !firstPartyOrigins.has(url.origin);
 
