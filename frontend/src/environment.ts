@@ -23,12 +23,10 @@ function initializeEnvironment() {
 // Initialize environment variables on module load
 initializeEnvironment();
 
-export const development = process.env.NODE_ENV === 'development';
-
 export const origin = cachedEnv?.origin || '';
 export const apiOrigin = cachedEnv?.apiOrigin || '';
 export const turnstileSiteKey = cachedEnv?.turnstileSiteKey || '';
-export const urls = cachedEnv?.urls || {};
+//export const urls = cachedEnv?.urls || {};
 
 /**
  * A set of first-party origins, these are given special treatment in the
