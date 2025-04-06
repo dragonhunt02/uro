@@ -1,24 +1,55 @@
-function environment<T>(value: unknown, name: string): T {
-	if (!value) throw new Error(`Missing environment variable: ${name}.`);
-	return value as T;
-}
+let cachedEnv: Record<string, any> | null = null;
+
+const fetchEnvironment = async () => {
+  if (!cachedEnv) {
+    const localStorageEnv = localStorage.getItem('env');
+    if (localStorageEnv) {
+      cachedEnv = JSON.parse(localStorageEnv);
+    } else {
+      const response = await fetch('/api/env');
+      const data = await response.json();
+      localStorage.setItem('env', JSON.stringify(data));
+      cachedEnv = data;
+    }
+  }
+  return cachedEnv;
+};
+
+// Fetch the environment variables on startup
+fetchEnvironment().then((env) => {
+  cachedEnv = env;
+});
+
+export const origin = async (): Promise<string> => {
+  const env = await fetchEnvironment();
+  return env.origin;
+};
+
+export const apiOrigin = async (): Promise<string> => {
+  const env = await fetchEnvironment();
+  return env.apiOrigin;
+};
+
+export const turnstileSiteKey = async (): Promise<string> => {
+  const env = await fetchEnvironment();
+  return env.turnstileSiteKey;
+};
+
+export const urls = async (): Promise<Record<string, string>> => {
+  const env = await fetchEnvironment();
+  return env.urls;
+};
+
+/**
+ * A set of first-party origins, these are given special treatment in the
+ * application, such as in OAuth2 redirection & opening links in a new tab.
+ */
+export const firstPartyOrigins = async (): Promise<Set<string>> => {
+  const env = await fetchEnvironment();
+  return new Set([env.origin]);
+};
 
 export const development = process.env.NODE_ENV === "development";
-
-export const origin = environment<string>(
-	process.env.NEXT_PUBLIC_ORIGIN,
-	"NEXT_PUBLIC_ORIGIN"
-);
-
-export const apiOrigin = environment<string>(
-	process.env.API_ORIGIN || process.env.NEXT_PUBLIC_API_ORIGIN,
-	"API_ORIGIN and or NEXT_PUBLIC_API_ORIGIN"
-);
-
-export const turnstileSiteKey = environment<string>(
-	process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY,
-	"NEXT_PUBLIC_TURNSTILE_SITEKEY"
-);
 
 if (development) {
 	process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
@@ -29,9 +60,3 @@ export const urls = {
 	github: "https://github.com/v-sekai",
 	twitter: "https://twitter.com/vsekaiofficial"
 };
-
-/**
- * A set of first-party origins, these are given special treatment in the
- * application, such as in OAuth2 redirection & opening links in a new tab.
- */
-export const firstPartyOrigins = new Set([origin]);
