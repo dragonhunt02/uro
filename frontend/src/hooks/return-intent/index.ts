@@ -5,9 +5,11 @@ import { firstPartyOrigins, origin } from "~/environment";
 
 import { useLocation } from "../location";
 
+const api_origin = await origin();
+
 function minimizeHref(href: URL | string) {
-	const url = new URL(href.toString(), origin);
-	return url.origin === origin ? url.href.replace(origin, "") : url.href;
+	const url = new URL(href.toString(), api_origin);
+	return url.origin === api_origin ? url.href.replace(api_origin, "") : url.href;
 }
 
 export function useReturnIntent() {
@@ -17,7 +19,7 @@ export function useReturnIntent() {
 	const _returnIntent = searchParams.get("ri");
 
 	return useMemo(() => {
-		let returnIntent = _returnIntent ? new URL(_returnIntent, origin) : null;
+		let returnIntent = _returnIntent ? new URL(_returnIntent, api_origin) : null;
 		if (returnIntent && !firstPartyOrigins.has(returnIntent.origin))
 			returnIntent = null;
 
@@ -26,7 +28,7 @@ export function useReturnIntent() {
 				router.push(returnIntent?.toString() || fallback),
 			returnIntent,
 			withReturnIntent: (pathname: string) => {
-				const url = new URL(pathname, origin);
+				const url = new URL(pathname, api_origin);
 				url.searchParams.set(
 					"ri",
 					minimizeHref(returnIntent ? returnIntent.href : current)
