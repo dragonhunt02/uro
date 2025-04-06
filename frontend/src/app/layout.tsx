@@ -5,6 +5,7 @@ import { getTheme } from "~/hooks/theme/server";
 import { dehydrateAll, getQueryClient } from "~/query";
 import { getOptionalSession } from "~/data/session";
 import { prefetchEnvVariables } from "~/serverEnv";
+import { ClientPrefetch } from '~/components/ClientPrefetch';
 
 import { Body, QueryProvider } from "./body";
 import { LoadingIndicator } from "./loading-indicator";
@@ -24,7 +25,7 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const session = await getOptionalSession();
-	const prefetchEnv = await prefetchEnvVariables();
+	//const prefetchEnv = await prefetchEnvVariables();
 
 	const queryClient = getQueryClient();
 
@@ -41,6 +42,7 @@ export default async function RootLayout({
 					<Body>
 						<ReactQueryDevtools />
 						<LoadingIndicator />
+						<ClientPrefetch />
 						{children}
 					</Body>
 				</HydrationBoundary>
