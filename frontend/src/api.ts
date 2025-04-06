@@ -21,7 +21,7 @@ const relevantHeaders = new Set([
 	"x-forwarded-proto"
 ]);
 
-config.baseUrl = apiOrigin;
+config.baseUrl = await apiOrigin();
 config.fetch = async (request: Request) => {
 	if (development)
 		// Simulate network latency in development, encouraging optimistic updates & proper loading states.
