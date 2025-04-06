@@ -1,4 +1,5 @@
 // Expose some server env variables to client as API
+export const dynamic = 'force-dynamic';
 export async function GET(request) {
   const responseBody = {
     origin: process.env.NEXTJS_ORIGIN,
