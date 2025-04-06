@@ -32,7 +32,7 @@ interface ServerEnv {
   turnstileSiteKey?: string;
 }
 
-export function getEnvVariables(): ServerEnv {
+export function getServerEnv(): ServerEnv {
 	const [env, setEnv] = useState({});
 
   useEffect(() => {
