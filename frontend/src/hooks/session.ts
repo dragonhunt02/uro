@@ -10,11 +10,16 @@ import { getQueryClient } from "~/query";
 import { useReturnIntent } from "./return-intent";
 import { useLocation } from "./location";
 
+import { getEnvVariables } from "~/serverEnv";
+
 export const useOptionalSession = () => {
 	const { withReturnIntent } = useReturnIntent();
 	const { pathname } = useLocation();
 	const queryClient = useQueryClient();
 
+        const envVars = getEnvVariables();
+	console.log(envVars);
+	
 	const { data: session } = useSuspenseQuery({
 		queryFn: async () => {
 			const data = await getOptionalSession();
