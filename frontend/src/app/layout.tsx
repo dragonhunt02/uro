@@ -4,6 +4,7 @@ import { HydrationBoundary } from "@tanstack/react-query";
 import { getTheme } from "~/hooks/theme/server";
 import { dehydrateAll, getQueryClient } from "~/query";
 import { getOptionalSession } from "~/data/session";
+import { prefetchEnvVariables } from "~/serverEnv;
 
 import { Body, QueryProvider } from "./body";
 import { LoadingIndicator } from "./loading-indicator";
@@ -23,6 +24,7 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }>) {
 	const session = await getOptionalSession();
+	const prefetchEnv = await prefetchEnvVariables();
 
 	const queryClient = getQueryClient();
 
