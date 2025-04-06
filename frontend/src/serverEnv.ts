@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 export async function prefetchEnvVariables() {
   if (typeof window === 'undefined') {
     console.error('Cannot use localStorage in a server context.');
@@ -22,4 +24,22 @@ export function getEnvVariables(): { apiOrigin: string } {
   }
   return JSON.parse(cachedData);
   */
+}
+
+interface ServerEnv {
+  origin?: string;
+  apiOrigin?: string; // Combining possible values from both environment variables
+  turnstileSiteKey?: string;
+}
+
+export function getEnvVariables(): ServerEnv {
+	const [env, setEnv] = useState({});
+
+  useEffect(() => {
+    fetch('/api/env')
+      .then((res) => res.json())
+      .then((data) => setEnv(data))
+  }, []);
+
+  console.log(env);
 }
