@@ -28,6 +28,7 @@ export default async function RootLayout({
 	const session = await getOptionalSession();
 	//const prefetchEnv = await prefetchEnvVariables();
 
+						//<ClientPrefetch />
 	const queryClient = getQueryClient();
 
 	queryClient.setQueryData(["theme"], getTheme());
@@ -44,7 +45,6 @@ export default async function RootLayout({
 					<Body>
 						<ReactQueryDevtools />
 						<LoadingIndicator />
-						<ClientPrefetch />
 						{children}
 					</Body>
 				</HydrationBoundary>
