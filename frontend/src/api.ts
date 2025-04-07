@@ -48,7 +48,7 @@ config.fetch = async (request: Request) => {
         const protocol = originalUrl.protocol;
         //const newBaseUrl2 = "//api.example.local";
 	const newBaseUrl = process.env.API_ORIGIN || ""; // NOT WORKING it fallbacks to empty
-        const pathName = originalUrl.pathname || "";
+        const pathName = originalUrl.pathname || "/";
 	
         //let newRequest2 = new Request(`${protocol}${newBaseUrl2}${originalUrl.pathname}`, {
         //     ...request,
