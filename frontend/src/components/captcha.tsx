@@ -12,7 +12,7 @@ import {
 	type FC
 } from "react";
 import { twMerge } from "tailwind-merge";
-
+import { useState  } from 'react';
 //import { turnstileSiteKey } from "~/environment";
 import { useServerEnv } from "~/hooks/server-env";
 
@@ -32,16 +32,42 @@ const CaptchaContent: FC<
 	const reference = useRef<HTMLDivElement>(null);
 	const onChange = useLatest(_onChange);
 	const serverEnv = useServerEnv();
+const envLoading = !serverEnv; 
+	console.log('serverEnv');
+	console.log(envLoading);
 	console.log(serverEnv);
-	const turnstileSiteKey = serverEnv.turnstileSiteKey;
+/*
+if (!serverEnv) {
+console.log("waiting")
+return <div>Loading...</div>;
+}*/
+const [trigger, setTrigger] = useState(0);
+const serverEnv2 = useServerEnv();
+
+useEffect(() => {
+  if (!serverEnv2) {
+    // Retry after a delay, for example
+    const retryTimeout = setTimeout(() => setTrigger((prev) => prev + 1), 1000);
+    return () => clearTimeout(retryTimeout);
+  }
+}, [serverEnv2, trigger]);
+
+	const turnstileSiteKey = serverEnv?.turnstileSiteKey || "testkey";
+	console.log( turnstileSiteKey );
 
 	useEffect(() => {
 		const { current: element } = reference;
 		if (!element) return;
+		const serverEnv2 = useServerEnv();
+		const envLoading2 = !serverEnv2; 
+
+		if (envLoading2 ) return;
+	console.log('turnrenderserverEnv');
+console.log(serverEnv);
 
 		turnstile.render(element, {
 			callback: (value) => onChange.current?.(value),
-			sitekey: turnstileSiteKey,
+			sitekey: serverEnv.turnstileSiteKey,
 			theme
 		});
 
@@ -53,9 +79,12 @@ const CaptchaContent: FC<
 	useEffect(() => {
 		const { current: element } = reference;
 		if (!element || formStatus === "pending") return;
+		if (envLoading) return;
 
 		turnstile.reset(element);
 	}, [formStatus]);
+
+		if (envLoading) return (<div>Emptym</div>);
 
 	return (
 		<div
