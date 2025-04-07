@@ -47,8 +47,17 @@ config.fetch = async (request: Request) => {
 	const originalUrl = new URL(request.url);
         const protocol = originalUrl.protocol;
         //const newBaseUrl2 = "//api.example.local";
-	const newBaseUrl = process.env.API_ORIGIN || ""; // NOT WORKING it fallbacks to empty
-        const pathName = originalUrl.pathname || "/";
+
+	if (typeof window !== "undefined"){
+		
+        const responsee = await fetch("/api/env");
+        const envJson = await responsee.json();
+        console.log("yaho")
+        console.log(JSON.stringify(envJson))
+			
+	const newBaseUrl = envJson.origin || "";
+		//process.env.API_ORIGIN || ""; // NOT WORKING it fallbacks to empty
+        const pathName = originalUrl.pathname || "";
 	
         //let newRequest2 = new Request(`${protocol}${newBaseUrl2}${originalUrl.pathname}`, {
         //     ...request,
@@ -59,11 +68,18 @@ config.fetch = async (request: Request) => {
              ...request,
              headers: request.headers,
          });
-	
+		
+	console.log('inside request');
+	console.log(newBaseUrl, originalUrl.pathname);
+		
 	console.log(request);
 	console.log(request2);
 	//console.log(newRequest2);
 	return fetch(request2);
+	
+	} else {
+		return fetch(request)
+	}
 };
 
 export * from "./__generated/api";
