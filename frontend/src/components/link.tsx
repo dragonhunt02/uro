@@ -16,13 +16,29 @@ export const Link = forwardRef<
 	ComponentProps<typeof LinkPrimitive>
 >(({ href: _href, children, className, ...props }, reference) => {
 	const { href, external } = useMemo(() => {
-		const url = new URL(_href.toString(), origin);
-		const href =
-			url.origin === origin ? url.href.replace(origin, "") : url.href;
 
-		const external = !firstPartyOrigins.has(url.origin);
+		try {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/api/env", false); // `false` makes it synchronous
+    xhr.send();
+  } catch (error) {
+    console.error("error.message");
+  }
+
+		if (xhr.status !== 200){
+      throw new Error(`Failed to fetch server environment: ${xhr.status}`);
+    }
+		const serverEnv = JSON.parse(xhr.responseText);
+      console.log("Synchronous link serverEnv:", serverEnv);
+		
+		const url = new URL(_href.toString(), serverEnv.origin);
+		const href =
+			url.origin === serverEnv.origin ? url.href.replace(serverEnv.origin, "") : url.href;
+
+		const external = !firstPartyOrigins.has(url.origin) && !(serverEnv.origin === url.origin);
 
 		return { external, href };
+	
 	}, [_href]);
 
 	return (
