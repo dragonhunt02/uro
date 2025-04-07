@@ -9,22 +9,29 @@ import { getQueryClient } from "~/query";
 import { useReturnIntent } from "./return-intent";
 import { useLocation } from "./location";
 
-export const useListDownloads = () => {
-  const { withReturnIntent } = useReturnIntent();
-  const { pathname } = useLocation();
+export const useServerEnv = () => {
   const queryClient = useQueryClient();
 
-  const { data: serverEnv } = useQuery({
+  const { data: serverEnv, error } = useQuery({
     queryFn: async () => {
-      const response = await fetch('/api/env').then((res) => res.json());
-      if (!response) {
+      try {
+        const response = await fetch('/api/env');
+        if (!response.ok) {
+          throw new Error('Failed to fetch server environment data');
+        }
+        return await response.json();
+      } catch (error) {
+        console.error(error);
         return null;
       }
-      return response;
     },
     queryKey: ["server-env"],
-    refetchOnWindowFocus: "always"
+    refetchOnWindowFocus: false
   });
+
+  if (error) {
+    console.error('Error fetching server environment:', error);
+  }
 
   return serverEnv;
 };
