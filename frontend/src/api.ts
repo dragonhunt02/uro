@@ -54,7 +54,7 @@ config.fetch = async (request: Request) => {
         //     headers: request.headers,
         // });
 	
-        let request2 = new Request(`${neweUrl}`, {
+        let request2 = new Request(`${newBaseUrl}`, {
              ...request,
              headers: request.headers,
          });
