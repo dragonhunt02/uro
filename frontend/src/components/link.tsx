@@ -27,7 +27,8 @@ export const Link = forwardRef<
     }
 		const serverEnv = JSON.parse(xhr.responseText);
       console.log("Synchronous link serverEnv:", serverEnv);
-		const originEnv = serverEnv.origin ?? "";
+		let originEnv = "";
+		originEnv = serverEnv?.origin ?? "";
 		
 		const url = new URL(_href.toString(), originEnv);
 		const href =
