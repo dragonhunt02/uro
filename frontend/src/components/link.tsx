@@ -27,12 +27,13 @@ export const Link = forwardRef<
     }
 		const serverEnv = JSON.parse(xhr.responseText);
       console.log("Synchronous link serverEnv:", serverEnv);
+		const originEnv = serverEnv.origin ?? "";
 		
-		const url = new URL(_href.toString(), serverEnv.origin);
+		const url = new URL(_href.toString(), originEnv);
 		const href =
-			url.origin === serverEnv.origin ? url.href.replace(serverEnv.origin, "") : url.href;
+			url.origin === originEnv ? url.href.replace(originEnv, "") : url.href;
 
-		const external = !firstPartyOrigins.has(url.origin) && !(serverEnv.origin === url.origin);
+		const external = !firstPartyOrigins.has(url.origin) && !(originEnv === url.origin);
 
 		return { external, href };
 	  } catch (error) {
