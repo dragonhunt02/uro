@@ -13,7 +13,9 @@ import {
 } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { turnstileSiteKey } from "~/environment";
+//import { turnstileSiteKey } from "~/environment";
+import { useServerEnv } from "~/hooks/server-env";
+
 import { MutationFormContext } from "~/hooks/form";
 import { useTheme } from "~/hooks/theme";
 
@@ -29,6 +31,9 @@ const CaptchaContent: FC<
 	const { theme } = useTheme();
 	const reference = useRef<HTMLDivElement>(null);
 	const onChange = useLatest(_onChange);
+	const serverEnv = useServerEnv();
+	console.log(serverEnv);
+	const turnstileSiteKey = serverEnv.turnstileSiteKey;
 
 	useEffect(() => {
 		const { current: element } = reference;
