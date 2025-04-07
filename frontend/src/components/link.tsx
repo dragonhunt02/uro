@@ -21,9 +21,6 @@ export const Link = forwardRef<
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "/api/env", false); // `false` makes it synchronous
     xhr.send();
-  } catch (error) {
-    console.error("error.message");
-  }
 
 		if (xhr.status !== 200){
       throw new Error(`Failed to fetch server environment: ${xhr.status}`);
@@ -38,7 +35,10 @@ export const Link = forwardRef<
 		const external = !firstPartyOrigins.has(url.origin) && !(serverEnv.origin === url.origin);
 
 		return { external, href };
-	
+	  } catch (error) {
+    console.error("error.message");
+		return {};
+  }
 	}, [_href]);
 
 	return (
