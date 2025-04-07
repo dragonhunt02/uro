@@ -9,10 +9,6 @@ import { getQueryClient } from "~/query";
 import { useReturnIntent } from "./return-intent";
 import { useLocation } from "./location";
 
-"use client";
-
-import { useQuery } from "@tanstack/react-query";
-
 export const useServerEnv = () => {
   const { data: serverEnv } = useQuery({
     queryFn: async () => {
