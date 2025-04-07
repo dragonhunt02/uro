@@ -9,29 +9,25 @@ import { getQueryClient } from "~/query";
 import { useReturnIntent } from "./return-intent";
 import { useLocation } from "./location";
 
-export const useServerEnv = () => {
-  const queryClient = useQueryClient();
+"use client";
 
-  const { data: serverEnv, error } = useQuery({
+import { useQuery } from "@tanstack/react-query";
+
+export const useServerEnv = () => {
+  const { data: serverEnv } = useQuery({
     queryFn: async () => {
-      try {
-        const response = await fetch('/api/env');
-        if (!response.ok) {
-          throw new Error('Failed to fetch server environment data');
-        }
-        return await response.json();
-      } catch (error) {
-        console.error(error);
-        return null;
+      const response = await fetch('/api/env');
+      if (!response.ok) {
+        throw new Error('Failed to fetch server environment data');
       }
+      return await response.json();
     },
     queryKey: ["server-env"],
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    onError: (err) => {
+      console.error('Error fetching server environment:', err);
+    },
   });
-
-  if (error) {
-    console.error('Error fetching server environment:', error);
-  }
 
   return serverEnv;
 };
