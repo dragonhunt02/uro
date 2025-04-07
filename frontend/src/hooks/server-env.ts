@@ -10,7 +10,7 @@ import { useReturnIntent } from "./return-intent";
 import { useLocation } from "./location";
 
 export const useServerEnv = () => {
-  const { data: serverEnv } = useQuery({
+  const { data: serverEnv, error } = useQuery({
     queryFn: async () => {
       const response = await fetch('/api/env');
       if (!response.ok) {
@@ -20,10 +20,11 @@ export const useServerEnv = () => {
     },
     queryKey: ["server-env"],
     refetchOnWindowFocus: false,
-    onError: (err) => {
-      console.error('Error fetching server environment:', err);
-    },
   });
+
+  if (error) {
+    console.error('Error fetching server environment:', error);
+  }
 
   return serverEnv;
 };
