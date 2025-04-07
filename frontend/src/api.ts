@@ -1,7 +1,8 @@
 import { client } from "@hey-api/client-fetch";
 import { randomInt } from "@ariesclark/extensions";
 
-import { apiOrigin, development } from "./environment";
+import { development } from "./environment";
+import { useServerEnv } from "~/hooks/server-env";
 
 const config = client.getConfig();
 
@@ -40,8 +41,17 @@ config.fetch = async (request: Request) => {
 		request.headers.set(key, value);
 	}
 
+	const originalUrl = new URL(request.url);
+        const protocol = originalUrl.protocol;
+        const newBaseUrl = "//api.example.local"
+
+    newRequest = new Request(`${protocol}${newBaseUrl}${originalUrl.pathname}`, {
+        ...request,
+        headers: request.headers,
+    });
+
 	// console.log(request);
-	return fetch(request);
+	return fetch(newRequest);
 };
 
 export * from "./__generated/api";
