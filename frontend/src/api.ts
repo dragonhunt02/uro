@@ -22,10 +22,10 @@ const relevantHeaders = new Set([
 	"x-forwarded-proto"
 ]);
 
-config.baseUrl = "https://bad.request.vsekai.local"; //apiOrigin";
+config.baseUrl = apiOrigin; //"https://bad.request.vsekai.local"; //apiOrigin";
 config.fetch = async (request: Request) => {
-	const serverEnv = await fetchEnv();
-	const newbaseUrl = serverEnv.apiOrigin;
+	//const serverEnv = await fetchEnv();
+	//const newBaseUrl = serverEnv.apiOrigin;
 
 	if (development)
 		// Simulate network latency in development, encouraging optimistic updates & proper loading states.
@@ -46,7 +46,7 @@ config.fetch = async (request: Request) => {
 
 	const originalUrl = new URL(request.url);
         const protocol = originalUrl.protocol;
-        //const newBaseUrl = "//api.example.local"
+        const newBaseUrl = "//api.example.local"
 
         let newRequest = new Request(`${protocol}${newBaseUrl}${originalUrl.pathname}`, {
              ...request,
@@ -55,7 +55,7 @@ config.fetch = async (request: Request) => {
 
 	console.log(request);
 	console.log(newRequest);
-	return fetch(newRequest);
+	return fetch(request);
 };
 
 export * from "./__generated/api";
