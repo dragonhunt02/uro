@@ -46,7 +46,7 @@ config.fetch = async (request: Request) => {
 
 	const originalUrl = new URL(request.url);
         const protocol = originalUrl.protocol;
-        const newBaseUrl = "//api.example.local"
+        const newBaseUrl = "//api.example.local";
 
         let newRequest = new Request(`${protocol}${newBaseUrl}${originalUrl.pathname}`, {
              ...request,
