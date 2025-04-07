@@ -45,12 +45,12 @@ config.fetch = async (request: Request) => {
         const protocol = originalUrl.protocol;
         const newBaseUrl = "//api.example.local"
 
-    newRequest = new Request(`${protocol}${newBaseUrl}${originalUrl.pathname}`, {
-        ...request,
-        headers: request.headers,
-    });
+        let newRequest = new Request(`${protocol}${newBaseUrl}${originalUrl.pathname}`, {
+             ...request,
+             headers: request.headers,
+         });
 
-	// console.log(request);
+	console.log(request);
 	return fetch(newRequest);
 };
 
