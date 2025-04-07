@@ -31,7 +31,7 @@ interface ServerEnv {
   apiOrigin?: string; // Combining possible values from both environment variables
   turnstileSiteKey?: string;
 }
-
+/*
 export function getServerEnv(): ServerEnv {
 	const [env, setEnv] = useState({});
 
@@ -44,3 +44,4 @@ export function getServerEnv(): ServerEnv {
   console.log(env);
 return env;
 }
+*/
