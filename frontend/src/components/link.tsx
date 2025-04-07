@@ -1,97 +1,100 @@
+"use client";
+
 import LinkPrimitive from "next/link";
 import { twMerge } from "tailwind-merge";
 import {
-	type ComponentRef,
-	forwardRef,
-	type ComponentProps,
-	type FC,
-	useMemo
+    type ComponentRef,
+    forwardRef,
+    type ComponentProps,
+    type FC,
+    useState,
+    useEffect,
 } from "react";
 
 import { dataAttribute } from "~/element";
-import { firstPartyOrigins, origin } from "~/environment";
+import { firstPartyOrigins } from "~/environment";
 
 export const Link = forwardRef<
-	ComponentRef<typeof LinkPrimitive>,
-	ComponentProps<typeof LinkPrimitive>
+    ComponentRef<typeof LinkPrimitive>,
+    ComponentProps<typeof LinkPrimitive>
 >(({ href: _href, children, className, ...props }, reference) => {
-	const { href, external } = useMemo(() => {
-  if (typeof window !== "undefined") {
-		try {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/api/env", false); // `false` makes it synchronous
-    xhr.send();
-    console.warn(xhr.status);
+    // State to store the computed `href` and `external` values
+    const [href, setHref] = useState("http://fallback.vsekai.local");
+    const [external, setExternal] = useState(true);
 
-		if (xhr.status === 200){
-     // throw new Error(`Failed to fetch server environment: ${xhr.status}`);
+    useEffect(() => {
+        const fetchServerEnv = async () => {
+            try {
+                const response = await fetch("/api/env"); // Fetch server environment data
+                if (response.ok) {
+                    const serverEnv = await response.json();
+                    console.log("Fetched serverEnv:", serverEnv);
 
-		const serverEnv = JSON.parse(xhr.responseText);
-      console.log("Synchronous link serverEnv:", serverEnv);
-		let originEnv = "http://wrong.vsekai.local";
-		originEnv = serverEnv?.origin ?? "http://wrong2.vsekai.local";
-	console.log("oka")	
-		const url = new URL(_href.toString(), originEnv);
-console.log("okb")
-		const href =
-			url.origin === originEnv ? url.href.replace(originEnv, "") : url.href;
-console.log("okc")
-		const external = !firstPartyOrigins.has(url.origin) && !(originEnv === url.origin);
+                    // Determine the origin environment
+                    const originEnv = serverEnv?.origin ?? "http://fallback2.vsekai.local";
+                    const url = new URL(_href?.toString() || "", originEnv);
+                    console.log("checktest url");
+                    console.log(String(url));
+                    console.log(originEnv);
 
-		return { external, href };
-    } else {
-    const fallb=new URL("http://wrong4.vsekai.local"); 
-    const href=fallb.href; 
-    const external = true;
-		return { external, href };
+                    // Update `href` and `external` based on conditions
+                    setHref(
+                        url.origin === originEnv
+                            ? url.href.replace(originEnv, "")
+                            : url.href
+                    );
+                    setExternal(
+                        !firstPartyOrigins.has(url.origin) && !(originEnv === url.origin)
+                    );
+                } else {
+                    console.error(
+                        `Failed to fetch server environment: ${response.status}`
+                    );
+                }
+            } catch (error) {
+                console.error("Error fetching server environment:", error);
+                // Fallback values in case of error
+                setHref("http://fallback.vsekai.local");
+                setExternal(true);
+            }
+        };
 
-}
-	  } catch (error) {
+        if (typeof window !== "undefined") {
+            fetchServerEnv(); // Call fetch logic only in the browser
+        }
+    }, [_href]);
 
-    console.error("error.message", String(error));
-           const fallbackUrl = new URL("http://fallback.vsekai.local");
-            return { href: fallbackUrl.href, external: true };
-
-  }
-
-} else {
-           const fallbackUrl2 = new URL("http://fallback2.vsekai.local");
-            return { href: fallbackUrl2.href, external: true };
-
-}
-	}, [_href]);
-
-	return (
-		<LinkPrimitive
-			data-external={dataAttribute(external)}
-			href={href}
-			ref={reference}
-			target={dataAttribute(external && "_blank")}
-			className={twMerge(
-				"outline-offset-2 outline-current transition-all focus-visible:outline",
-				className
-			)}
-			{...props}
-		>
-			{children}
-		</LinkPrimitive>
-	);
+    return (
+        <LinkPrimitive
+            data-external={dataAttribute(external)}
+            href={href}
+            ref={reference}
+            target={external ? "_blank" : undefined}
+            className={twMerge(
+                "outline-offset-2 outline-current transition-all focus-visible:outline",
+                className
+            )}
+            {...props}
+        >
+            {children}
+        </LinkPrimitive>
+    );
 });
 
 Link.displayName = "Link";
 
 export const InlineLink: FC<
-	Omit<ComponentProps<typeof Link>, "href"> & { href: URL | string }
+    Omit<ComponentProps<typeof Link>, "href"> & { href: URL | string }
 > = ({ children, className, ...props }) => {
-	return (
-		<Link
-			className={twMerge(
-				"text-blue-500 transition-all hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500",
-				className
-			)}
-			{...props}
-		>
-			{children}
-		</Link>
-	);
+    return (
+        <Link
+            className={twMerge(
+                "text-blue-500 transition-all hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500",
+                className
+            )}
+            {...props}
+        >
+            {children}
+        </Link>
+    );
 };
