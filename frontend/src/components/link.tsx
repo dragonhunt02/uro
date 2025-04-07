@@ -27,8 +27,8 @@ export const Link = forwardRef<
     }
 		const serverEnv = JSON.parse(xhr.responseText);
       console.log("Synchronous link serverEnv:", serverEnv);
-		let originEnv = "";
-		originEnv = serverEnv?.origin ?? "";
+		let originEnv = "http://wrong.vsekai.local";
+		originEnv = serverEnv?.origin ?? "http://wrong2.vsekai.local";
 		
 		const url = new URL(_href.toString(), originEnv);
 		const href =
