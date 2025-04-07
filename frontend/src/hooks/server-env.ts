@@ -28,3 +28,11 @@ export const useServerEnv = () => {
 
   return serverEnv;
 };
+
+export const fetchEnv = async () => {
+  const response = await fetch('/api/env');
+  if (!response.ok) {
+    throw new Error('Failed to fetch server environment data');
+  }
+  return await response.json();
+};
