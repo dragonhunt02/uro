@@ -2,7 +2,7 @@ import { client } from "@hey-api/client-fetch";
 import { randomInt } from "@ariesclark/extensions";
 
 import { development } from "./environment";
-import { useServerEnv } from "~/hooks/server-env";
+import { useServerEnv, fetchEnv } from "~/hooks/server-env";
 
 const config = client.getConfig();
 
@@ -22,8 +22,11 @@ const relevantHeaders = new Set([
 	"x-forwarded-proto"
 ]);
 
-config.baseUrl = apiOrigin;
+config.baseUrl = "https://bad.request.vsekai.local"; //apiOrigin";
 config.fetch = async (request: Request) => {
+	const serverEnv = await fetchEnv();
+	const newbaseUrl = serverEnv.apiOrigin;
+
 	if (development)
 		// Simulate network latency in development, encouraging optimistic updates & proper loading states.
 		await new Promise((resolve) =>
@@ -43,7 +46,7 @@ config.fetch = async (request: Request) => {
 
 	const originalUrl = new URL(request.url);
         const protocol = originalUrl.protocol;
-        const newBaseUrl = "//api.example.local"
+        //const newBaseUrl = "//api.example.local"
 
         let newRequest = new Request(`${protocol}${newBaseUrl}${originalUrl.pathname}`, {
              ...request,
