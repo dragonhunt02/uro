@@ -13,6 +13,7 @@ import {
 
 import { dataAttribute } from "~/element";
 import { firstPartyOrigins } from "~/environment";
+import { fetchServerEnv } from "~/fetchServerEnv"; // Import the fetch utility
 
 export const Link = forwardRef<
     ComponentRef<typeof LinkPrimitive>,
@@ -23,44 +24,26 @@ export const Link = forwardRef<
     const [external, setExternal] = useState(true);
 
     useEffect(() => {
-        const fetchServerEnv = async () => {
-            try {
-                const response = await fetch("/api/env"); // Fetch server environment data
-                if (response.ok) {
-                    const serverEnv = await response.json();
-                    console.log("Fetched serverEnv:", serverEnv);
+        const loadServerEnv = async () => {
+            const serverEnv = await fetchServerEnv(); // Call the fetch utility
+            const originEnv = serverEnv?.origin ?? "http://fallback2.vsekai.local";
 
-                    // Determine the origin environment
-                    const originEnv = serverEnv?.origin ?? "http://fallback2.vsekai.local";
-                    const url = new URL(_href?.toString() || "", originEnv);
-                    console.log("checktest url");
-                    console.log(String(url));
-                    console.log(originEnv);
+            if (_href) {
+                const url = new URL(_href.toString(), originEnv);
 
-                    // Update `href` and `external` based on conditions
-                    setHref(
-                        url.origin === originEnv
-                            ? url.href.replace(originEnv, "")
-                            : url.href
-                    );
-                    setExternal(
-                        !firstPartyOrigins.has(url.origin) && !(originEnv === url.origin)
-                    );
-                } else {
-                    console.error(
-                        `Failed to fetch server environment: ${response.status}`
-                    );
-                }
-            } catch (error) {
-                console.error("Error fetching server environment:", error);
-                // Fallback values in case of error
-                setHref("http://fallback.vsekai.local");
-                setExternal(true);
+                setHref(
+                    url.origin === originEnv
+                        ? url.href.replace(originEnv, "")
+                        : url.href
+                );
+                setExternal(
+                    !firstPartyOrigins.has(url.origin) && !(originEnv === url.origin)
+                );
             }
         };
 
         if (typeof window !== "undefined") {
-            fetchServerEnv(); // Call fetch logic only in the browser
+            loadServerEnv(); // Ensure fetch logic runs only in the browser
         }
     }, [_href]);
 
