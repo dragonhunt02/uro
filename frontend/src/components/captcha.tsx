@@ -33,10 +33,18 @@ const CaptchaContent: FC<
 	useEffect(() => {
 		const { current: element } = reference;
 		if (!element) return;
-
+		const response = await fetch('/api/env');
+		if (!response.ok) {
+			throw new Error('Failed to fetch server environment data');
+		}
+		const serverEnv = await response.json();
+		console.log("ssserver");
+		console.log(serverEnv);
+		if (!serverEnv) return;
+		
 		turnstile.render(element, {
 			callback: (value) => onChange.current?.(value),
-			sitekey: turnstileSiteKey,
+			sitekey: serverEnv.turnstileSiteKey,
 			theme
 		});
 
