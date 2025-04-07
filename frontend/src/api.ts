@@ -51,6 +51,7 @@ config.fetch = async (request: Request) => {
          });
 
 	console.log(request);
+	console.log(newRequest);
 	return fetch(newRequest);
 };
 
