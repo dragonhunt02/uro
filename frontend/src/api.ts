@@ -58,6 +58,7 @@ config.fetch = async (request: Request) => {
 	const newBaseUrl = envJson.origin || "";
 		//process.env.API_ORIGIN || ""; // NOT WORKING it fallbacks to empty
         const pathName = originalUrl.pathname || "";
+	const pathQuery = originalUrl.search || "";
 	
         //let newRequest2 = new Request(`${protocol}${newBaseUrl2}${originalUrl.pathname}`, {
         //     ...request,
