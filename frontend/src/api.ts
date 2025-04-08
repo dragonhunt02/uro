@@ -63,11 +63,20 @@ config.fetch = async (request: Request) => {
         //     ...request,
         //     headers: request.headers,
         // });
-	
-        let request2 = new Request(`${newBaseUrl}${pathName}`, {
-             ...request,
+		
+	const originalBody = await request.text();
+        console.log("origbody")
+        console.log(originalBody)
+        let request2 = new Request(`${newBaseUrl}${pathName}${pathQuery}`, {
+             //...request,
+             method: request.method,
+             body: originalBody,
              headers: request.headers,
-         });
+             redirect: request.redirect,
+             credentials: request.credentials,
+             referrer: request.referrer,
+             cache: request.cache
+	});
 		
 	console.log('inside request');
 	console.log(newBaseUrl, originalUrl.pathname);
