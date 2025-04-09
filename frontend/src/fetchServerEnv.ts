@@ -44,7 +44,39 @@ export const fetchServerEnv = async (): Promise<{ origin: string } | null> => {
     return envFetchPromise;
 };
 
+/**
+ * A set of first-party origins, these are given special treatment in the
+ * application, such as in OAuth2 redirection & opening links in a new tab.
+ * Add to set if required.
+ */
+const firstPartyOrigins = new Set([]);
 
+export const getFirstPartyOrigins = async (): Promise<Set<string>> => {
+    const serverEnv = await fetchServerEnv();
+    const appOrigin = serverEnv?.origin;
+    if (appOrigin) {
+        firstPartyOrigins.add(appOrigin);
+    }
+
+    console.log("First-party origins:", [...firstPartyOrigins]);
+
+    return firstPartyOrigins; // Returning the Set directly
+};
+
+export const getFirstPartyOrigins = async (): Promise<Set<string>> => {
+    const serverEnv = await fetchServerEnv();
+    const appOrigin = serverEnv?.origin;
+    let origins = firstPartyOrigins;
+
+    // Ensure firstPartyOrigins includes the dynamically fetched origin
+    if (appOrigin) {
+        origins.add(appOrigin);
+    }
+
+    //console.log("First-party origins:", [...origins]);
+
+    return origins;
+};
 
 export const fetchServerEnv1 = async (): Promise<{ origin: string } | null> => {
     try {
