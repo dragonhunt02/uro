@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { firstPartyOrigins } from "~/environment";
-import { fetchServerEnv } from "~/fetchServerEnv"; // Import the fetch utility
+import { fetchServerEnv, getFirstPartyOrigins } from "~/fetchServerEnv"; // Import the fetch utility
 
 /**
  * Redirects the user to the return intent, if it is a first-party origin, otherwise to the home page.
@@ -11,6 +11,7 @@ export async function restoreReturnIntent(ri: string): Promise<void> {
     try {
         const serverEnv = await fetchServerEnv(); // Fetch the server environment
         const origin = serverEnv?.origin ?? "http://fallback.vsekai.local"; // Use fetched origin or fallback
+        const firstPartyOrigins = await getFirstPartyOrigins();
 
         const returnIntent = new URL(ri, origin);
 
