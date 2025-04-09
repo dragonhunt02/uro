@@ -76,12 +76,12 @@ config.fetch = async (request: Request) => {
         let request2 = new Request(`${newBaseUrl}${pathName}${pathQuery}`, {
              //...request,
              method: request.method,
-             body: originalBody,
              headers: request.headers,
              redirect: request.redirect,
              credentials: request.credentials,
              referrer: request.referrer,
-             cache: request.cache
+             cache: request.cache,
+		...(["POST", "PUT", "PATCH"].includes(request.method) && originalBody.trim() !== "" && { body: originalBody }) 
 	});
 		
 	console.log('inside request');
