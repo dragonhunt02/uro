@@ -7,12 +7,12 @@ import { InlineLink } from "~/components/link";
 import { urls } from "~/environment";
 import { Section, SectionTitle } from "~/app/(static)/section";
 import { Footer } from "~/app/footer";
-import { useServerEnv } from "~/hooks/server-env";
+//import { useServerEnv } from "~/hooks/server-env";
 
 export default function AboutPage() {
-	const tests = useServerEnv();
-	console.log("serverenv");
-	console.log(tests);
+	//const tests = useServerEnv();
+	//console.log("serverenv");
+	//console.log(tests);
 	return (
 		<main className="mx-auto flex w-full max-w-screen-lg flex-col pt-8 lg:pt-16">
 			<div className="mx-auto flex w-full max-w-screen-md flex-col gap-4 px-4 text-lg">
