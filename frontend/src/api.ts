@@ -49,6 +49,7 @@ config.fetch = async (request: Request) => {
         const protocol = originalUrl.protocol;
         //const newBaseUrl2 = "//api.example.local";
 
+	//#### Modify to baseUrl when server side request
 	if (typeof window !== "undefined"){
 		
         //const responsee = await fetch("/api/env");
