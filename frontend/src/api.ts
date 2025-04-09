@@ -3,6 +3,7 @@ import { randomInt } from "@ariesclark/extensions";
 
 import { apiOrigin, development } from "./environment";
 import { useServerEnv, fetchEnv } from "~/hooks/server-env";
+import { fetchServerEnv } from "~/fetchServerEnv";
 
 const config = client.getConfig();
 
@@ -50,12 +51,15 @@ config.fetch = async (request: Request) => {
 
 	if (typeof window !== "undefined"){
 		
-        const responsee = await fetch("/api/env");
-        const envJson = await responsee.json();
+        //const responsee = await fetch("/api/env");
+        //const envJson = await responsee.json();
         console.log("yaho")
-        console.log(JSON.stringify(envJson))
+        //console.log(JSON.stringify(envJson))
+	
+        const envJson = await fetchServerEnv();
+        console.log(envJson)
 			
-	const newBaseUrl = envJson.origin || "";
+	const newBaseUrl = envJson?.origin || "";
 		//process.env.API_ORIGIN || ""; // NOT WORKING it fallbacks to empty
         const pathName = originalUrl.pathname || "";
 	const pathQuery = originalUrl.search || "";
