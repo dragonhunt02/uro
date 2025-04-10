@@ -37,7 +37,7 @@ export const getServerEnv = (): serverEnvType | null => {
             process.env.NEXTJS_ORIGIN,
             "NEXTJS_ORIGIN"
         ),
-        apiOrigin: environment<string>(
+        apiOrigin: environment<string>( // API_ORIGIN is only used server-side
             process.env.API_ORIGIN || process.env.NEXTJS_API_ORIGIN,
             "API_ORIGIN and or NEXTJS_API_ORIGIN"
         ),
