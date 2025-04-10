@@ -16,7 +16,7 @@ export const Link = forwardRef<
 	ComponentProps<typeof LinkPrimitive>
 >(({ href: _href, children, className, ...props }, reference) => {
 	const { href, external } = useMemo(() => {
-		const origin = getServerEnv()?.origin;
+		const origin = getServerEnv()?.origin || "";
 		const firstPartyOrigins = getFirstPartyOrigins();
 		const url = new URL(_href.toString(), origin);
 		const href =
