@@ -7,7 +7,7 @@ import { getFirstPartyOrigins, getServerEnv } from "~/environment";
  * @see https://www.fastly.com/blog/open-redirects-real-world-abuse-and-recommendations/
  */
 export function restoreReturnIntent(ri: string) {
-	const origin = getServerEnv?.origin || "";
+	const origin = getServerEnv()?.origin || "";
 	const firstPartyOrigins = getFirstPartyOrigins();
 
 	const returnIntent = new URL(ri, origin);
