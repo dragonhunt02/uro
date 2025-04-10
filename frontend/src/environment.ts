@@ -43,49 +43,37 @@ interface serverEnvType {
 	apiOrigin: string;
 	turnstileSiteKey: string
 };
+
 let envCache: serverEnvType | null = null;
-let envFetchPromise: Promise<serverEnvType | null> | null = null;
 
-export const fetchServerEnv = async (): Promise<serverEnvType | null> => {
-    if (typeof window === "undefined") return null;
+export const getServerEnv = (): serverEnvType | null => {
+  if (typeof window === "undefined") {
+    console.error("Cannot fetch server environment on the server side.");
+    return null;
+  }
 
-    if (envCache) {
-        console.log("Using in-memory cache:", envCache);
-        return envCache;
+  if (envCache) {
+    console.log("Using in-memory cache:", envCache);
+    return envCache;
+  }
+
+  try {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/api/env", false); // synchronous XMLHttpRequest
+    xhr.send();
+
+    if (xhr.status === 200) {
+      envCache = JSON.parse(xhr.responseText);
+      console.log("Fetched serverEnv:", envCache);
+      return envCache;
+    } else {
+      console.error(`Failed to fetch server environment: ${xhr.status}`);
     }
+  } catch (error) {
+    console.error("Error fetching server environment:", String(error));
+  }
 
-    // Return ongoing fetch request if multiple calls happen at the same time
-    if (envFetchPromise) {
-        console.log("Waiting for existing fetch request...");
-        return envFetchPromise;
-    }
-
-    envFetchPromise = (async () => {
-        try {
-            const cachedEnv = localStorage.getItem("serverEnv");
-            if (cachedEnv) {
-                envCache = JSON.parse(cachedEnv);
-                console.log("Using localStorage cache:", envCache);
-                return envCache;
-            }
-
-            const response = await fetch("/api/env");
-            if (response.ok) {
-                envCache = await response.json();
-                console.log("Fetched serverEnv:", envCache);
-                localStorage.setItem("serverEnv", JSON.stringify(envCache));
-                return envCache;
-            } else {
-                console.error(`Failed to fetch server environment: ${response.status}`);
-            }
-        } catch (error) {
-            console.error("Error fetching server environment:", error);
-        }
-
-        return null;
-    })();
-
-    return envFetchPromise;
+  return null;
 };
 
 /**
@@ -95,16 +83,17 @@ export const fetchServerEnv = async (): Promise<serverEnvType | null> => {
  */
 const firstPartyOrigins_new: Set<string> = new Set([]);
 
-export const getFirstPartyOrigins = async (): Promise<Set<string>> => {
-    const serverEnv = await fetchServerEnv();
-    const appOrigin = serverEnv?.origin;
-    let origins = firstPartyOrigins_new;
+export const getFirstPartyOrigins = (): Set<string> => {
+  const serverEnv = getServerEnv();
+  const appOrigin = serverEnv?.origin;
+  let origins = firstPartyOrigins_new;
 
-    // Ensure firstPartyOrigins includes fetched origin
-    if (appOrigin) {
-        origins.add(appOrigin);
-    }
+  // Ensure firstPartyOrigins includes the fetched origin
+  if (appOrigin) {
+    origins.add(appOrigin);
+  }
 
-    //console.log("First-party origins:", [...origins]);
-    return origins;
+  // console.log("First-party origins:", [...origins]);
+
+  return origins;
 };
