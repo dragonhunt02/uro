@@ -21,12 +21,8 @@ const relevantHeaders = new Set([
 	"x-forwarded-proto"
 ]);
 
-if (typeof window === "undefined") {
-	config.baseUrl = getServerEnv()?.apiOrigin || "";
-} else {
-	config.baseUrl = getServerEnv()?.apiOrigin || "";
-}
 
+config.baseUrl = getServerEnv()?.apiOrigin || "";
 config.fetch = async (request: Request) => {
 	if (development)
 		// Simulate network latency in development, encouraging optimistic updates & proper loading states.
