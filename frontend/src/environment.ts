@@ -81,8 +81,7 @@ export const getServerEnv = (): serverEnvType | null => {
 const firstPartyOrigins: Set<string> = new Set([]);
 
 export const getFirstPartyOrigins = (): Set<string> => {
-  const serverEnv = getServerEnv();
-  const appOrigin = serverEnv?.origin;
+  const appOrigin = getServerEnv()?.origin;
   let origins = firstPartyOrigins;
 
   // Ensure firstPartyOrigins includes the fetched origin
@@ -91,6 +90,5 @@ export const getFirstPartyOrigins = (): Set<string> => {
   }
 
   // console.log("First-party origins:", [...origins]);
-
   return origins;
 };
