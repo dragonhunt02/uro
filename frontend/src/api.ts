@@ -21,7 +21,6 @@ const relevantHeaders = new Set([
 	"x-forwarded-proto"
 ]);
 
-
 config.baseUrl = getServerEnv()?.apiOrigin || "";
 config.fetch = async (request: Request) => {
 	if (development)
