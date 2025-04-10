@@ -47,6 +47,12 @@ interface serverEnvType {
 let envCache: serverEnvType | null = null;
 
 export const getServerEnv = (): serverEnvType | null => {
+  if (envCache) {
+    console.log("Using in-memory cache:", envCache);
+    return envCache;
+  }
+
+  // Server-side
   if (typeof window === "undefined") {
     const serverEnv = {
         origin: environment<string>(
@@ -63,18 +69,15 @@ export const getServerEnv = (): serverEnvType | null => {
         )
     };
 
-    console.error("Fetch server environment on the server side.");
+    envCache = serverEnv;
+    // console.log("Fetched environment on server side.");
     return serverEnv;
   }
 
-  if (envCache) {
-    console.log("Using in-memory cache:", envCache);
-    return envCache;
-  }
-
+  // Client-side
   try {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/api/env", false); // synchronous XMLHttpRequest
+    xhr.open("GET", "/api/env", false); // Synchronous XMLHttpRequest
     xhr.send();
 
     if (xhr.status === 200) {
