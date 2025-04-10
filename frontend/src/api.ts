@@ -23,7 +23,7 @@ const relevantHeaders = new Set([
 if (typeof window === "undefined") {
 	config.baseUrl = apiOrigin;
 } else {
-	config.baseUrl = getServerEnv().origin;
+	config.baseUrl = getServerEnv()?.origin;
 }
 config.fetch = async (request: Request) => {
 	if (development)
