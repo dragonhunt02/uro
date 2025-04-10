@@ -13,7 +13,7 @@ import {
 
 import { dataAttribute } from "~/element";
 import { firstPartyOrigins } from "~/environment";
-import { fetchServerEnv } from "~/fetchServerEnv"; // Import the fetch utility
+import { fetchServerEnv } from "~/environment"; // Import the fetch utility
 
 export const Link = forwardRef<
     ComponentRef<typeof LinkPrimitive>,
