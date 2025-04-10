@@ -38,10 +38,15 @@ export const firstPartyOrigins = new Set([origin]);
 
 
 // Runtime fetch from API
-let envCache: { origin: string } | null = null;
-let envFetchPromise: Promise<{ origin: string } | null> | null = null;
+interface serverEnvType {
+	origin: string;
+	apiOrigin: string;
+	turnstileSiteKey: string
+};
+let envCache: serverEnvType | null = null;
+let envFetchPromise: Promise<serverEnvType | null> | null = null;
 
-export const fetchServerEnv = async (): Promise<{ origin: string } | null> => {
+export const fetchServerEnv = async (): Promise<serverEnvType | null> => {
     if (typeof window === "undefined") return null;
 
     if (envCache) {
