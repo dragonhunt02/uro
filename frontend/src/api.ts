@@ -1,7 +1,7 @@
 import { client } from "@hey-api/client-fetch";
 import { randomInt } from "@ariesclark/extensions";
 
-import { apiOrigin, development, getServerEnv } from "./environment";
+import { development, getServerEnv } from "./environment";
 
 const config = client.getConfig();
 
@@ -20,11 +20,13 @@ const relevantHeaders = new Set([
 	"x-forwarded-port",
 	"x-forwarded-proto"
 ]);
+
 if (typeof window === "undefined") {
-	config.baseUrl = apiOrigin;
+	config.baseUrl = getServerEnv()?.apiOrigin || "";
 } else {
 	config.baseUrl = getServerEnv()?.origin || "";
 }
+
 config.fetch = async (request: Request) => {
 	if (development)
 		// Simulate network latency in development, encouraging optimistic updates & proper loading states.
