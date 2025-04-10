@@ -56,16 +56,16 @@ export const getServerEnv = (): serverEnvType | null => {
   if (typeof window === "undefined") {
     const serverEnv = {
         origin: environment<string>(
-            process.env.NEXT_PUBLIC_ORIGIN,
-            "NEXT_PUBLIC_ORIGIN"
+            process.env.NEXTJS_ORIGIN,
+            "NEXTJS_ORIGIN"
         ),
         apiOrigin: environment<string>(
             process.env.API_ORIGIN || process.env.NEXTJS_API_ORIGIN,
-            "API_ORIGIN and or NEXT_PUBLIC_API_ORIGIN"
+            "API_ORIGIN and or NEXTJS_API_ORIGIN"
         ),
         turnstileSiteKey: environment<string>(
-            process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY,
-            "NEXT_PUBLIC_TURNSTILE_SITEKEY"
+            process.env.NEXTJS_TURNSTILE_SITEKEY,
+            "NEXTJS_TURNSTILE_SITEKEY"
         )
     };
 
