@@ -1,8 +1,7 @@
 import { client } from "@hey-api/client-fetch";
 import { randomInt } from "@ariesclark/extensions";
 
-import { apiOrigin, development } from "./environment";
-import { fetchServerEnv } from "~/environment";
+import { apiOrigin, development, getServerEnv } from "./environment";
 
 const config = client.getConfig();
 
@@ -21,8 +20,11 @@ const relevantHeaders = new Set([
 	"x-forwarded-port",
 	"x-forwarded-proto"
 ]);
-
-config.baseUrl = apiOrigin;
+if (typeof window === "undefined") {
+	config.baseUrl = apiOrigin;
+} else {
+	config.baseUrl = getServerEnv().origin;
+}
 config.fetch = async (request: Request) => {
 	if (development)
 		// Simulate network latency in development, encouraging optimistic updates & proper loading states.
@@ -41,38 +43,8 @@ config.fetch = async (request: Request) => {
 		request.headers.set(key, value);
 	}
 
-	const originalUrl = new URL(request.url);
-        const protocol = originalUrl.protocol;
-
-	//#### Modify to baseUrl when server side request
-	if (typeof window !== "undefined"){
-	
-        const serverEnv = await fetchServerEnv();
-        //console.log(serverEnv)
-			
-	const newBaseUrl = serverEnv?.origin || "";
-	//process.env.API_ORIGIN || ""; // NOT WORKING it fallbacks to empty
-        const pathName = originalUrl.pathname || "";
-	const pathQuery = originalUrl.search || "";
-	const originalBody = await request.text();
-
-        let newRequest = new Request(`${newBaseUrl}${pathName}${pathQuery}`, {
-             method: request.method,
-             headers: request.headers,
-             redirect: request.redirect,
-             credentials: request.credentials,
-             referrer: request.referrer,
-             cache: request.cache,
-		...(["POST", "PUT", "PATCH"].includes(request.method) && originalBody.trim() !== "" && { body: originalBody }) 
-	});
-		
-	console.log(request);
-	console.log(newRequest);
-	return fetch(newRequest);
-	
-	} else {
-		return fetch(request)
-	}
+	// console.log(request);
+	return fetch(request);
 };
 
 export * from "./__generated/api";
