@@ -24,7 +24,6 @@ const relevantHeaders = new Set([
 
 config.baseUrl = apiOrigin;
 config.fetch = async (request: Request) => {
-
 	if (development)
 		// Simulate network latency in development, encouraging optimistic updates & proper loading states.
 		await new Promise((resolve) =>
