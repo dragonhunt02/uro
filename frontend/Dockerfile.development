@@ -2,9 +2,9 @@
 ARG uro_image=uro
 FROM $uro_image AS openapi
 
+FROM node:22-alpine AS base
 ARG NODE_ENV=development
 
-FROM node:22-alpine AS base
 RUN apk add --no-cache curl
 
 ENV NEXT_TELEMETRY_DISABLED=1
