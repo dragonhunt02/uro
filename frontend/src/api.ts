@@ -24,7 +24,7 @@ const relevantHeaders = new Set([
 if (typeof window === "undefined") {
 	config.baseUrl = getServerEnv()?.apiOrigin || "";
 } else {
-	config.baseUrl = getServerEnv()?.origin || "";
+	config.baseUrl = getServerEnv()?.apiOrigin || "";
 }
 
 config.fetch = async (request: Request) => {
