@@ -2,7 +2,6 @@ import { client } from "@hey-api/client-fetch";
 import { randomInt } from "@ariesclark/extensions";
 
 import { apiOrigin, development } from "./environment";
-import { useServerEnv, fetchEnv } from "~/hooks/server-env";
 import { fetchServerEnv } from "~/environment";
 
 const config = client.getConfig();
