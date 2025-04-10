@@ -2,7 +2,7 @@
 ARG uro_image=uro
 FROM $uro_image AS openapi
 
-ARG NODE_ENV=production
+ARG NODE_ENV=development
 
 FROM node:22-alpine AS base
 RUN apk add --no-cache curl
