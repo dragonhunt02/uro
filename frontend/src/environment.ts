@@ -55,9 +55,14 @@ export const getServerEnv = (): serverEnvType | null => {
   // Client-side
   try {
     const xhr = new XMLHttpRequest();
+    let timeout = setTimeout(function () {
+        xhr.abort();
+        console.error("Request timed out");
+    }, 5000);
+	  
     xhr.open("GET", "/api/env", false); // Synchronous XMLHttpRequest
-    xhr.timeout = 5000;
     xhr.send();
+    clearTimeout(timeout);
 
     if (xhr.status === 200) {
       envCache = JSON.parse(xhr.responseText);
