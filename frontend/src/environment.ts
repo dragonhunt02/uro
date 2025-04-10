@@ -78,6 +78,7 @@ export const getServerEnv = (): serverEnvType | null => {
   try {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", "/api/env", false); // Synchronous XMLHttpRequest
+    xhr.timeout = 5000;
     xhr.send();
 
     if (xhr.status === 200) {
