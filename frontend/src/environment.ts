@@ -48,8 +48,23 @@ let envCache: serverEnvType | null = null;
 
 export const getServerEnv = (): serverEnvType | null => {
   if (typeof window === "undefined") {
-    console.error("Cannot fetch server environment on the server side.");
-    return null;
+    const serverEnv = {
+        origin: environment<string>(
+            process.env.NEXT_PUBLIC_ORIGIN,
+            "NEXT_PUBLIC_ORIGIN"
+        ),
+        apiOrigin: environment<string>(
+            process.env.API_ORIGIN || process.env.NEXT_PUBLIC_API_ORIGIN,
+            "API_ORIGIN and or NEXT_PUBLIC_API_ORIGIN"
+        ),
+        turnstileSiteKey: environment<string>(
+            process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY,
+            "NEXT_PUBLIC_TURNSTILE_SITEKEY"
+        )
+    };
+
+    console.error("Fetch server environment on the server side.");
+    return serverEnv;
   }
 
   if (envCache) {
