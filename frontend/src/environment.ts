@@ -60,7 +60,7 @@ export const getServerEnv = (): serverEnvType | null => {
             "NEXT_PUBLIC_ORIGIN"
         ),
         apiOrigin: environment<string>(
-            process.env.API_ORIGIN || process.env.NEXT_PUBLIC_API_ORIGIN,
+            process.env.API_ORIGIN || process.env.NEXTJS_API_ORIGIN,
             "API_ORIGIN and or NEXT_PUBLIC_API_ORIGIN"
         ),
         turnstileSiteKey: environment<string>(
