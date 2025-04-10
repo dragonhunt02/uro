@@ -31,17 +31,36 @@ const CaptchaContent: FC<
 	const onChange = useLatest(_onChange);
 
 	useEffect(() => {
-		const { current: element } = reference;
-		if (!element) return;
+  const { current: element } = reference;
+  if (!element) return;
 
-		turnstile.render(element, {
-			callback: (value) => onChange.current?.(value),
-			sitekey: turnstileSiteKey,
-			theme
-		});
+  try {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "/api/env", false); // `false` makes it synchronous
+    xhr.send();
 
-		return () => turnstile.remove(element);
-	}, [onChange, turnstile, theme]);
+    if (xhr.status === 200) {
+      const serverEnv = JSON.parse(xhr.responseText);
+      console.log("Synchronous serverEnv:", serverEnv);
+
+      turnstile.render(element, {
+        callback: (value) => onChange.current?.(value),
+        sitekey: serverEnv.turnstileSiteKey,
+        theme,
+      });
+    } else {
+      throw new Error(`Failed to fetch server environment: ${xhr.status}`);
+    }
+  } catch (error) {
+    console.error("error.message");
+  }
+
+  return () => {
+    if (element) turnstile.remove(element);
+  };
+}, [onChange, turnstile, theme]);
+
+
 
 	const { status: formStatus } = use(MutationFormContext) || {};
 
