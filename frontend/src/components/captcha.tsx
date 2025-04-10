@@ -13,7 +13,7 @@ import {
 } from "react";
 import { twMerge } from "tailwind-merge";
 
-import { turnstileSiteKey } from "~/environment";
+import { getServerEnv } from "~/environment";
 import { MutationFormContext } from "~/hooks/form";
 import { useTheme } from "~/hooks/theme";
 
@@ -25,42 +25,24 @@ const CaptchaContent: FC<
 	CaptchaProps & { promise: Promise<Turnstile.Turnstile> }
 > = ({ onChange: _onChange, promise }) => {
 	const turnstile = use(promise);
+	const turnstileSiteKey = getServerEnv().turnstileSiteKey;
 
 	const { theme } = useTheme();
 	const reference = useRef<HTMLDivElement>(null);
 	const onChange = useLatest(_onChange);
 
 	useEffect(() => {
-  const { current: element } = reference;
-  if (!element) return;
+		const { current: element } = reference;
+		if (!element) return;
 
-  try {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "/api/env", false); // `false` makes it synchronous
-    xhr.send();
+		turnstile.render(element, {
+			callback: (value) => onChange.current?.(value),
+			sitekey: turnstileSiteKey,
+			theme
+		});
 
-    if (xhr.status === 200) {
-      const serverEnv = JSON.parse(xhr.responseText);
-      console.log("Synchronous serverEnv:", serverEnv);
-
-      turnstile.render(element, {
-        callback: (value) => onChange.current?.(value),
-        sitekey: serverEnv.turnstileSiteKey,
-        theme,
-      });
-    } else {
-      throw new Error(`Failed to fetch server environment: ${xhr.status}`);
-    }
-  } catch (error) {
-    console.error("error.message");
-  }
-
-  return () => {
-    if (element) turnstile.remove(element);
-  };
-}, [onChange, turnstile, theme]);
-
-
+		return () => turnstile.remove(element);
+	}, [onChange, turnstile, theme]);
 
 	const { status: formStatus } = use(MutationFormContext) || {};
 
