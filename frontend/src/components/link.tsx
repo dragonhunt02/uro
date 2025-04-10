@@ -1,67 +1,47 @@
-"use client";
-
 import LinkPrimitive from "next/link";
 import { twMerge } from "tailwind-merge";
 import {
-    type ComponentRef,
-    forwardRef,
-    type ComponentProps,
-    type FC,
-    useState,
-    useEffect,
+	type ComponentRef,
+	forwardRef,
+	type ComponentProps,
+	type FC,
+	useMemo
 } from "react";
 
 import { dataAttribute } from "~/element";
-import { firstPartyOrigins } from "~/environment";
-import { fetchServerEnv } from "~/environment";
+import { getFirstPartyOrigins, getServerEnv } from "~/environment";
 
 export const Link = forwardRef<
 	ComponentRef<typeof LinkPrimitive>,
 	ComponentProps<typeof LinkPrimitive>
 >(({ href: _href, children, className, ...props }, reference) => {
-    // State to store the computed `href` and `external` values
-    const [href, setHref] = useState("http://fallback.vsekai.local");
-    const [external, setExternal] = useState(true);
+	const { href, external } = useMemo(() => {
+		const origin = getServerEnv().origin;
+		const firstPartyOrigins = getFirstPartyOrigins();
+		const url = new URL(_href.toString(), origin);
+		const href =
+			url.origin === origin ? url.href.replace(origin, "") : url.href;
 
-    useEffect(() => {
-        const loadServerEnv = async () => {
-            const serverEnv = await fetchServerEnv();
-            const originEnv = serverEnv?.origin ?? "http://fallback2.vsekai.local";
+		const external = !firstPartyOrigins.has(url.origin);
 
-            if (_href) {
-                const url = new URL(_href.toString(), originEnv);
+		return { external, href };
+	}, [_href]);
 
-                setHref(
-                    url.origin === originEnv
-                        ? url.href.replace(originEnv, "")
-                        : url.href
-                );
-                setExternal(
-                    !firstPartyOrigins.has(url.origin) && !(originEnv === url.origin)
-                );
-            }
-        };
-
-        if (typeof window !== "undefined") {
-            loadServerEnv();
-        }
-    }, [_href]);
-
-    return (
-        <LinkPrimitive
-            data-external={dataAttribute(external)}
-            href={href}
-            ref={reference}
-            target={external ? "_blank" : undefined}
-            className={twMerge(
-                "outline-offset-2 outline-current transition-all focus-visible:outline",
-                className
-            )}
-            {...props}
-        >
-            {children}
-        </LinkPrimitive>
-    );
+	return (
+		<LinkPrimitive
+			data-external={dataAttribute(external)}
+			href={href}
+			ref={reference}
+			target={dataAttribute(external && "_blank")}
+			className={twMerge(
+				"outline-offset-2 outline-current transition-all focus-visible:outline",
+				className
+			)}
+			{...props}
+		>
+			{children}
+		</LinkPrimitive>
+	);
 });
 
 Link.displayName = "Link";
