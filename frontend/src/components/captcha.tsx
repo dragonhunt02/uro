@@ -25,7 +25,7 @@ const CaptchaContent: FC<
 	CaptchaProps & { promise: Promise<Turnstile.Turnstile> }
 > = ({ onChange: _onChange, promise }) => {
 	const turnstile = use(promise);
-	const turnstileSiteKey = getServerEnv().turnstileSiteKey;
+	const turnstileSiteKey = getServerEnv()?.turnstileSiteKey;
 
 	const { theme } = useTheme();
 	const reference = useRef<HTMLDivElement>(null);
