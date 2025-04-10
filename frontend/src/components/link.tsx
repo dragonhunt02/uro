@@ -13,11 +13,11 @@ import {
 
 import { dataAttribute } from "~/element";
 import { firstPartyOrigins } from "~/environment";
-import { fetchServerEnv } from "~/environment"; // Import the fetch utility
+import { fetchServerEnv } from "~/environment";
 
 export const Link = forwardRef<
-    ComponentRef<typeof LinkPrimitive>,
-    ComponentProps<typeof LinkPrimitive>
+	ComponentRef<typeof LinkPrimitive>,
+	ComponentProps<typeof LinkPrimitive>
 >(({ href: _href, children, className, ...props }, reference) => {
     // State to store the computed `href` and `external` values
     const [href, setHref] = useState("http://fallback.vsekai.local");
@@ -25,7 +25,7 @@ export const Link = forwardRef<
 
     useEffect(() => {
         const loadServerEnv = async () => {
-            const serverEnv = await fetchServerEnv(); // Call the fetch utility
+            const serverEnv = await fetchServerEnv();
             const originEnv = serverEnv?.origin ?? "http://fallback2.vsekai.local";
 
             if (_href) {
@@ -43,7 +43,7 @@ export const Link = forwardRef<
         };
 
         if (typeof window !== "undefined") {
-            loadServerEnv(); // Ensure fetch logic runs only in the browser
+            loadServerEnv();
         }
     }, [_href]);
 
@@ -67,17 +67,17 @@ export const Link = forwardRef<
 Link.displayName = "Link";
 
 export const InlineLink: FC<
-    Omit<ComponentProps<typeof Link>, "href"> & { href: URL | string }
+	Omit<ComponentProps<typeof Link>, "href"> & { href: URL | string }
 > = ({ children, className, ...props }) => {
-    return (
-        <Link
-            className={twMerge(
-                "text-blue-500 transition-all hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500",
-                className
-            )}
-            {...props}
-        >
-            {children}
-        </Link>
-    );
+	return (
+		<Link
+			className={twMerge(
+				"text-blue-500 transition-all hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500",
+				className
+			)}
+			{...props}
+		>
+			{children}
+		</Link>
+	);
 };
