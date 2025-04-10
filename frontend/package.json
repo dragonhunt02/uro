@@ -5,6 +5,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "openapi-ts && next dev -H 0.0.0.0 -p 3000",
+    "dev-docker": "next dev -H 0.0.0.0 -p 3000",
     "build": "openapi-ts && next build",
     "lint": "next lint"
   },
