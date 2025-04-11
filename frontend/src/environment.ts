@@ -43,7 +43,7 @@ export const getServerEnv = (): serverEnvType | null => {
       turnstileSiteKey: environment<string>(env("NEXT_PUBLIC_TURNSTILE_SITEKEY"), "NEXT_PUBLIC_TURNSTILE_SITEKEY"),
     };
     envCache = serverEnv;
-    console.log(`Fetched environment on ${isServer ? "server" : "client"} side.`);
+    // console.log(`Fetched environment on ${isServer ? "server" : "client"} side.`, serverEnv);
     return serverEnv;
   } catch (error) {
     console.error("Error fetching server environment:", String(error));
