@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: env-sync
+          ref: runtime-env
           fetch-depth: 0
       - name: Dispatch to workflow 
         run: |
@@ -61,11 +61,11 @@ jobs:
             
 
             git log -n 5
-            git reset --soft HEAD~2
+            git reset --soft HEAD~9
 
             # rm -r .github/workflows/test.yml
             # rm -r priv/repo/test_content/
-            # rm -r frontend/src/api2.ts.txt
+             rm -r frontend/src/app/api/env/route.js
             
             #mix local.hex --force
             #mix deps.get
@@ -74,7 +74,7 @@ jobs:
             git config --global user.email "jackhunt43@libero.it"
             git config --global user.name "dragonhunt02"
             git add -A
-            git commit -a -m 'Fix environment variables embedded in builds'
+            git commit -a -m 'Clean up and use next-runtime-env in getServerEnv'
             git log -n 5
             git status
             git push -f
