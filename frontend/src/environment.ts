@@ -26,34 +26,25 @@ interface serverEnvType {
 
 let envCache: serverEnvType | null = null;
 
+
 export const getServerEnv = (): serverEnvType | null => {
   if (envCache) {
     // console.log("Using cached env:", envCache);
     return envCache;
   }
 
-  // Server-side
-  if (typeof window === "undefined") {
+  const isServer = typeof window === "undefined";
+  const apiOriginKey = isServer ? "API_ORIGIN" : "NEXT_PUBLIC_API_ORIGIN";
+
+  try {
     const serverEnv = {
       origin: environment<string>(env("NEXT_PUBLIC_ORIGIN"), "NEXT_PUBLIC_ORIGIN"),
-      apiOrigin: environment<string>(env("API_ORIGIN"), "API_ORIGIN"),
+      apiOrigin: environment<string>(env(apiOriginKey), apiOriginKey),
       turnstileSiteKey: environment<string>(env("NEXT_PUBLIC_TURNSTILE_SITEKEY"), "NEXT_PUBLIC_TURNSTILE_SITEKEY"),
     };
-
     envCache = serverEnv;
-    // console.log("Fetched environment on server side.");
+    // console.log(`Fetched environment on ${isServer ? "server" : "client"} side.`);
     return serverEnv;
-  }
-
-  // Client-side
-  try {
-    const clientEnv = {
-      origin: environment<string>(env("NEXT_PUBLIC_ORIGIN"), "NEXT_PUBLIC_ORIGIN"),
-      apiOrigin: environment<string>(env("NEXT_PUBLIC_API_ORIGIN"), "NEXT_PUBLIC_API_ORIGIN"),
-      turnstileSiteKey: environment<string>(env("NEXT_PUBLIC_TURNSTILE_SITEKEY"), "NEXT_PUBLIC_TURNSTILE_SITEKEY"),
-    };
-
-    return clientEnv;
   } catch (error) {
     console.error("Error fetching server environment:", String(error));
   }
