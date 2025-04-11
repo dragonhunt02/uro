@@ -35,18 +35,9 @@ export const getServerEnv = (): serverEnvType | null => {
   // Server-side
   if (typeof window === "undefined") {
     const serverEnv = {
-        origin: environment<string>(
-            process.env.ORIGIN || process.env.NEXT_PUBLIC_ORIGIN,
-            "NEXT_PUBLIC_ORIGIN"
-        ),
-        apiOrigin: environment<string>( // API_ORIGIN is only used server-side
-            process.env.API_ORIGIN || process.env.NEXT_PUBLIC_API_ORIGIN,
-            "API_ORIGIN and or NEXT_PUBLIC_API_ORIGIN"
-        ),
-        turnstileSiteKey: environment<string>(
-            process.env.TURNSTILE_SITEKEY || process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY,
-            "NEXT_PUBLIC_TURNSTILE_SITEKEY"
-        )
+      origin: environment<string>(env("NEXT_PUBLIC_ORIGIN"), "NEXT_PUBLIC_ORIGIN"),
+      apiOrigin: environment<string>(env("API_ORIGIN"), "API_ORIGIN"),
+      turnstileSiteKey: environment<string>(env("NEXT_PUBLIC_TURNSTILE_SITEKEY"), "NEXT_PUBLIC_TURNSTILE_SITEKEY"),
     };
 
     envCache = serverEnv;
@@ -56,27 +47,12 @@ export const getServerEnv = (): serverEnvType | null => {
 
   // Client-side
   try {
-    //const xhr = new XMLHttpRequest();
-    //let timeout = setTimeout(function () {
-    //    xhr.abort();
-    //    console.error("Request timed out");
-    //}, 5000);
-	  
-    //xhr.open("GET", "/api/env", false); // Synchronous XMLHttpRequest
-    //xhr.send();
-    //clearTimeout(timeout);
     const clientEnv = {
       origin: environment<string>(env("NEXT_PUBLIC_ORIGIN"), "NEXT_PUBLIC_ORIGIN"),
       apiOrigin: environment<string>(env("NEXT_PUBLIC_API_ORIGIN"), "NEXT_PUBLIC_API_ORIGIN"),
       turnstileSiteKey: environment<string>(env("NEXT_PUBLIC_TURNSTILE_SITEKEY"), "NEXT_PUBLIC_TURNSTILE_SITEKEY"),
     };
-    //if (xhr.status === 200) {
-    //  envCache = JSON.parse(xhr.responseText);
-    //  // console.log("Fetched serverEnv:", envCache);
-    //  return envCache;
-    //} else {
-    //  console.error(`Failed to fetch server environment: ${xhr.status}`);
-    //}
+
     return clientEnv;
   } catch (error) {
     console.error("Error fetching server environment:", String(error));
