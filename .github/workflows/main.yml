@@ -65,7 +65,7 @@ jobs:
 
             # rm -r .github/workflows/test.yml
             # rm -r priv/repo/test_content/
-            rm -r frontend/src/api2.ts.txt
+            # rm -r frontend/src/api2.ts.txt
             
             #mix local.hex --force
             #mix deps.get
