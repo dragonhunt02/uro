@@ -1,4 +1,4 @@
-defmodule Uro.Oauth.VRoid do 
+defmodule Uro.Oauth.Vroid do 
   use Assent.Strategy.OAuth2.Base
 
   @impl true
