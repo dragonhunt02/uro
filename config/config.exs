@@ -144,6 +144,7 @@ config :uro, :pow_assent,
              [
                client_id: get_env.("OAUTH2_#{key}_CLIENT_ID", nil),
                client_secret: get_env.("OAUTH2_#{key}_CLIENT_SECRET", nil),
+               redirect_uri: get_env.("OAUTH2_#{key}_REDIRECT_URI", nil),
                strategy: Module.concat([module_name])
              ]
            }
