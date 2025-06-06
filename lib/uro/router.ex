@@ -89,6 +89,11 @@ defmodule Uro.Router do
     get("/", Uro.UserController, :showCurrent)
   end
 
+  scope "/auth" do
+    get "/:provider/new", Uro.Oauth.AuthorizationController, :new
+    post "/:provider/callback", Uro.Oauth.AuthorizationController, :callback
+  end
+
   ##################################
 
   scope "/session" do
