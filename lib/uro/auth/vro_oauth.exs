@@ -5,13 +5,12 @@ defmodule Uro.Oauth.Vroid do
   def default_config(_config) do
     [
       base_url: "https://hub.vroid.com",
-
       authorize_url: "/oauth/authorize",
-      token_url:      "/oauth/token",
-      user_url:       "/api/account",
+      token_url: "/oauth/token",
+      user_url: "/api/account",
 
       authorization_params: [response_type: "code", scope: "default"],
-      token_params:         [grant_type: "authorization_code"],
+      token_params: [grant_type: "authorization_code"],
 
       headers: [{"X-Api-Version", "11"}],
 
@@ -31,8 +30,8 @@ defmodule Uro.Oauth.Vroid do
 
     {:ok,
      %{
-       "sub"     => user["id"],
-       "name"    => user["name"],
+       "sub"     => user["id"],
+       "name"    => user["name"],
        "picture" => avatar
     }}
   end
