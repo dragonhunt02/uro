@@ -1,5 +1,5 @@
 defmodule Uro.Oauth.AuthorizationController do
-  use MyAppWeb, :controller
+  use Uro, :controller
 
   alias Plug.Conn
   alias PowAssent.Plug
