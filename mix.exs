@@ -63,7 +63,7 @@ defmodule Uro.MixProject do
       {:plug_static_index_html, "~> 1.0"},
       {:comeonin, "~> 5.3.2"},
       {:bcrypt_elixir, "~> 2.3"},
-      {:pow, "~> 1.0"},
+      {:pow, "~> 1.0.29"},
       {:email_checker, "~> 0.1.4"},
       {:pow_assent, "~> 0.4.18"},
       {:ssl_verify_fun, "~> 1.1.6"},
