@@ -186,7 +186,7 @@ defmodule Uro.UserController do
       ok: {
         "",
         "application/json",
-        Session.json_schema()
+        Session.json_game_client_schema()
       },
       unprocessable_entity: {
         "",
@@ -226,7 +226,7 @@ defmodule Uro.UserController do
 
         json(
           conn,
-          Session.to_json_schema(session)
+          Session.to_json_game_client_schema(session)
         )
 
       {:error, conn} ->
