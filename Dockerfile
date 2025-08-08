@@ -36,13 +36,14 @@ COPY patches ./patches
 #  && git config --worktree user.name "git-patches" \
 # && git config --worktree commit.gpgsign false \
 
-RUN find "./patches/" -type f -name '*.patch' -exec \
-     patch -p1 -i "{}" \;
+#RUN for PATCH_PATH in ./patches/*; do \
+#      patch -p1 -i "$PATCH_PATH"; \
+#    done
     #git am --committer-date-is-author-date "{}" \;
 
 #RUN rm -rf .git ./patches
 
-RUN mix do patch.exmarcel, deps.compile
+RUN mix do patch.all, deps.compile
 
 COPY config ./config
 COPY priv ./priv
