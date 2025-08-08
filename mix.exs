@@ -96,18 +96,22 @@ defmodule Uro.MixProject do
       ],
 
       # Not required, fixes warning https://github.com/chaskiq/ex-marcel/pull/2
-      "patch.exmarcel": fn _args ->
-        path = "deps/ex_marcel/lib/magic.ex"
+      "patch.all": fn _args ->
+        patches_path = "patches/*.patch"
 
-        patched =
-          String.replace(
-            File.read!(path),
-            "ext |> String.slice(1..-1)",
-            "ext |> String.slice(1..-1//1)"
-          )
+        Path.wildcard(patches_path)
+        |> Enum.each(fn file ->
+          case System.cmd("patch", ["-p1", "-i", file], stderr_to_stdout: true) do
+            {_out, 0} ->
+              IO.puts("Patch applied successfully: #{Path.basename(file)}")
 
-        File.write!(path, patched)
-        IO.puts("Module 'ex_marcel' patched successfully!")
+            {out, code} ->
+              raise """
+              Failed to apply #{Path.basename(file)} (exit #{code})
+              #{out}
+              """
+          end
+        end)
       end,
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
