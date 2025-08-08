@@ -70,20 +70,24 @@ defmodule Uro.Oauth.AuthorizationController do
           |> Map.take(["access_token", "refresh_token", "expires_in"])
         params = Map.put(token_data, "provider", provider)
         redirect_uri = client_redirect_uri(provider) <> "?" <> URI.encode_query(params)
-        html = make_client_redirect_page(redirect_uri, 5)
+        html = make_client_redirect_page(provider, redirect_uri, 5)
         conn
         |> put_resp_content_type("text/html")
         |> send_resp(200, html)
         #json(conn, %{data: token_data })
 
       {:error, conn} ->
+        html = make_error_page(provider)
         conn
-        |> put_status(500)
-        |> json(%{error: %{status: 500, message: "An unexpected error occurred"}})
+        |> put_resp_content_type("text/html")
+        |> send_resp(500, html)
+        #|> put_status(500)
+        #|> json(%{error: %{status: 500, message: "An unexpected error occurred"}})
     end
   end
 
-def make_client_redirect_page(redirect_uri, wait_time) do
+def make_client_redirect_page(provider, redirect_uri, wait_time) do
+  provider_name = String.capitalize(provider)
   html = ~s"""
   <!DOCTYPE html>
   <html>
@@ -91,11 +95,28 @@ def make_client_redirect_page(redirect_uri, wait_time) do
       <meta charset="utf-8">
       <meta http-equiv="refresh"
             content="#{wait_time};url=#{redirect_uri}">
-      <title>Vroid OAuth</title>
+      <title>#{provider_name} OAuth</title>
     </head>
     <body>
-      <h1>Vroid OAuth</h1>
-      <p>Vroid login was successful. Sending data to V-Sekai client in #{wait_time} seconds. If not, <a href="#{redirect_uri}">click here</a>.</p>
+      <h1>#{provider_name} OAuth</h1>
+      <p>#{provider_name} login was successful. Sending data to V-Sekai client in #{wait_time} seconds. If not, <a href="#{redirect_uri}">click here</a>.</p>
+    </body>
+  </html>
+  """
+end
+
+def make_error_page(provider) do
+  provider_name = String.capitalize(provider)
+  html = ~s"""
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <title>#{provider_name} OAuth</title>
+    </head>
+    <body>
+      <h1>#{provider_name} OAuth</h1>
+      <p>#{provider_name} login failed. An unexpected error occurred.</p>
     </body>
   </html>
   """
