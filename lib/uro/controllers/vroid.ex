@@ -24,7 +24,8 @@ defmodule Uro.Oauth.AuthorizationController do
   end
 
   defp redirect_uri(conn) do
-    "http://localhost:7432/auth/vroid/callback"
+    System.get_env("OAUTH2_VROID_REDIRECT_URI")
+    #"http://localhost:7432/auth/vroid/callback"
 #4000/auth/#{conn.params["provider"]}/callback"
   end
 
