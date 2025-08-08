@@ -8,7 +8,7 @@ defmodule Uro.Oauth.AuthorizationController do
 
   action_fallback Uro.FallbackController
 
-  tags(["vroid"])
+  tags(["app_oauth"])
 
   @spec new(Conn.t(), map()) :: Conn.t()
   def new(conn, %{"provider" => provider}) do
