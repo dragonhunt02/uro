@@ -7,11 +7,54 @@ defmodule Uro.Oauth.AuthorizationController do
   alias PowAssent.Plug
   #alias Assent.Strategy.OAuth2
 
+  action_fallback Uro.FallbackController
+
+  tags(["vroid"])
+
+
+  @doc """
+  Fetches the config for the given provider name (string).
+  Returns the options keyword list or `[]` if not found.
+  Atom table is not modified.
+  """
+  @spec get_provider_cfg(String.t() | atom()) :: keyword()
+  def get_provider_cfg(provider_name) when is_binary(provider_name) do
+    Application.get_env(:uro, :pow_assent, [])
+    |> Keyword.get(:providers, [])
+    #|> IO.inspect()
+    |> Enum.find_value([], fn {provider_atom, opts} ->
+      name = Atom.to_string(provider_atom)
+
+      if name == provider_name do
+        #IO.puts("Matched provider: #{name}")
+        opts
+      end
+    end)
+  end
+
+  def get_provider_cfg(provider_name) when is_atom(provider_name) do
+    Application.get_env(:uro, :pow_assent, []) 
+    |> Keyword.get(:providers, [])
+    #|> IO.inspect()
+    |> Enum.find_value([], fn {provider_atom, opts} ->
+
+      if provider_name == provider_atom do
+        IO.puts("Matched provider atom: #{provider_name}")
+        opts
+      end
+    end)
+  end
+
+
   @spec new(Conn.t(), map()) :: Conn.t()
   def new(conn, %{"provider" => provider}) do
     #IEx.pry()
+    IO.puts("testing new #{provider}")
+    prov_cfg=get_provider_cfg(provider)
+    IO.inspect(prov_cfg)
+
     conn
-    |> Plug.authorize_url(provider, redirect_uri(conn))
+    |> Plug.authorize_url(provider, redirect_uri(provider))
     |> case do
       {:ok, url, conn} ->
         json(conn, %{data: %{url: url, session_params: conn.private[:pow_assent_session_params]}})
@@ -23,12 +66,31 @@ defmodule Uro.Oauth.AuthorizationController do
     end
   end
 
-  defp redirect_uri(conn) do
-    System.get_env("OAUTH2_VROID_REDIRECT_URI")
+  defp redirect_uri(provider) do
+    IO.inspect(provider, label: "get_provider_cfg/1 called with")
+
+    cfg = get_provider_cfg(provider)
+    uri = Keyword.get(cfg, :redirect_uri, "")
+    #System.get_env("OAUTH2_VROID_REDIRECT_URI")
     #"http://localhost:7432/auth/vroid/callback"
 #4000/auth/#{conn.params["provider"]}/callback"
   end
 
+  # On successful oauth, use localhost redirect to send back tokens to client
+  defp client_redirect_uri(provider) do
+    IO.inspect(provider, label: "get_provider_cfg/1 called with")
+
+    cfg = get_provider_cfg(provider)
+    url = case Keyword.fetch(cfg, :client_redirect_port) do
+      {:ok, port} -> "http://localhost:#{port}/"
+      :error -> "http://0.0.0.0/" #TODO: replace with error page
+    end
+    IO.inspect(url)
+    url
+    #TODO: change to use elixir runtime.exs config instead
+    #port = System.get_env("OAUTH2_VROID_CLIENT_REDIRECT_PORT") || "8000"
+    #url = "http://localhost:#{port}/"
+  end
 
   def exchange_code(code) do
     require Logger
@@ -104,7 +166,7 @@ defmodule Uro.Oauth.AuthorizationController do
     conn
     #|> Conn.put_private(:pow_assent_callback_params, session_params)
     |> Conn.put_private(:pow_assent_session_params, session_params)
-    |> Plug.callback_upsert(provider, params, redirect_uri(conn))
+    |> Plug.callback_upsert(provider, params, redirect_uri(provider))
     |> case do
       {:ok, conn} ->
         IO.inspect(conn.private)
@@ -113,7 +175,8 @@ defmodule Uro.Oauth.AuthorizationController do
         api_tokens = conn.private.pow_assent_callback_params.user_identity["token"]
         token_data = api_tokens
           |> Map.take(["access_token", "refresh_token", "expires_in"])
-        redirect_uri = "http://localhost:8432/" <> URI.encode_query(token_data)
+        params = Map.put(token_data, "provider", provider)
+        redirect_uri = client_redirect_uri(provider) <> "?" <> URI.encode_query(params)
         html = make_client_redirect_page(redirect_uri, 5)
         conn
         |> put_resp_content_type("text/html")
