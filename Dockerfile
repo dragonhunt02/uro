@@ -15,6 +15,7 @@ RUN apk add --no-cache \
 	npm \
 	inotify-tools \
 	git \
+	patch \
 	bash \
 	make \
 	gcc \
@@ -28,11 +29,18 @@ COPY mix.exs mix.lock ./
 RUN mix do deps.get
 
 # Apply patches
-RUN git config --worktree user.email "git-patches@github" \
-  git config --worktree user.name "git-patches" \
-  git config --worktree commit.gpgsign false \
-  find "patches/" -type f -name '*.patch' -exec \
-    git am --committer-date-is-author-date "{}" \;
+#COPY .git ./.git
+COPY patches ./patches
+
+#RUN git config --worktree user.email "git-patches@github" \
+#  && git config --worktree user.name "git-patches" \
+# && git config --worktree commit.gpgsign false \
+
+RUN find "./patches/" -type f -name '*.patch' -exec \
+     patch -p1 -i "{}" \;
+    #git am --committer-date-is-author-date "{}" \;
+
+#RUN rm -rf .git ./patches
 
 RUN mix do patch.exmarcel, deps.compile
 
