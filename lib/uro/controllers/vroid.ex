@@ -5,50 +5,13 @@ defmodule Uro.Oauth.AuthorizationController do
   require IEx
   alias Plug.Conn
   alias PowAssent.Plug
-  #alias Assent.Strategy.OAuth2
 
   action_fallback Uro.FallbackController
 
   tags(["vroid"])
 
-
-  @doc """
-  Fetches the config for the given provider name (string).
-  Returns the options keyword list or `[]` if not found.
-  Atom table is not modified.
-  """
-  @spec get_provider_cfg(String.t() | atom()) :: keyword()
-  def get_provider_cfg(provider_name) when is_binary(provider_name) do
-    Application.get_env(:uro, :pow_assent, [])
-    |> Keyword.get(:providers, [])
-    #|> IO.inspect()
-    |> Enum.find_value([], fn {provider_atom, opts} ->
-      name = Atom.to_string(provider_atom)
-
-      if name == provider_name do
-        #IO.puts("Matched provider: #{name}")
-        opts
-      end
-    end)
-  end
-
-  def get_provider_cfg(provider_name) when is_atom(provider_name) do
-    Application.get_env(:uro, :pow_assent, []) 
-    |> Keyword.get(:providers, [])
-    #|> IO.inspect()
-    |> Enum.find_value([], fn {provider_atom, opts} ->
-
-      if provider_name == provider_atom do
-        IO.puts("Matched provider atom: #{provider_name}")
-        opts
-      end
-    end)
-  end
-
-
   @spec new(Conn.t(), map()) :: Conn.t()
   def new(conn, %{"provider" => provider}) do
-    #IEx.pry()
     IO.puts("testing new #{provider}")
     prov_cfg=get_provider_cfg(provider)
     IO.inspect(prov_cfg)
@@ -71,9 +34,6 @@ defmodule Uro.Oauth.AuthorizationController do
 
     cfg = get_provider_cfg(provider)
     uri = Keyword.get(cfg, :redirect_uri, "")
-    #System.get_env("OAUTH2_VROID_REDIRECT_URI")
-    #"http://localhost:7432/auth/vroid/callback"
-#4000/auth/#{conn.params["provider"]}/callback"
   end
 
   # On successful oauth, use localhost redirect to send back tokens to client
@@ -87,81 +47,16 @@ defmodule Uro.Oauth.AuthorizationController do
     end
     IO.inspect(url)
     url
-    #TODO: change to use elixir runtime.exs config instead
-    #port = System.get_env("OAUTH2_VROID_CLIENT_REDIRECT_PORT") || "8000"
-    #url = "http://localhost:#{port}/"
   end
-
-  def exchange_code(code) do
-    require Logger
-    config = Application.get_env(:uro, :pow_assent)[:providers][:vroid]
-    IO.inspect(code)
-    params = %{
-      "code" => code,
-      "client_id" => config[:client_id],
-      "client_secret" => config[:client_secret],
-      "redirect_uri" => config[:redirect_uri],
-      "grant_type" => "authorization_code"
-    }
-
-    token_endpoint = "https://hub.vroid.com/oauth/token"
-#config[:token_endpoint]
-    provider = "vroid"
-    if token_endpoint == nil do
-      {:error, "Token endpoint configuration is missing"}
-    else
-      headers = [{"Content-Type", "application/x-www-form-urlencoded"}]
-      # OAuth token requests expect URL-encoded form data.
-      body = URI.encode_query(params)
-
-      Logger.info("Exchanging code for token via #{token_endpoint} for provider #{provider}")
-      IO.inspect(token_endpoint)
-      IO.inspect(params, label: "parameters")
-      IO.inspect(headers)
-      IO.inspect(body)
-
-      # Execute the HTTP POST.
-      case HTTPoison.post(token_endpoint, body, headers, []) do
-        {:ok, %HTTPoison.Response{status_code: status, body: response_body}} when status in 200..299 ->
-          case Jason.decode(response_body) do
-            {:ok, token_info} ->
-              IO.inspect(token_info)
-              {:ok, token_info}
-
-            error ->
-              Logger.error("Failed to decode JSON response: #{inspect(error)}")
-              {:error, {:json_decode_error, error}}
-          end
-
-        {:ok, %HTTPoison.Response{status_code: status, body: error_body}} ->
-          Logger.error("HTTP error during token exchange: status #{status}, body #{error_body}")
-          {:error, {:http_error, status, error_body}}
-
-        {:error, reason} ->
-          Logger.error("HTTP request error: #{inspect(reason)}")
-          {:error, reason}
-      end
-    end
-  end
-
-  #defmodule SessionParams do
-  #  @enforce_keys [:code, :state]
-  #  defstruct [:code, :state]
-  #end
 
   @spec callback(Conn.t(), map()) :: Conn.t()
   def callback(conn, %{"provider" => provider, "code" => code, "state" => state} = params) do
     IO.inspect(conn)
     IO.inspect(params)
     session_params = %{code: code, state: state}
-    #session_params = Map.fetch!(params, "session_params")
-    #params         = Map.drop(params, ["provider", "session_params"])
     IO.puts("Debug callback")
     IO.inspect(params)
     IO.inspect(session_params)
-    #cfg=Uro.Oauth.Vroid.config
-    #assres=Uro.Oauth.Vroid.authorize_url(conn)
-    #IO.inspect(assres)
 
     conn
     #|> Conn.put_private(:pow_assent_callback_params, session_params)
@@ -170,8 +65,6 @@ defmodule Uro.Oauth.AuthorizationController do
     |> case do
       {:ok, conn} ->
         IO.inspect(conn.private)
-        #IO.inspect(conn.private.pow_assent_session_params)
-        #IO.inspect(conn.private.pow_assent_callback_params)
         api_tokens = conn.private.pow_assent_callback_params.user_identity["token"]
         token_data = api_tokens
           |> Map.take(["access_token", "refresh_token", "expires_in"])
@@ -208,50 +101,37 @@ def make_client_redirect_page(redirect_uri, wait_time) do
   """
 end
 
+  @doc """
+  Fetches the config for the given provider name (string).
+  Returns the options keyword list or `[]` if not found.
+  Atom table is not modified.
+  """
+  @spec get_provider_cfg(String.t() | atom()) :: keyword()
+  def get_provider_cfg(provider_name) when is_binary(provider_name) do
+    Application.get_env(:uro, :pow_assent, [])
+    |> Keyword.get(:providers, [])
+    #|> IO.inspect()
+    |> Enum.find_value([], fn {provider_atom, opts} ->
+      name = Atom.to_string(provider_atom)
 
-  @spec callback1(Conn.t(), map()) :: Conn.t()
-  def callback1(conn, %{"provider" => provider} = params) do
-    session_params = Map.fetch!(params, "session_params")
-    code = Map.get(params, "code")
-    params         = Map.drop(params, ["provider", "session_params"])   #, "code"])
-    #IEx.pry()
-    IO.inspect(params)
-    accessor = nil
-    access_tokenn = nil
-    accessor = case exchange_code(code) do
-      {:ok, token_info} ->
-        accessor = token_info
-        IO.puts("all ok")
-        token_info
-      _ ->
-        IO.puts("Bad error"); nil
-    end
-    IO.inspect(accessor)
-    access_tokenn = Map.get(accessor, "access_token")
-    session_params = Map.merge(session_params, accessor)
-    IO.inspect(session_params)
-    parameters = %{"access_token" => access_tokenn}
-    conn
-    |> Conn.put_private(:pow_assent_session_params, session_params)
-    |> IO.inspect()
-    #|> Plug.callback_upsert(provider, params, redirect_uri(conn))
-    {:ok, conn} |> case do
-      {:ok, conn} ->
-        #json(conn, %{data: %{access_token: conn.private.access_token, refresh_token: conn.private.refresh_token}})
-        json(conn, %{data: session_params})
-
-      {:error, conn} ->
-
-        error_message = conn.private[:pow_assent_callback_error] || "An unexpected error occurred"
-
-        Logger.error(fn ->
-          "Callback error for provider #{provider}: #{error_message}. " <>
-          "HTTP #{conn.method} #{conn.request_path}"
-        end)
-
-        conn
-        |> put_status(500)
-        |> json(%{error: %{status: 500, message: "An unexpected error occurred"}})
-    end
+      if name == provider_name do
+        #IO.puts("Matched provider: #{name}")
+        opts
+      end
+    end)
   end
+
+  def get_provider_cfg(provider_name) when is_atom(provider_name) do
+    Application.get_env(:uro, :pow_assent, []) 
+    |> Keyword.get(:providers, [])
+    #|> IO.inspect()
+    |> Enum.find_value([], fn {provider_atom, opts} ->
+
+      if provider_name == provider_atom do
+        IO.puts("Matched provider atom: #{provider_name}")
+        opts
+      end
+    end)
+  end
+
 end
