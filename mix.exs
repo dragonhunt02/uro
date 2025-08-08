@@ -95,7 +95,7 @@ defmodule Uro.MixProject do
         "openapi.spec.json --spec Uro.OpenAPI.Specification --pretty --vendor-extensions=false ./frontend/src/__generated/openapi.json"
       ],
 
-      # Not required, fixes warning https://github.com/chaskiq/ex-marcel/pull/2
+      # Requires 'patch' installed
       "patch.all": fn _args ->
         patches_path = "patches/*.patch"
 
