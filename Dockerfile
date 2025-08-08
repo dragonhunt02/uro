@@ -28,23 +28,11 @@ RUN mix local.hex --force && \
 COPY mix.exs mix.lock ./
 RUN mix do deps.get
 
-# Apply patches
-#COPY .git ./.git
+# Apply patches and compile
 COPY patches ./patches
-
-#RUN git config --worktree user.email "git-patches@github" \
-#  && git config --worktree user.name "git-patches" \
-# && git config --worktree commit.gpgsign false \
-
-#RUN for PATCH_PATH in ./patches/*; do \
-#      patch -p1 -i "$PATCH_PATH"; \
-#    done
-    #git am --committer-date-is-author-date "{}" \;
-
-#RUN rm -rf .git ./patches
-
 RUN mix do patch.all, deps.compile
 
+RUN rm -rf ./patches
 COPY config ./config
 COPY priv ./priv
 COPY lib ./lib
