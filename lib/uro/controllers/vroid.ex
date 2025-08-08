@@ -5,6 +5,7 @@ defmodule Uro.Oauth.AuthorizationController do
   require IEx
   alias Plug.Conn
   alias PowAssent.Plug
+  #alias Assent.Strategy.OAuth2
 
   @spec new(Conn.t(), map()) :: Conn.t()
   def new(conn, %{"provider" => provider}) do
@@ -23,7 +24,7 @@ defmodule Uro.Oauth.AuthorizationController do
   end
 
   defp redirect_uri(conn) do
-    "http://localhost:7432"
+    "http://localhost:7432/auth/vroid/callback"
 #4000/auth/#{conn.params["provider"]}/callback"
   end
 
@@ -51,7 +52,10 @@ defmodule Uro.Oauth.AuthorizationController do
       body = URI.encode_query(params)
 
       Logger.info("Exchanging code for token via #{token_endpoint} for provider #{provider}")
-      IO.inspect(params)
+      IO.inspect(token_endpoint)
+      IO.inspect(params, label: "parameters")
+      IO.inspect(headers)
+      IO.inspect(body)
 
       # Execute the HTTP POST.
       case HTTPoison.post(token_endpoint, body, headers, []) do
@@ -77,8 +81,48 @@ defmodule Uro.Oauth.AuthorizationController do
     end
   end
 
+  #defmodule SessionParams do
+  #  @enforce_keys [:code, :state]
+  #  defstruct [:code, :state]
+  #end
+
   @spec callback(Conn.t(), map()) :: Conn.t()
-  def callback(conn, %{"provider" => provider} = params) do
+  def callback(conn, %{"provider" => provider, "code" => code, "state" => state} = params) do
+    IO.inspect(conn)
+    IO.inspect(params)
+    session_params = %{code: code, state: state}
+    #session_params = Map.fetch!(params, "session_params")
+    #params         = Map.drop(params, ["provider", "session_params"])
+    IO.puts("Debug callback")
+    IO.inspect(params)
+    IO.inspect(session_params)
+    #cfg=Uro.Oauth.Vroid.config
+    #assres=Uro.Oauth.Vroid.authorize_url(conn)
+    #IO.inspect(assres)
+
+    conn
+    |> Conn.put_private(:pow_assent_callback_params, session_params)
+    |> Conn.put_private(:pow_assent_session_params, session_params)
+    |> Plug.callback_upsert(provider, params, redirect_uri(conn))
+    |> case do
+      {:ok, conn} ->
+        IO.inspect(conn.private)
+        api_tokens = conn.private.pow_assent_callback_params.user_identity["token"]
+        token_data = api_tokens
+          |> Map.take(["access_token", "refresh_token", "expires_in"])
+        json(conn, %{data: token_data })
+
+      {:error, conn} ->
+        conn
+        |> put_status(500)
+        |> json(%{error: %{status: 500, message: "An unexpected error occurred"}})
+    end
+  end
+
+
+
+  @spec callback1(Conn.t(), map()) :: Conn.t()
+  def callback1(conn, %{"provider" => provider} = params) do
     session_params = Map.fetch!(params, "session_params")
     code = Map.get(params, "code")
     params         = Map.drop(params, ["provider", "session_params"])   #, "code"])
@@ -110,7 +154,7 @@ defmodule Uro.Oauth.AuthorizationController do
 
       {:error, conn} ->
 
-        error_message = conn.private[:pow_assent_error] || "An unexpected error occurred"
+        error_message = conn.private[:pow_assent_callback_error] || "An unexpected error occurred"
 
         Logger.error(fn ->
           "Callback error for provider #{provider}: #{error_message}. " <>
