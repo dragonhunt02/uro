@@ -65,6 +65,7 @@ defmodule Uro.MixProject do
       {:bcrypt_elixir, "~> 2.3"},
       {:pow, "~> 1.0.29"},
       {:email_checker, "~> 0.1.4"},
+      {:assent, "~> 0.2.13"},
       {:pow_assent, "~> 0.4.18"},
       {:ssl_verify_fun, "~> 1.1.6"},
       {:open_api_spex, "~> 3.18"},
