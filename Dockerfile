@@ -25,7 +25,16 @@ RUN mix local.hex --force && \
 	mix local.rebar --force
 
 COPY mix.exs mix.lock ./
-RUN mix do deps.get, patch.exmarcel, deps.compile
+RUN mix do deps.get
+
+# Apply patches
+RUN git config --worktree user.email "git-patches@github" \
+  git config --worktree user.name "git-patches" \
+  git config --worktree commit.gpgsign false \
+  find "patches/" -type f -name '*.patch' -exec \
+    git am --committer-date-is-author-date "{}" \;
+
+RUN mix do patch.exmarcel, deps.compile
 
 COPY config ./config
 COPY priv ./priv
