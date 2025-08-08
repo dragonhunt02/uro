@@ -90,7 +90,8 @@ defmodule Uro.Router do
   end
 
   scope "/auth" do
-    get "/:provider/new", Uro.Oauth.AuthorizationController, :new
+    get "/:provider/new",      Uro.Oauth.AuthorizationController, :new
+    get "/:provider/callback", Uro.Oauth.AuthorizationController, :callback
     post "/:provider/callback", Uro.Oauth.AuthorizationController, :callback
   end
 
