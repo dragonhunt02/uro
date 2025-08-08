@@ -10,14 +10,10 @@ defmodule Uro.Oauth.Vroid do
       token_url: "/oauth/token",
       user_url: "/api/account",
 
-      authorization_params: [response_type: "code", scope: "default"],  #, client_id: config[:client_id], client_secret: config[:client_secret]],
-      token_params: [grant_type: "authorization_code"],
-token_request_method: :get,
-
-      #headers: [{"X-Api-Version", "11"}],
-      #auth_headers: [{"X-Api-Version", "10"}],
       base_headers: [{"X-Api-Version", "11"}],
 
+      authorization_params: [response_type: "code", scope: "default"],
+      token_params: [grant_type: "authorization_code"],
       auth_method: :client_secret_post
     ]
   end
@@ -38,7 +34,7 @@ token_request_method: :get,
        "sub"     => user["id"],
        "name"    => user["name"],
        "picture" => avatar,
-       "email" => "#{user["id"]}@vroid.vsekai.local" # placeholder
+       "email" => "#{user["id"]}@vroid.vsekai.local" # Placeholder
     }}
   end
 end
