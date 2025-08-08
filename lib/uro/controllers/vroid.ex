@@ -102,16 +102,23 @@ defmodule Uro.Oauth.AuthorizationController do
     #IO.inspect(assres)
 
     conn
-    |> Conn.put_private(:pow_assent_callback_params, session_params)
+    #|> Conn.put_private(:pow_assent_callback_params, session_params)
     |> Conn.put_private(:pow_assent_session_params, session_params)
     |> Plug.callback_upsert(provider, params, redirect_uri(conn))
     |> case do
       {:ok, conn} ->
         IO.inspect(conn.private)
+        #IO.inspect(conn.private.pow_assent_session_params)
+        #IO.inspect(conn.private.pow_assent_callback_params)
         api_tokens = conn.private.pow_assent_callback_params.user_identity["token"]
         token_data = api_tokens
           |> Map.take(["access_token", "refresh_token", "expires_in"])
-        json(conn, %{data: token_data })
+        redirect_uri = "http://localhost:8432/" <> URI.encode_query(token_data)
+        html = make_client_redirect_page(redirect_uri, 5)
+        conn
+        |> put_resp_content_type("text/html")
+        |> send_resp(200, html)
+        #json(conn, %{data: token_data })
 
       {:error, conn} ->
         conn
@@ -120,6 +127,23 @@ defmodule Uro.Oauth.AuthorizationController do
     end
   end
 
+def make_client_redirect_page(redirect_uri, wait_time) do
+  html = ~s"""
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="refresh"
+            content="#{wait_time};url=#{redirect_uri}">
+      <title>Vroid OAuth</title>
+    </head>
+    <body>
+      <h1>Vroid OAuth</h1>
+      <p>Vroid login was successful. Sending data to V-Sekai client in #{wait_time} seconds. If not, <a href="#{redirect_uri}">click here</a>.</p>
+    </body>
+  </html>
+  """
+end
 
 
   @spec callback1(Conn.t(), map()) :: Conn.t()
