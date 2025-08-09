@@ -64,8 +64,10 @@ defmodule Uro.AuthenticationController do
   end
 
   defp login_error_native(conn, params) do
-    provider = Map.take(conn.params, ["provider"])
-    html = make_native_error_page(provider)
+    provider_entry = Map.take(conn.params, ["provider"])
+    provider=provider_entry["provider"]
+   #fixme TODO
+    html = make_native_error_page("provider")
 
     conn
       |> put_resp_content_type("text/html")
@@ -79,8 +81,12 @@ defmodule Uro.AuthenticationController do
   end
 
   defp login_success_native(conn, params) do
-    provider = Map.take(conn.params, ["provider"])
-    redirect_uri = client_redirect_uri_native(params) <> "?" <> URI.encode_query(Map.merge(params, provider))
+    provider_entry = Map.take(conn.params, ["provider"])
+    provider=provider_entry["provider"]
+    IO.puts("inspect provid")
+    IO.inspect(provider)
+    IO.inspect(params)
+    redirect_uri = client_redirect_uri_native(conn) <> "?" <> URI.encode_query(Map.merge(params, provider_entry))
     html = make_native_redirect_page(provider, redirect_uri, 5)
 
     conn
@@ -236,13 +242,16 @@ defmodule Uro.AuthenticationController do
     end
   end
 
-  def provider_callback_native(conn, %{"provider" => provider} = params) do
+  def provider_callback_native(conn, %{"provider" => provider,  "code" => code, "state" => state} = params) do
     base_params = Map.take(params, ["provider", "state", "code"])
+    session_params = %{code: code, state: state}
+    IO.inspect(conn)
 
     case conn
-         |> Conn.put_private(:pow_assent_session_params, params)
-         |> Plug.callback_upsert(provider, params, redirect_uri(conn)) do
+         |> Conn.put_private(:pow_assent_session_params, session_params)
+         |> Plug.callback_upsert(provider, base_params, redirect_uri_native(conn)) do
       {:ok, conn} ->
+              IO.inspect(conn)
           api_tokens =
             conn.private.pow_assent_callback_params.user_identity["token"]
 
@@ -287,7 +296,7 @@ defmodule Uro.AuthenticationController do
            pow_assent_callback_error: {:invalid_user_id_field, %{changes: %{email: email}}}
          }
        }} ->
-        login_error(
+        login_error_native(
           conn,
           %{
             error: "conflict",
@@ -297,8 +306,9 @@ defmodule Uro.AuthenticationController do
           }
         )
 
-      _ ->
-        login_error(conn, %{
+      _err ->
+        IO.inspect(_err)
+        login_error_native(conn, %{
           error: "invalid_code",
           error_description: "Invalid or expired code, please try again"
         })
@@ -314,7 +324,8 @@ defmodule Uro.AuthenticationController do
   end
 
   defp client_redirect_uri_native(%{params: %{"provider" => provider}}) do
-    config = get_provider_cfg(provider)
+    {provider_atom, config} = get_provider_cfg(provider)
+    IO.inspect(config)
     uri = case Keyword.fetch(config, :client_redirect_port) do
       {:ok, port} -> "http://localhost:#{port}/"
       :error -> "http://0.0.0.0/" # TODO: replace with error page
