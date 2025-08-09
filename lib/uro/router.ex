@@ -118,6 +118,17 @@ defmodule Uro.Router do
       get("/", Uro.AuthenticationController, :login_with_provider)
       get("/callback", Uro.AuthenticationController, :provider_callback)
     end
+
+  # Don't add new providers before checking compliance with current native client flow
+  @native_oauth_providers ~w(vroid)
+
+  for provider <- @native_oauth_providers do
+    scope "/native/#{provider}" do
+      get "/", AuthenticationController, :login_with_provider_native,
+        defaults: [provider: provider]
+      get "/callback", AuthenticationController, :provider_callback_native,
+        defaults: [provider: provider]
+    end
   end
 
   resources("/avatars", Uro.AvatarController, only: [:index, :show])
