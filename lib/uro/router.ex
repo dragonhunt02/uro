@@ -53,6 +53,24 @@ defmodule Uro.Router do
     plug(Uro.Plug.RequirePropUploadPermission)
   end
 
+pipeline :ensure_native_provider do
+    plug :validate_provider
+  end
+
+  @native_oauth_providers ~w(vroid)
+
+  # Validate that params["provider"] is in our whitelist
+  defp validate_provider(%{params: %{"provider" => provider}} = conn, _opts)
+       when provider in @native_oauth_providers do
+    conn
+  end
+
+  defp validate_provider(conn, _opts) do
+    conn
+    |> send_resp(:not_found, "Provider not supported")
+    |> halt()
+  end
+
   if Mix.env() == :dev do
     pipeline :browser do
       plug(:accepts, ["html"])
@@ -114,21 +132,19 @@ defmodule Uro.Router do
   scope "/login" do
     post("/", Uro.AuthenticationController, :login)
 
+    scope "/native/:provider" do
+  # Don't add new providers before checking compliance with current native client flow
+          pipe_through [:ensure_native_provider]
+      get("/", Uro.AuthenticationController, :login_with_provider_native)
+      get("/callback", Uro.AuthenticationController, :provider_callback_native)
+       end
+   
+
     scope "/:provider" do
       get("/", Uro.AuthenticationController, :login_with_provider)
       get("/callback", Uro.AuthenticationController, :provider_callback)
     end
 
-  # Don't add new providers before checking compliance with current native client flow
-  @native_oauth_providers ~w(vroid)
-
-  for provider <- @native_oauth_providers do
-    scope "/native/#{provider}" do
-      get "/", AuthenticationController, :login_with_provider_native,
-        defaults: [provider: provider]
-      get "/callback", AuthenticationController, :provider_callback_native,
-        defaults: [provider: provider]
-    end
   end
 
   resources("/avatars", Uro.AvatarController, only: [:index, :show])
