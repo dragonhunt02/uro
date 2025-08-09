@@ -11,23 +11,31 @@ defmodule Uro.Oauth.AuthorizationController do
   tags(["app_oauth"])
 
   @spec new(Conn.t(), map()) :: Conn.t()
-  def new(conn, %{"provider" => provider}) do
-    IO.puts("testing new #{provider}")
-    prov_cfg=get_provider_cfg(provider)
-    IO.inspect(prov_cfg)
+def new(conn, %{"provider" => provider}) do
+  IO.puts("testing new #{provider}")
 
-    conn
-    |> Plug.authorize_url(provider, redirect_uri(provider))
-    |> case do
-      {:ok, url, conn} ->
-        json(conn, %{data: %{url: url, session_params: conn.private[:pow_assent_session_params]}})
+  case get_provider_cfg(provider) do
+    cfg when is_list(cfg) and cfg != [] ->
+      IO.inspect(cfg)
 
-      {:error, _error, conn} ->
-        conn
-        |> put_status(500)
-        |> json(%{error: %{status: 500, message: "An unexpected error occurred"}})
-    end
+      conn
+      |> Plug.authorize_url(provider, redirect_uri(provider))
+      |> case do
+        {:ok, url, conn} ->
+          json(conn, %{data: %{url: url, session_params: conn.private[:pow_assent_session_params]}})
+
+        {:error, _error, conn} ->
+          conn
+          |> put_status(500)
+          |> json(%{error: %{status: 500, message: "An unexpected error occurred"}})
+      end
+
+    _ ->
+      conn
+      |> put_status(500)
+      |> json(%{error: %{status: 500, message: "Provider not found"}})
   end
+end
 
   defp redirect_uri(provider) do
     IO.inspect(provider, label: "get_provider_cfg/1 called with")
@@ -49,42 +57,49 @@ defmodule Uro.Oauth.AuthorizationController do
     url
   end
 
-  @spec callback(Conn.t(), map()) :: Conn.t()
-  def callback(conn, %{"provider" => provider, "code" => code, "state" => state} = params) do
-    IO.inspect(conn)
-    IO.inspect(params)
-    session_params = %{code: code, state: state}
-    IO.puts("Debug callback")
-    IO.inspect(params)
-    IO.inspect(session_params)
+@spec callback(Conn.t(), map()) :: Conn.t()
+def callback(conn, %{"provider" => provider, "code" => code, "state" => state} = params) do
+  IO.puts("Debug callback for #{provider}")
+  session_params = %{code: code, state: state}
 
-    conn
-    #|> Conn.put_private(:pow_assent_callback_params, session_params)
-    |> Conn.put_private(:pow_assent_session_params, session_params)
-    |> Plug.callback_upsert(provider, params, redirect_uri(provider))
-    |> case do
-      {:ok, conn} ->
-        IO.inspect(conn.private)
-        api_tokens = conn.private.pow_assent_callback_params.user_identity["token"]
-        token_data = api_tokens
-          |> Map.take(["access_token", "refresh_token", "expires_in"])
-        params = Map.put(token_data, "provider", provider)
-        redirect_uri = client_redirect_uri(provider) <> "?" <> URI.encode_query(params)
-        html = make_client_redirect_page(provider, redirect_uri, 5)
-        conn
-        |> put_resp_content_type("text/html")
-        |> send_resp(200, html)
-        #json(conn, %{data: token_data })
+  case get_provider_cfg(provider) do
+    cfg when is_list(cfg) and cfg != [] ->
+      conn
+      |> Conn.put_private(:pow_assent_session_params, session_params)
+      |> Plug.callback_upsert(provider, params, redirect_uri(provider))
+      |> case do
+        {:ok, conn} ->
+          api_tokens =
+            conn.private.pow_assent_callback_params.user_identity["token"]
 
-      {:error, conn} ->
-        html = make_error_page(provider)
-        conn
-        |> put_resp_content_type("text/html")
-        |> send_resp(500, html)
-        #|> put_status(500)
-        #|> json(%{error: %{status: 500, message: "An unexpected error occurred"}})
-    end
+          token_data =
+            api_tokens
+            |> Map.take(["access_token", "refresh_token", "expires_in"])
+
+          client_params = Map.put(token_data, "provider", provider)
+
+          redirect_uri = client_redirect_uri(provider) <> "?" <> URI.encode_query(client_params)
+          html = make_client_redirect_page(provider, redirect_uri, 5)
+
+          conn
+          |> put_resp_content_type("text/html")
+          |> send_resp(200, html)
+
+        {:error, conn} ->
+          html = make_error_page(provider)
+
+          conn
+          |> put_resp_content_type("text/html")
+          |> send_resp(500, html)
+      end
+
+    _ ->
+      conn
+      |> put_status(500)
+      |> json(%{error: %{status: 500, message: "Provider not found"}})
   end
+end
+
 
 def make_client_redirect_page(provider, redirect_uri, wait_time) do
   provider_name = String.capitalize(provider)
