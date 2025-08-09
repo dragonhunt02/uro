@@ -11,12 +11,14 @@ defmodule Uro.Oauth.AuthorizationController do
   tags(["app_oauth"])
 
   @spec new(Conn.t(), map()) :: Conn.t()
-def new(conn, %{"provider" => provider}) do
-  IO.puts("testing new #{provider}")
+def new(conn, %{"provider" => request_provider}) do
+  IO.puts("testing new #{request_provider}")
 
-  case get_provider_cfg(provider) do
-    cfg when is_list(cfg) and cfg != [] ->
+  case get_provider_cfg(request_provider) do
+    {provider_atom, cfg} when is_atom(provider_atom) and is_list(cfg) and cfg != [] ->
+      provider = Atom.to_string(provider_atom)
       IO.inspect(cfg)
+      IO.inspect(provider)
 
       conn
       |> Plug.authorize_url(provider, get_redirect_uri(cfg))
@@ -52,12 +54,13 @@ end
   end
 
 @spec callback(Conn.t(), map()) :: Conn.t()
-def callback(conn, %{"provider" => provider, "code" => code, "state" => state} = params) do
-  IO.puts("Debug callback for #{provider}")
+def callback(conn, %{"provider" => request_provider, "code" => code, "state" => state} = params) do
+  IO.puts("Debug callback for #{request_provider}")
   session_params = %{code: code, state: state}
 
-  case get_provider_cfg(provider) do
-    cfg when is_list(cfg) and cfg != [] ->
+  case get_provider_cfg(request_provider) do
+    {provider_atom, cfg} when is_atom(provider_atom) and is_list(cfg) and cfg != [] ->
+      provider = Atom.to_string(provider_atom)
       conn
       |> Conn.put_private(:pow_assent_session_params, session_params)
       |> Plug.callback_upsert(provider, params, get_redirect_uri(cfg))
@@ -142,13 +145,12 @@ end
   def get_provider_cfg(provider_name) when is_binary(provider_name) do
     Application.get_env(:uro, :pow_assent, [])
     |> Keyword.get(:providers, [])
-    #|> IO.inspect()
-    |> Enum.find_value([], fn {provider_atom, opts} ->
+    |> Enum.find({}, fn {provider_atom, opts} ->
       name = Atom.to_string(provider_atom)
 
       if name == provider_name do
         #IO.puts("Matched provider: #{name}")
-        opts
+        true
       end
     end)
   end
@@ -156,12 +158,10 @@ end
   def get_provider_cfg(provider_name) when is_atom(provider_name) do
     Application.get_env(:uro, :pow_assent, []) 
     |> Keyword.get(:providers, [])
-    #|> IO.inspect()
-    |> Enum.find_value([], fn {provider_atom, opts} ->
-
+    |> Enum.find({}, fn {provider_atom, opts} ->
       if provider_name == provider_atom do
-        IO.puts("Matched provider atom: #{provider_name}")
-        opts
+        #IO.puts("Matched provider atom: #{provider_name}")
+        true
       end
     end)
   end
