@@ -19,7 +19,7 @@ def new(conn, %{"provider" => provider}) do
       IO.inspect(cfg)
 
       conn
-      |> Plug.authorize_url(provider, redirect_uri(provider))
+      |> Plug.authorize_url(provider, get_redirect_uri(cfg))
       |> case do
         {:ok, url, conn} ->
           json(conn, %{data: %{url: url, session_params: conn.private[:pow_assent_session_params]}})
@@ -37,24 +37,18 @@ def new(conn, %{"provider" => provider}) do
   end
 end
 
-  defp redirect_uri(provider) do
-    IO.inspect(provider, label: "get_provider_cfg/1 called with")
-
-    cfg = get_provider_cfg(provider)
-    uri = Keyword.get(cfg, :redirect_uri, "")
+  defp get_redirect_uri(config) do
+    uri = Keyword.get(config, :redirect_uri, "")
   end
 
   # On successful oauth, use localhost redirect to send back tokens to client
-  defp client_redirect_uri(provider) do
-    IO.inspect(provider, label: "get_provider_cfg/1 called with")
-
-    cfg = get_provider_cfg(provider)
-    url = case Keyword.fetch(cfg, :client_redirect_port) do
+  defp get_client_redirect_uri(config) do
+    uri = case Keyword.fetch(config, :client_redirect_port) do
       {:ok, port} -> "http://localhost:#{port}/"
       :error -> "http://0.0.0.0/" #TODO: replace with error page
     end
-    IO.inspect(url)
-    url
+    IO.inspect(uri)
+    uri
   end
 
 @spec callback(Conn.t(), map()) :: Conn.t()
@@ -66,7 +60,7 @@ def callback(conn, %{"provider" => provider, "code" => code, "state" => state} =
     cfg when is_list(cfg) and cfg != [] ->
       conn
       |> Conn.put_private(:pow_assent_session_params, session_params)
-      |> Plug.callback_upsert(provider, params, redirect_uri(provider))
+      |> Plug.callback_upsert(provider, params, get_redirect_uri(cfg))
       |> case do
         {:ok, conn} ->
           api_tokens =
@@ -76,9 +70,11 @@ def callback(conn, %{"provider" => provider, "code" => code, "state" => state} =
             api_tokens
             |> Map.take(["access_token", "refresh_token", "expires_in"])
 
-          client_params = Map.put(token_data, "provider", provider)
+          client_params =
+            token_data
+            |> Map.put("provider", provider)
 
-          redirect_uri = client_redirect_uri(provider) <> "?" <> URI.encode_query(client_params)
+          redirect_uri = get_client_redirect_uri(cfg) <> "?" <> URI.encode_query(client_params)
           html = make_client_redirect_page(provider, redirect_uri, 5)
 
           conn
