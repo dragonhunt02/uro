@@ -144,8 +144,8 @@ config :uro, :pow_assent,
              [
                client_id: get_env.("OAUTH2_#{key}_CLIENT_ID", nil),
                client_secret: get_env.("OAUTH2_#{key}_CLIENT_SECRET", nil),
-               redirect_uri: get_env.("OAUTH2_#{key}_REDIRECT_URI", nil),
-               client_redirect_port: get_env.("OAUTH2_#{key}_CLIENT_REDIRECT_PORT", nil),
+               # Prefer loopback IP instead of 'localhost' RFC 8252 section 8.3 "OAuth 2.0 for Native Apps"
+               godot_redirect_port: "http://127.0.0.1:#{get_env.("GODOT_OAUTH2_REDIRECT_PORT", 80)}",
                strategy: Module.concat([module_name])
              ]
            }
