@@ -61,23 +61,21 @@ jobs:
             
 
             git log -n 5
-            #git reset --soft HEAD~2
+            git reset --soft HEAD~2
 
             # rm -r .github/workflows/test.yml
             # rm -r priv/repo/test_content/
             # rm -r frontend/src/app/api/env/route.js
-            rm lib/uro/controllers/vroid.ex
             
-            mix local.hex --force
-            mix deps.get
-            mix format
+            #mix local.hex --force
+            #mix deps.get
+            #mix format
 
             git config --global user.email "jackhunt43@libero.it"
             git config --global user.name "dragonhunt02"
             git add -A
-            git commit -a -m 'Formatting'
+            git commit -a -m 'Add Vroid native app OAuth flow and update website'
             git log -n 5
             git status
-            git push
-            #-f
+            git push -f
             exit 1
