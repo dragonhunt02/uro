@@ -66,6 +66,7 @@ defmodule Uro.Router do
        when provider in @native_oauth_providers do
     conn
   end
+
   defp validate_native_provider(conn, _opts) do
     conn
     |> send_resp(:not_found, "Provider not supported")
@@ -131,7 +132,7 @@ defmodule Uro.Router do
       pipe_through [:ensure_native_provider]
       get("/", Uro.AuthenticationController, :login_with_provider_native)
       get("/callback", Uro.AuthenticationController, :provider_callback_native)
-       end   
+    end
 
     scope "/:provider" do
       get("/", Uro.AuthenticationController, :login_with_provider)
