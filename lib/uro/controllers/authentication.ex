@@ -64,9 +64,7 @@ defmodule Uro.AuthenticationController do
   end
 
   defp login_error_native(conn, params) do
-    provider_entry = Map.take(conn.params, ["provider"])
-    provider=provider_entry["provider"]
-    html = make_native_error_page(provider)
+    html = make_native_error_page()
 
     conn
       |> put_resp_content_type("text/html")
@@ -81,9 +79,8 @@ defmodule Uro.AuthenticationController do
 
   defp login_success_native(conn, params) do
     provider_entry = Map.take(conn.params, ["provider"])
-    provider=provider_entry["provider"]
     redirect_uri = client_redirect_uri_native(conn) <> "?" <> URI.encode_query(Map.merge(params, provider_entry))
-    html = make_native_redirect_page(provider, redirect_uri, 5)
+    html = make_native_redirect_page(redirect_uri, 5)
 
     conn
     |> put_resp_content_type("text/html")
@@ -242,7 +239,7 @@ defmodule Uro.AuthenticationController do
     operation_id: "loginProviderCallbackNative",
     summary: "Login Provider Callback Native",
     description: """
-    This endpoint is called by the provider after the user has authenticated. The provider will include a code in the query string if the user has successfully authenticated, or an error if the user has not.
+    This endpoint is called by a provider through browser redirect after the user has authenticated. The provider will include a code in the query string if the user has successfully authenticated, or an error if the user has not.
 
     You should not call this endpoint directly. Instead, you should redirect the user to the URL returned by the `loginWithProviderNative` endpoint.
     """,
@@ -378,8 +375,7 @@ defmodule Uro.AuthenticationController do
     end)
   end
 
-defp make_native_redirect_page(provider, redirect_uri, wait_time) do
-  provider_name = String.capitalize(provider)
+defp make_native_redirect_page(redirect_uri, wait_time) do
   html = ~s"""
   <!DOCTYPE html>
   <html>
@@ -387,28 +383,27 @@ defp make_native_redirect_page(provider, redirect_uri, wait_time) do
       <meta charset="utf-8">
       <meta http-equiv="refresh"
             content="#{wait_time};url=#{redirect_uri}">
-      <title>#{provider_name} OAuth</title>
+      <title>V-Sekai OAuth</title>
     </head>
     <body>
-      <h1>#{provider_name} OAuth</h1>
-      <p>#{provider_name} login was successful. Sending data to V-Sekai client in #{wait_time} seconds. If not, <a href="#{redirect_uri}">click here</a>.</p>
+      <h1>V-Sekai OAuth</h1>
+      <p>V-Sekai OAuth login was successful. Sending data to Godot client in #{wait_time} seconds. If not, <a href="#{redirect_uri}">click here</a>.</p>
     </body>
   </html>
   """
 end
 
-defp make_native_error_page(provider) do
-  provider_name = String.capitalize(provider)
+defp make_native_error_page(error_msg \\ "An unexpected error occurred.") do
   html = ~s"""
   <!DOCTYPE html>
   <html>
     <head>
       <meta charset="utf-8">
-      <title>#{provider_name} OAuth</title>
+      <title>V-Sekai OAuth</title>
     </head>
     <body>
-      <h1>#{provider_name} OAuth</h1>
-      <p>#{provider_name} login failed. An unexpected error occurred.</p>
+      <h1>V-Sekai OAuth</h1>
+      <p>OAuth login failed. #{error_msg}</p>
     </body>
   </html>
   """
