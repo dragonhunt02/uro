@@ -353,7 +353,7 @@ defmodule Uro.AuthenticationController do
 
   @doc """
   Fetches the config for the given provider name (string or atom).
-  Returns the options keyword list or `[]` if not found.
+  Returns the options keyword list or `{}` if not found.
   Atom table is not modified.
   """
   @spec get_provider_cfg(String.t() | atom()) :: keyword()
