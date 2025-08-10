@@ -353,7 +353,7 @@ defmodule Uro.AuthenticationController do
   Returns the options keyword list or `{}` if not found.
   Atom table is not modified.
   """
-  @spec get_provider_cfg(String.t() | atom()) :: keyword()
+@spec get_provider_cfg(String.t() | atom()) :: {atom(), keyword()} | {}
   defp get_provider_cfg(provider_name) when is_binary(provider_name) do
     Application.get_env(:uro, :pow_assent, [])
     |> Keyword.get(:providers, [])
@@ -375,26 +375,37 @@ defmodule Uro.AuthenticationController do
     end)
   end
 
+@spec make_native_redirect_page(String.t(), integer()) :: String.t()
 defp make_native_redirect_page(redirect_uri, wait_time) do
+  escaped_uri = redirect_uri
+    |> Phoenix.HTML.html_escape()
+    |> Phoenix.HTML.safe_to_string()
+
+  wait_time_str = Integer.to_string(wait_time)
   html = ~s"""
   <!DOCTYPE html>
   <html>
     <head>
       <meta charset="utf-8">
       <meta http-equiv="refresh"
-            content="#{wait_time};url=#{redirect_uri}">
+            content="#{wait_time_str};url=#{escaped_uri}">
       <title>V-Sekai OAuth</title>
     </head>
     <body>
       <h1>V-Sekai OAuth</h1>
-      <p>V-Sekai OAuth login was successful. Sending data to Godot client in #{wait_time} seconds. If not, <a href="#{redirect_uri}">click here</a>.</p>
+      <p>V-Sekai OAuth login was successful. Sending data to Godot client in #{wait_time_str} seconds. If not, <a href="#{escaped_uri}">click here</a>.</p>
     </body>
   </html>
   """
 end
 
+@spec make_native_error_page(String.t()) :: String.t()
 defp make_native_error_page(error_msg \\ "An unexpected error occurred.") do
-  html = ~s"""
+  escaped_msg = error_msg
+    |> Phoenix.HTML.html_escape()
+    |> Phoenix.HTML.safe_to_string()
+
+html = ~s"""
   <!DOCTYPE html>
   <html>
     <head>
@@ -403,7 +414,7 @@ defp make_native_error_page(error_msg \\ "An unexpected error occurred.") do
     </head>
     <body>
       <h1>V-Sekai OAuth</h1>
-      <p>OAuth login failed. #{error_msg}</p>
+      <p>OAuth login failed. #{escaped_msg}</p>
     </body>
   </html>
   """
