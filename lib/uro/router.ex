@@ -131,14 +131,12 @@ defmodule Uro.Router do
       pipe_through [:ensure_native_provider]
       get("/", Uro.AuthenticationController, :login_with_provider_native)
       get("/callback", Uro.AuthenticationController, :provider_callback_native)
-       end
-   
+       end   
 
     scope "/:provider" do
       get("/", Uro.AuthenticationController, :login_with_provider)
       get("/callback", Uro.AuthenticationController, :provider_callback)
     end
-
   end
 
   resources("/avatars", Uro.AvatarController, only: [:index, :show])
