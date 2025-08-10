@@ -66,8 +66,7 @@ defmodule Uro.AuthenticationController do
   defp login_error_native(conn, params) do
     provider_entry = Map.take(conn.params, ["provider"])
     provider=provider_entry["provider"]
-   #fixme TODO
-    html = make_native_error_page("provider")
+    html = make_native_error_page(provider)
 
     conn
       |> put_resp_content_type("text/html")
@@ -83,9 +82,6 @@ defmodule Uro.AuthenticationController do
   defp login_success_native(conn, params) do
     provider_entry = Map.take(conn.params, ["provider"])
     provider=provider_entry["provider"]
-    IO.puts("inspect provid")
-    IO.inspect(provider)
-    IO.inspect(params)
     redirect_uri = client_redirect_uri_native(conn) <> "?" <> URI.encode_query(Map.merge(params, provider_entry))
     html = make_native_redirect_page(provider, redirect_uri, 5)
 
@@ -242,22 +238,47 @@ defmodule Uro.AuthenticationController do
     end
   end
 
+  operation(:provider_callback_native,
+    operation_id: "loginProviderCallbackNative",
+    summary: "Login Provider Callback Native",
+    description: """
+    This endpoint is called by the provider after the user has authenticated. The provider will include a code in the query string if the user has successfully authenticated, or an error if the user has not.
+
+    You should not call this endpoint directly. Instead, you should redirect the user to the URL returned by the `loginWithProviderNative` endpoint.
+    """,
+    parameters: [
+      provider: [
+        in: :path,
+        schema: @provider_id_json_schema
+      ]
+    ],
+    responses: %{
+      :ok => {
+        "",
+        "application/json",
+        %Schema{
+          type: :object
+        }
+      }
+    }
+  )
+
   def provider_callback_native(conn, %{"provider" => provider,  "code" => code, "state" => state} = params) do
     base_params = Map.take(params, ["provider", "state", "code"])
     session_params = %{code: code, state: state}
-    IO.inspect(conn)
 
     case conn
          |> Conn.put_private(:pow_assent_session_params, session_params)
          |> Plug.callback_upsert(provider, base_params, redirect_uri_native(conn)) do
       {:ok, conn} ->
-              IO.inspect(conn)
           api_tokens =
             conn.private.pow_assent_callback_params.user_identity["token"]
 
           token_data =
             api_tokens
-            |> Map.take(["access_token", "refresh_token", "expires_in"])
+            |> Map.take(["access_token", "expires_in"])
+
+        # TODO: implement  "refresh_token" api endpoint
 
         params = Map.merge(base_params, token_data)
         login_success_native(conn, params)
@@ -306,8 +327,7 @@ defmodule Uro.AuthenticationController do
           }
         )
 
-      _err ->
-        IO.inspect(_err)
+      _ ->
         login_error_native(conn, %{
           error: "invalid_code",
           error_description: "Invalid or expired code, please try again"
@@ -325,13 +345,10 @@ defmodule Uro.AuthenticationController do
 
   defp client_redirect_uri_native(%{params: %{"provider" => provider}}) do
     {provider_atom, config} = get_provider_cfg(provider)
-    IO.inspect(config)
-    uri = case Keyword.fetch(config, :client_redirect_port) do
-      {:ok, port} -> "http://localhost:#{port}/"
+    uri = case Keyword.fetch(config, :godot_redirect_address) do
+      {:ok, address} -> address
       :error -> "http://0.0.0.0/" # TODO: replace with error page
     end
-    IO.inspect(uri)
-    uri
   end
 
   @doc """
@@ -345,9 +362,7 @@ defmodule Uro.AuthenticationController do
     |> Keyword.get(:providers, [])
     |> Enum.find({}, fn {provider_atom, opts} ->
       name = Atom.to_string(provider_atom)
-
       if name == provider_name do
-        #IO.puts("Matched provider: #{name}")
         true
       end
     end)
@@ -358,13 +373,12 @@ defmodule Uro.AuthenticationController do
     |> Keyword.get(:providers, [])
     |> Enum.find({}, fn {provider_atom, opts} ->
       if provider_name == provider_atom do
-        #IO.puts("Matched provider atom: #{provider_name}")
         true
       end
     end)
   end
 
-def make_native_redirect_page(provider, redirect_uri, wait_time) do
+defp make_native_redirect_page(provider, redirect_uri, wait_time) do
   provider_name = String.capitalize(provider)
   html = ~s"""
   <!DOCTYPE html>
@@ -383,7 +397,7 @@ def make_native_redirect_page(provider, redirect_uri, wait_time) do
   """
 end
 
-def make_native_error_page(provider) do
+defp make_native_error_page(provider) do
   provider_name = String.capitalize(provider)
   html = ~s"""
   <!DOCTYPE html>
