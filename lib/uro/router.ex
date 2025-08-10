@@ -53,19 +53,20 @@ defmodule Uro.Router do
     plug(Uro.Plug.RequirePropUploadPermission)
   end
 
-pipeline :ensure_native_provider do
-    plug :validate_provider
+  # Don't add new providers before checking compliance with current native client flow.
+  # Access tokens are sent to apps using 'localhost:port' redirect
+  # This can be unsafe for some providers
+  @native_oauth_providers ~w(vroid)
+  pipeline :ensure_native_provider do
+    plug :validate_native_provider
   end
 
-  @native_oauth_providers ~w(vroid)
-
   # Validate that params["provider"] is in our whitelist
-  defp validate_provider(%{params: %{"provider" => provider}} = conn, _opts)
+  defp validate_native_provider(%{params: %{"provider" => provider}} = conn, _opts)
        when provider in @native_oauth_providers do
     conn
   end
-
-  defp validate_provider(conn, _opts) do
+  defp validate_native_provider(conn, _opts) do
     conn
     |> send_resp(:not_found, "Provider not supported")
     |> halt()
@@ -133,8 +134,7 @@ pipeline :ensure_native_provider do
     post("/", Uro.AuthenticationController, :login)
 
     scope "/native/:provider" do
-  # Don't add new providers before checking compliance with current native client flow
-          pipe_through [:ensure_native_provider]
+      pipe_through [:ensure_native_provider]
       get("/", Uro.AuthenticationController, :login_with_provider_native)
       get("/callback", Uro.AuthenticationController, :provider_callback_native)
        end
