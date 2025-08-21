@@ -70,7 +70,9 @@ defmodule Uro.VSekai.Shard do
       address: to_string(shard.address),
       port: shard.port,
       map: to_string(shard.map),
-      name: to_string(shard.name)
+      name: to_string(shard.name),
+      current_users: shard.current_users,
+      max_users: shard.max_users
     }
   end
 
