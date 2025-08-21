@@ -100,9 +100,14 @@ defmodule Uro.ShardController do
     |> VSekai.create_shard()
     |> case do
       {:ok, shard} ->
+        shard = Repo.preload(shard, :user)
+        shard_json = shard
+          |> Shard.to_json_schema()
+          |> Map.put(:id, to_string(shard.id))
+
         conn
         |> put_status(200)
-        |> json(%{data: %{id: to_string(shard.id)}})
+        |> json(%{data: shard_json})
 
       {:error, %Ecto.Changeset{}} ->
         json_error(conn)
